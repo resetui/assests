@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Videoyards - Create professional SaaS Demo Videos</title>
+<meta name="description" content="Turn your raw screen captures into clean, professional SaaS demo videos with smart zooms, cursor highlights, camera preview, and more.">
+<meta property="og:image" content="https://videoyards.com/og-image.png">
+<link rel="icon" href="https://videoyards.com/_next/image?url=%2Flogo-no-bg.png&w=32&q=75" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Geist', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['Geist Mono', 'ui-monospace', 'monospace'],
+      },
+    }
+  }
+}
+</script>
+<style>
+  :root {
+    --bg: #0a0a0c;
+    --surface-1: #0f0f12;
+    --surface-2: #131318;
+    --surface-3: #17171d;
+    --surface-4: #1c1c24;
+    --text: #ededf0;
+    --muted: #a3a3ad;
+    --dim: #6e6e7a;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --accent: oklch(0.62 0.22 295);
+    --accent-2: oklch(0.72 0.20 305);
+    --accent-glow: oklch(0.62 0.22 295 / 0.55);
+    --accent-soft: oklch(0.62 0.22 295 / 0.18);
+    --green: oklch(0.72 0.18 145);
+    --red: oklch(0.68 0.22 25);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Geist', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Eyebrow */
+  .eyebrow {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Diagonal striped placeholder */
+  .diag-bg {
+    background-color: var(--surface-3);
+    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 12px);
+  }
+  .diag-bg-2 {
+    background-color: var(--surface-4);
+    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 14px);
+  }
+
+  /* Dot grid background */
+  .dot-grid {
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-position: center;
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    background: linear-gradient(180deg, #fff 30%, var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset, 0 10px 40px -10px var(--accent-glow);
+    transition: all .25s ease;
+    font-weight: 500;
+  }
+  .btn-primary:hover {
+    background: var(--accent-2);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.12) inset, 0 14px 50px -10px var(--accent-glow);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  /* Ghost button */
+  .btn-ghost {
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    transition: all .25s ease;
+    font-weight: 500;
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--border-strong);
+  }
+
+  /* Glass card */
+  .glass-card {
+    background: rgba(20,20,26,0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    transition: all .3s ease;
+  }
+  .card:hover {
+    background: var(--surface-3);
+    border-color: var(--border-strong);
+  }
+  .card-sm {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: all .3s ease;
+  }
+  .card-sm:hover {
+    background: var(--surface-3);
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+  }
+
+  /* Icon bubble */
+  .icon-bubble {
+    background: linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.025));
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 12px 30px rgba(0,0,0,0.22);
+  }
+  .icon-bubble svg {
+    filter: drop-shadow(0 0 10px oklch(0.72 0.20 305 / 0.25));
+  }
+
+  /* Intentional heading mark */
+  .see-difference-prefix::before {
+    content: "— ";
+    color: var(--muted);
+  }
+
+  /* Selection */
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+  /* Focus */
+  *:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Hero glow */
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .hero-glow::before {
+    content: "";
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%, -10%);
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+    filter: blur(60px);
+    opacity: 0.6;
+  }
+
+  /* Numbered bubble */
+  .num-bubble {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  /* Featured pricing */
+  .pricing-featured {
+    background: linear-gradient(180deg, oklch(0.62 0.22 295 / 0.10) 0%, var(--surface-2) 50%);
+    border: 1px solid oklch(0.62 0.22 295 / 0.35);
+  }
+
+  /* Consistent feature video frames */
+  .showcase-video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center;
+  }
+  .wide-showcase-frame {
+    padding: 14px clamp(28px, 5vw, 58px);
+  }
+  .wide-showcase-frame .showcase-video {
+    border-radius: 12px;
+  }
+
+  /* FAQ */
+  .faq-item { transition: all .3s ease; }
+  .faq-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .35s ease;
+  }
+  .faq-item.open .faq-content { max-height: 300px; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--accent); }
+  .faq-item.open .faq-icon-bg { background: var(--accent-soft); }
+  .faq-icon { transition: transform .3s ease, color .3s ease; }
+  .faq-icon-bg { transition: background .3s ease; }
+
+  /* CTA gradient */
+  .cta-bg {
+    background:
+      radial-gradient(circle at 50% 42%, oklch(0.62 0.22 295 / 0.34) 0%, transparent 62%),
+      linear-gradient(135deg, #211534 0%, #140f20 48%, #25153c 100%);
+  }
+
+  /* Animations */
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .float-slow { animation: float-slow 6s ease-in-out infinite; }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer-bar {
+    background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* Reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      transition: opacity .7s ease-out, transform .7s ease-out;
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; }
+    .float-slow, .pulse-dot, .shimmer-bar { animation: none !important; }
+  }
+
+  /* Nav scrolled state */
+  .nav-inner { transition: all .3s ease; }
+
+  /* Carousel */
+  .carousel-track { transition: transform .5s ease; }
+  #quote-dots button {
+    min-height: 0;
+    height: 8px;
+    padding: 0;
+  }
+  .dot-active { width: 20px; border-radius: 999px; background: var(--accent-2); box-shadow: 0 0 16px var(--accent-glow); }
+  .dot-idle { width: 8px; border-radius: 999px; background: rgba(255,255,255,0.24); }
+
+  /* Toggle */
+  .toggle-pill { background: var(--surface-3); border: 1px solid var(--border); }
+  .toggle-thumb {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+    box-shadow: 0 10px 30px -12px var(--accent-glow), 0 0 0 1px rgba(255,255,255,0.14) inset;
+    transition: transform .3s ease;
+  }
+  .toggle-pill.annual .toggle-thumb { transform: translateX(100%); }
+
+  /* Sparkline */
+  .spark-line { stroke: var(--accent); stroke-width: 2; fill: none; }
+  .spark-area { fill: url(#sparkGrad); }
+
+  /* Touch targets */
+  button, a[role="button"] { min-height: 44px; }
+  .nav-link { min-height: auto; }
+</style>
+</head>
+<body>
+
+<!-- ============ TOPBAR NAVIGATION ============ -->
+<div class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+  <nav class="nav-inner glass-card w-full max-w-[1200px] flex items-center justify-between h-16 px-6 rounded-full">
+    <!-- Logo -->
+    <a href="#top" class="flex items-center gap-2.5 shrink-0">
+      <img src="https://videoyards.com/_next/image?url=%2Flogo-no-bg.png&w=32&q=75" alt="Videoyards Logo" class="w-8 h-8 rounded-full object-cover">
+      <span class="font-semibold text-[17px] tracking-tight">Videoyards</span>
+    </a>
+
+    <!-- Center links -->
+    <div class="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+      <a href="#benefits" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Demo</a>
+      <a href="#features" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Features</a>
+      <a href="#how" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">How it works</a>
+      <a href="#pricing" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Pricing</a>
+      <a href="https://videoyards.com/blogs" class="nav-link px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Blogs</a>
+    </div>
+
+    <!-- Right -->
+    <div class="flex items-center gap-2">
+      <a href="https://videoyards.com/api/auth/login?" class="hidden sm:inline-flex btn-ghost px-5 py-2 text-sm">Log in</a>
+      <a href="https://videoyards.com/api/auth/register?" class="btn-primary px-5 py-2 text-sm">Get Started</a>
+      <button id="menu-toggle" aria-label="Open menu" class="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+</div>
+
+<!-- Mobile menu -->
+<div id="mobile-menu" class="fixed inset-0 z-[60] hidden flex-col items-center justify-center bg-[#0a0a0c]/95 backdrop-blur-lg" role="dialog" aria-modal="true">
+  <button id="menu-close" aria-label="Close menu" class="absolute top-6 right-6 w-11 h-11 flex items-center justify-center rounded-full border border-[var(--border)]">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <nav class="flex flex-col items-center gap-6">
+    <a href="#benefits" class="mobile-link text-3xl font-medium tracking-tight">Demo</a>
+    <a href="#features" class="mobile-link text-3xl font-medium tracking-tight">Features</a>
+    <a href="#how" class="mobile-link text-3xl font-medium tracking-tight">How it works</a>
+    <a href="#pricing" class="mobile-link text-3xl font-medium tracking-tight">Pricing</a>
+    <a href="https://videoyards.com/blogs" class="mobile-link text-3xl font-medium tracking-tight">Blogs</a>
+    <a href="#faq" class="mobile-link text-3xl font-medium tracking-tight">FAQ</a>
+    <a href="https://videoyards.com/api/auth/register?" class="mobile-link btn-primary px-8 py-3 mt-4 text-base">Get Started</a>
+  </nav>
+</div>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="relative pt-36 pb-24 lg:pt-44 lg:pb-32 overflow-hidden">
+  <!-- Dot grid + glow background -->
+  <div class="hero-glow"></div>
+  <div class="absolute inset-0 dot-grid opacity-60" style="mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 75%);"></div>
+
+  <div class="relative max-w-[1200px] mx-auto px-6 lg:px-10 text-center">
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2.5 p-1.5 pr-4 border border-[var(--border)] rounded-full text-sm text-[var(--muted)] mb-8 glass-card reveal">
+      <span class="bg-[var(--accent-soft)] text-[var(--accent-2)] px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
+        New
+      </span>
+      <span>Videoyards Chrome extension is live - record straight into the editor</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="text-[44px] sm:text-[64px] lg:text-[88px] leading-[1.02] font-medium tracking-[-0.035em] mb-6 text-balance reveal" style="text-wrap: balance;">
+      Create professional<br>
+      <span class="text-gradient">screen recordings.</span>
+    </h1>
+
+    <p class="text-lg lg:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 leading-relaxed reveal" style="text-wrap: balance;">
+      Turn your raw captures into clean, professional demos with smart zooms, cursor highlights, camera preview, and many more.
+    </p>
+
+    <!-- CTAs -->
+    <div class="flex flex-wrap items-center justify-center gap-3 mb-20 reveal">
+      <a href="https://videoyards.com/api/auth/register?" class="btn-primary px-7 py-3 text-sm flex items-center gap-2">
+        Start Creating Free
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="https://chromewebstore.google.com/detail/videoyards-screen-recorde/fbffgemkdhbinjgciigblmdbddlgfajl?hl=en" class="btn-ghost px-7 py-3 text-sm flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M21.17 8H12M3.95 6.06L8.54 14M10.88 21.94L15.46 14"/></svg>
+        Add Extension
+      </a>
+    </div>
+
+    <!-- Canvas mockup -->
+    <div class="relative max-w-[1200px] mx-auto reveal">
+      <!-- Glow under mockup -->
+      <div class="absolute -inset-4 rounded-[40px] opacity-50" style="background: radial-gradient(ellipse at 50% 40%, var(--accent-glow) 0%, transparent 60%); filter: blur(30px);"></div>
+
+      <!-- Outer frame -->
+      <div class="relative rounded-[28px] border border-[var(--border)] p-3 shadow-2xl" style="background: linear-gradient(180deg, #131318 0%, #0f0f12 100%); box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);">
+        <!-- Inner frame -->
+        <div class="rounded-[20px] border border-[var(--border)] overflow-hidden" style="background: #0f0f12;">
+          <!-- Top bar -->
+          <div class="flex items-center justify-between px-5 py-3 border-b border-[var(--border)] bg-[var(--surface-2)]">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
+              <div class="w-3 h-3 rounded-full bg-[#febc2e]"></div>
+              <div class="w-3 h-3 rounded-full bg-[#28c840]"></div>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface-4)] border border-[var(--border)] text-xs text-[var(--dim)] font-mono">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              app.videoyards.com/editor
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-full bg-[var(--surface-4)] border border-[var(--border)]"></div>
+              <div class="w-7 h-7 rounded-full" style="background: linear-gradient(135deg, var(--accent), var(--accent-2));"></div>
+            </div>
+          </div>
+
+          <!-- Body: product demo video -->
+          <div class="relative bg-[#0f0f12]">
+            <video
+              class="w-full h-auto block"
+              src="https://7z2o7qczel.ufs.sh/f/8TNyVnchNYzebniQxJEdrADwxfGL2U90saNJvEeO7PC1q5Xy"
+              poster="https://videoyards.com/Pic.png"
+              autoplay muted loop playsinline preload="metadata"
+              aria-label="Videoyards demo video"></video>
+            <div class="absolute top-4 right-4 px-3 py-1.5 rounded-full glass-card text-xs text-[var(--muted)] flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--accent)] pulse-dot"></span>
+              Auto-zoom on
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ BENEFITS (BENTO GRID) ============ -->
+<section id="benefits" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="max-w-2xl mb-14 reveal">
+      <span class="eyebrow see-difference-prefix">See the difference</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        From ordinary screen recording to <span class="text-gradient">polished demo</span>.
+      </h2>
+      <p class="text-lg text-[var(--muted)] leading-relaxed mt-5">Witness the dramatic transformation from ordinary screen recordings to professional, engaging content.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 reveal">
+      <!-- Wide card -->
+      <div class="card p-7 lg:col-span-2 flex flex-col">
+        <div class="flex flex-col sm:flex-row items-start gap-6 mb-6">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style="background: var(--accent-soft);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight mb-2">Auto Zoom Effects</h3>
+            <p class="text-[var(--muted)] leading-relaxed max-w-md">Automatically detects and zooms to critical areas of your screen, so viewers always look where it matters.</p>
+          </div>
+        </div>
+        <div class="mt-auto">
+          <div class="wide-showcase-frame rounded-2xl border border-[var(--border)] overflow-hidden bg-[var(--surface-3)]">
+            <video class="showcase-video" src="https://cdn.jsdelivr.net/gh/Videoyards/videos@main/Before.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Recording before Videoyards"></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Narrow card -->
+      <div class="card p-7 flex flex-col">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background: var(--accent-soft);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3 class="text-2xl font-medium tracking-tight mb-2">Custom Cursor</h3>
+        <p class="text-[var(--muted)] leading-relaxed mb-6">Transform your basic cursor into a professional highlight tool that makes every click and movement clear.</p>
+        <div class="rounded-2xl border border-[var(--border)] overflow-hidden bg-[var(--surface-3)] mt-auto">
+          <video class="showcase-video" src="https://cdn.jsdelivr.net/gh/Videoyards/videos@main/Cursor.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Custom cursor effect preview"></video>
+        </div>
+      </div>
+
+      <!-- Narrow card -->
+      <div class="card p-7 flex flex-col">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background: var(--accent-soft);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3 class="text-2xl font-medium tracking-tight mb-2">Professional Backgrounds</h3>
+        <p class="text-[var(--muted)] leading-relaxed mb-6">Replace cluttered desktops with sleek, custom backgrounds and overlays that keep the focus on your product.</p>
+        <div class="rounded-2xl border border-[var(--border)] overflow-hidden bg-[var(--surface-3)] mt-auto">
+          <video class="showcase-video" src="https://cdn.jsdelivr.net/gh/Videoyards/videos@main/After.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Professional background preview"></video>
+        </div>
+      </div>
+
+      <!-- Wide card -->
+      <div class="card p-7 lg:col-span-2 flex flex-col">
+        <div class="flex flex-col sm:flex-row items-start gap-6 mb-6">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style="background: var(--accent-soft);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight mb-2">Video &amp; Audio Effects</h3>
+            <p class="text-[var(--muted)] leading-relaxed max-w-md">Voice enhancement, audio trimming, and more to turn basic recordings into polished demos.</p>
+          </div>
+        </div>
+        <div class="wide-showcase-frame rounded-2xl border border-[var(--border)] overflow-hidden bg-[var(--surface-3)] mt-auto">
+          <video class="showcase-video" src="https://cdn.jsdelivr.net/gh/Videoyards/videos@main/After.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Video and audio effects preview"></video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES GRID ============ -->
+<section id="features" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="max-w-2xl mb-14 reveal">
+      <span class="eyebrow eyebrow-prefix">Features</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Powerful features in <span class="text-gradient">one place</span>.
+      </h2>
+      <p class="text-lg text-[var(--muted)] leading-relaxed mt-5">Record, edit, and enhance your screen recordings in one place. No more switching between apps.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 reveal">
+      <!-- Feature 1 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Smart Cursor</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Intelligent cursor tracking with customizable effects that highlight every click and movement, making your tutorials clear.</p>
+      </div>
+      <!-- Feature 2 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Auto Zoom</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Smart auto-zoom is applied automatically, detecting and zooming to the critical areas of your screen as you record.</p>
+      </div>
+      <!-- Feature 3 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Visual Effects</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Custom backgrounds, overlays, and camera preview turn a cluttered desktop capture into a clean, branded demo.</p>
+      </div>
+      <!-- Feature 4 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">4K Export</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Download your professional demo in HD quality and start driving more signups and sales.</p>
+      </div>
+      <!-- Feature 5 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Auto-Export</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Videos automatically export to your editor. No manual uploads required.</p>
+      </div>
+      <!-- Feature 6 -->
+      <div class="card-sm p-6">
+        <div class="w-[42px] h-[42px] rounded-xl icon-bubble flex items-center justify-center mb-5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <h3 class="text-lg font-medium tracking-tight mb-2">Lightweight &amp; Secure</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Minimal impact on your browser performance with complete privacy protection.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HIGHLIGHTS / SPLIT SECTION ============ -->
+<section class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center reveal">
+      <!-- Text -->
+      <div>
+        <span class="eyebrow eyebrow-prefix">Editor</span>
+        <h2 class="text-[36px] sm:text-[48px] lg:text-[56px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 mb-5 text-balance" style="text-wrap: balance;">
+          Explore our <span class="text-gradient">editing dashboard</span>.
+        </h2>
+        <p class="text-lg text-[var(--muted)] leading-relaxed mb-8 max-w-lg">
+          Edit like a pro in minutes, not hours. Even if you have never touched video editing software before.
+        </p>
+        <ul class="space-y-3 mb-9">
+          <li class="flex items-start gap-3">
+            <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background: var(--accent-soft);">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="text-[var(--text)]">Smart auto-zoom and custom cursor applied automatically</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background: var(--accent-soft);">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="text-[var(--text)]">Backgrounds, overlays, and camera preview</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background: var(--accent-soft);">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="text-[var(--text)]">Voice enhancement, audio trimming, and HD export</span>
+          </li>
+        </ul>
+        <a href="https://videoyards.com/api/auth/register?" class="btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm">
+          Start Creating Free
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <!-- Visual -->
+      <div class="rounded-[22px] border border-[var(--border)] bg-[var(--surface-2)] relative overflow-hidden">
+        <img src="https://videoyards.com/_next/image?url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FVideoyards%2Fvideos%40main%2FInterface.png&amp;w=1920&amp;q=75"
+             alt="Application interface showcase" class="w-full h-auto block" loading="lazy">
+        <div class="absolute top-4 right-4 px-3 py-1.5 rounded-full glass-card text-xs text-[var(--muted)] flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-[var(--accent)] pulse-dot"></span>
+          Editing
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="max-w-2xl mb-14 reveal">
+      <span class="eyebrow eyebrow-prefix">How it works</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Three steps to create professional <span class="text-gradient">SaaS demos</span>.
+      </h2>
+      <p class="text-lg text-[var(--muted)] leading-relaxed mt-5">Transform your screen recordings into conversion-focused demos that actually sell your product.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 reveal">
+      <!-- Step 1 -->
+      <div class="card p-7">
+        <div class="num-bubble w-11 h-11 rounded-full flex items-center justify-center font-medium mb-5">1</div>
+        <h3 class="text-xl font-medium tracking-tight mb-2">Add the extension</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Install the Videoyards Chrome extension. Just select a window, choose devices, customize the cursor, and record.</p>
+      </div>
+      <!-- Step 2 -->
+      <div class="card p-7">
+        <div class="num-bubble w-11 h-11 rounded-full flex items-center justify-center font-medium mb-5">2</div>
+        <h3 class="text-xl font-medium tracking-tight mb-2">Record or Upload</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Use our Chrome extension to record your screen instantly, or upload your existing recordings.</p>
+      </div>
+      <!-- Step 3 -->
+      <div class="card p-7">
+        <div class="num-bubble w-11 h-11 rounded-full flex items-center justify-center font-medium mb-5">3</div>
+        <h3 class="text-xl font-medium tracking-tight mb-2">Edit</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Smart auto-zoom and custom cursor are applied automatically. Add more effects to perfect your demo.</p>
+      </div>
+      <!-- Step 4 -->
+      <div class="card p-7">
+        <div class="num-bubble w-11 h-11 rounded-full flex items-center justify-center font-medium mb-5">4</div>
+        <h3 class="text-xl font-medium tracking-tight mb-2">Export</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed">Download your professional demo in HD quality and start driving more signups and sales.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOWCASE & AUTOMATION ============ -->
+<section class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-2 gap-4 reveal">
+      <!-- Card 1 -->
+      <div class="card p-7 flex flex-col">
+        <div class="flex items-start gap-4 mb-6">
+          <div class="w-12 h-12 rounded-xl icon-bubble flex items-center justify-center shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight mb-2">Screen record with our extension</h3>
+            <p class="text-[var(--muted)] leading-relaxed">The Videoyards Chrome extension makes it incredibly easy to record, save, and export your videos directly to the editor.</p>
+          </div>
+        </div>
+        <ul class="space-y-3 text-sm mb-6">
+          <li class="flex items-start gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><strong class="font-medium">Quick setup process:</strong> <span class="text-[var(--muted)]">select a window, choose devices, customize the cursor, and record.</span></span></li>
+          <li class="flex items-start gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><strong class="font-medium">Auto-export:</strong> <span class="text-[var(--muted)]">videos automatically export to your editor. No manual uploads required.</span></span></li>
+          <li class="flex items-start gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span><strong class="font-medium">Lightweight &amp; secure:</strong> <span class="text-[var(--muted)]">minimal impact on browser performance with complete privacy protection.</span></span></li>
+        </ul>
+        <a href="https://chromewebstore.google.com/detail/videoyards-screen-recorde/fbffgemkdhbinjgciigblmdbddlgfajl?hl=en" class="btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 text-sm mb-6 self-start">
+          Add to Chrome
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <div class="rounded-2xl border border-[var(--border)] bg-[var(--surface-3)] overflow-hidden mt-auto">
+          <img src="https://videoyards.com/_next/image?url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FVideoyards%2Fvideos%40main%2FExtensions.png&amp;w=1920&amp;q=75" alt="Videoyards Chrome Extension" class="w-full h-auto block" loading="lazy">
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="card p-7 flex flex-col">
+        <div class="flex items-start gap-4 mb-6">
+          <div class="w-12 h-12 rounded-xl icon-bubble flex items-center justify-center shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight mb-2">Currently supported platforms</h3>
+            <p class="text-[var(--muted)] leading-relaxed">Optimized for Windows 10/11 and Chromium-based browsers for reliable recording and export.</p>
+          </div>
+        </div>
+        <div class="space-y-3 mt-4">
+          <div class="flex items-start gap-4 p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface-3)]">
+            <img src="https://videoyards.com/_next/image?url=%2Fchrome-icon.png&amp;w=32&amp;q=75" alt="Chrome Icon" class="w-8 h-8 object-contain shrink-0" loading="lazy">
+            <div>
+              <div class="font-medium tracking-tight">Windows with Chrome Browser</div>
+              <p class="text-sm text-[var(--muted)] leading-relaxed mt-1">Full support for Windows 10/11 with Google Chrome browser Version 141.0.0.0+</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface-3)]">
+            <img src="https://videoyards.com/_next/image?url=%2Fbrave-icon.png&amp;w=32&amp;q=75" alt="Brave Icon" class="w-8 h-8 object-contain shrink-0" loading="lazy">
+            <div>
+              <div class="font-medium tracking-tight">Windows with Brave Browser</div>
+              <p class="text-sm text-[var(--muted)] leading-relaxed mt-1">Full support for Windows 10/11 with Brave browser Version 1.83.0+</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface-3)]">
+            <img src="https://videoyards.com/_next/image?url=%2Fedge-icon.png&amp;w=32&amp;q=75" alt="Edge Icon" class="w-8 h-8 object-contain shrink-0" loading="lazy">
+            <div>
+              <div class="font-medium tracking-tight">Windows with Edge Browser</div>
+              <p class="text-sm text-[var(--muted)] leading-relaxed mt-1">Full support for Windows 10/11 with Microsoft Edge browser Version 141.0.0.0+</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section id="use-cases" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-14 reveal">
+      <span class="eyebrow eyebrow-prefix">Use cases</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Perfect <span class="text-gradient">for</span>.
+      </h2>
+      <p class="text-lg text-[var(--muted)] leading-relaxed mt-5">Videoyards helps professionals across industries create engaging screen recordings.</p>
+    </div>
+
+    <div class="max-w-3xl mx-auto reveal">
+      <!-- Card -->
+      <div class="card p-8 lg:p-12 text-center relative">
+        <svg class="absolute top-6 left-8 opacity-10" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/></svg>
+        <p id="quote-text" class="text-xl lg:text-2xl font-medium leading-relaxed tracking-tight mb-8 text-balance" style="text-wrap: balance;">
+          "Create engaging software tutorials with professional cursor effects and zooms that guide viewers through each step."
+        </p>
+        <div class="flex items-center justify-center gap-3">
+          <div class="w-12 h-12 rounded-full" style="background: linear-gradient(135deg, var(--accent), var(--accent-2));"></div>
+          <div class="text-left">
+            <div id="quote-name" class="font-medium">Tutorial Creators</div>
+            <div id="quote-role" class="text-sm text-[var(--muted)]">Use case</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center justify-center gap-5 mt-8">
+        <button id="prev-quote" aria-label="Previous use case" class="w-11 h-11 rounded-full border border-[var(--border)] bg-[var(--surface-2)] flex items-center justify-center hover:bg-[var(--surface-3)] transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div id="quote-dots" class="flex items-center gap-2"></div>
+        <button id="next-quote" aria-label="Next use case" class="w-11 h-11 rounded-full border border-[var(--border)] bg-[var(--surface-2)] flex items-center justify-center hover:bg-[var(--surface-3)] transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="text-center max-w-2xl mx-auto mb-10 reveal">
+      <span class="eyebrow eyebrow-prefix">Pricing</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[60px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Simple, transparent <span class="text-gradient">pricing</span>.
+      </h2>
+      <p class="text-lg text-[var(--muted)] leading-relaxed mt-5">Choose the plan that works best for your needs with no hidden fees.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 reveal max-w-[920px] mx-auto">
+      <!-- Starter -->
+      <div class="card p-8 flex flex-col">
+        <div class="mb-6">
+          <div class="eyebrow text-[var(--muted)] mb-5">Get started free</div>
+          <div class="text-2xl font-medium tracking-tight mb-2">Free</div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-medium tracking-tight">$0</span>
+          </div>
+          <p class="text-sm text-[var(--muted)] mt-2">Perfect for Getting Started</p>
+        </div>
+        <a href="https://videoyards.com/api/auth/login?" class="btn-ghost w-full text-center py-3 text-sm order-last mt-auto">Get Started Free</a>
+        <ul class="space-y-3 text-sm mb-8">
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>3 Video Exports</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>All Premium Cursor &amp; Zoom Effects</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>720p Export + 1 Free 1080p Export</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>Has Watermark</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>1-Minute Video Export Limit</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>Simple Default Background</li>
+          <li class="flex items-center gap-3 text-[var(--muted)]"><span>○</span>No Camera Integration</li>
+          <li class="flex items-center gap-3 text-[var(--muted)]"><span>○</span>No Microphone Integration</li>
+          <li class="flex items-center gap-3 text-[var(--muted)]"><span>○</span>No Priority Support</li>
+        </ul>
+      </div>
+
+      <!-- Featured -->
+      <div class="pricing-featured p-8 rounded-[22px] flex flex-col relative">
+        <div class="absolute top-0 inset-x-0 rounded-t-[22px] py-2 text-center text-xs font-semibold uppercase text-white" style="background: var(--accent);">Most Popular Plan</div>
+        <div class="mb-6">
+          <div class="text-2xl font-medium tracking-tight mb-3 mt-8">Pro Monthly</div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-xl text-[var(--dim)] line-through mr-1">$20</span>
+            <span class="text-4xl font-medium tracking-tight">$12</span>
+            <span class="text-sm text-[var(--muted)]">/month</span>
+          </div>
+          <p class="text-sm text-[var(--muted)] mt-2">Flexible monthly plan with all Pro features.</p>
+        </div>
+        <a href="https://videoyards.com/api/auth/register?" class="btn-primary w-full text-center py-3 text-sm order-last mt-auto">Sign Up for Monthly Plan</a>
+        <ul class="space-y-3 text-sm mb-8">
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>Unlimited Video Exports</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>All Premium Cursor &amp; Zoom Effects</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>4K Export Quality</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>No Watermark</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>Unlimited Export Time</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>Dynamic Adaptive Backgrounds</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>Camera Integration Included</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>Microphone Integration Included</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>24/7 Priority Support</li>
+          <li class="flex items-center gap-3"><span class="text-[var(--accent-2)]">✓</span>All Updates Included</li>
+        </ul>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="hidden card p-8 flex-col">
+        <div class="mb-6">
+          <div class="text-sm text-[var(--muted)] mb-2">Chrome Extension</div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-4xl font-medium tracking-tight">Free</span>
+          </div>
+          <p class="text-sm text-[var(--muted)] mt-2">The recorder that feeds straight into the editor.</p>
+        </div>
+        <a href="https://chromewebstore.google.com/detail/videoyards-screen-recorde/fbffgemkdhbinjgciigblmdbddlgfajl?hl=en" class="btn-ghost w-full text-center py-3 text-sm mb-8">Add Extension</a>
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Quick setup process</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Auto-export to your editor</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Lightweight &amp; secure</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Chrome, Brave, and Edge</li>
+          <li class="flex items-center gap-3"><span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background: var(--accent-soft);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>No manual uploads</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[760px] mx-auto px-6 lg:px-10">
+    <div class="text-center mb-14 reveal">
+      <span class="eyebrow eyebrow-prefix">FAQ</span>
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[56px] leading-[1.05] font-medium tracking-[-0.035em] mt-4 text-balance" style="text-wrap: balance;">
+        Frequently asked <span class="text-gradient">questions</span>.
+      </h2>
+      <p class="text-lg text-[var(--muted)] leading-relaxed mt-5">Everything you need to know about Videoyards.</p>
+    </div>
+
+    <div class="reveal">
+      <!-- FAQ 1 -->
+      <div class="faq-item border-t border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">What is Videoyards and who is it for?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">Videoyards turns raw screen captures into clean, professional SaaS demo videos. It is built for founders, marketers, support teams, and educators who need polished recordings without learning a full video editor.</p>
+        </div>
+      </div>
+      <!-- FAQ 2 -->
+      <div class="faq-item border-t border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">How is Videoyards different from Loom or Screen Studio?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">Videoyards focuses on turning a recording into a conversion-focused product demo: smart auto-zoom and custom cursor are applied automatically, then you refine with backgrounds, overlays, and audio effects.</p>
+        </div>
+      </div>
+      <!-- FAQ 3 -->
+      <div class="faq-item border-t border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">What devices and browsers does Videoyards support?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">Videoyards is currently optimized for Windows 10/11 with Chromium based browsers: Chrome 141.0.0.0+, Brave 1.83.0+, and Microsoft Edge 141.0.0.0+.</p>
+        </div>
+      </div>
+      <!-- FAQ 4 -->
+      <div class="faq-item border-t border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">What export quality and video formats are supported?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">Export your finished demo in HD, with 4K export available on the Pro plan, ready to publish or embed wherever you share your product.</p>
+        </div>
+      </div>
+      <!-- FAQ 5 -->
+      <div class="faq-item border-t border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">Do I need to install anything to use Videoyards?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">The editor runs in your browser. To record directly you add the free Videoyards Chrome extension, which auto-exports your capture to the editor. You can also upload existing recordings instead.</p>
+        </div>
+      </div>
+      <!-- FAQ 6 -->
+      <div class="faq-item border-b border-[var(--border)]">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+          <span class="text-lg font-medium tracking-tight">What is the max video length and how does rendering work?</span>
+          <span class="faq-icon-bg w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+        </button>
+        <div class="faq-content">
+          <p class="text-[var(--muted)] leading-relaxed pb-5 pr-12">Rendering happens after you finish editing, then your demo downloads in HD. Longer recordings take proportionally longer to render, so trim to the moments that matter before exporting.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-12 reveal">
+      <p class="text-[var(--muted)] mb-4">Still have more questions?</p>
+      <a href="https://videoyards.com/contact-us" class="btn-ghost inline-flex items-center gap-2 px-6 py-3 text-sm">
+        Contact us
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section id="cta" class="py-24 lg:py-32 scroll-mt-24">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="cta-bg rounded-[28px] border border-[var(--border)] p-10 lg:p-20 text-center relative overflow-hidden reveal">
+      <!-- Glow -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full opacity-40 pointer-events-none" style="background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%); filter: blur(40px);"></div>
+
+      <div class="relative">
+        <span class="eyebrow eyebrow-prefix">Get started</span>
+        <h2 class="text-[40px] sm:text-[56px] lg:text-[72px] leading-[1.02] font-medium tracking-[-0.035em] mt-4 mb-5 text-balance" style="text-wrap: balance;">
+          Ready to create professional<br>
+          <span class="text-gradient">SaaS product demos?</span>
+        </h2>
+        <p class="text-lg text-[var(--muted)] max-w-xl mx-auto mb-10 leading-relaxed">
+          Join professionals who create engaging, polished content with Videoyards.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a href="https://videoyards.com/api/auth/register?" class="btn-primary px-7 py-3 text-sm flex items-center gap-2">
+            Start for Free
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="https://chromewebstore.google.com/detail/videoyards-screen-recorde/fbffgemkdhbinjgciigblmdbddlgfajl?hl=en" class="btn-ghost px-7 py-3 text-sm">Add Extension</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-[var(--border)] py-16 mt-10">
+  <div class="max-w-[1200px] mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-10">
+      <!-- Brand -->
+      <div class="col-span-2">
+        <a href="https://videoyards.com/" class="flex items-center gap-2.5 mb-5">
+          <img src="https://videoyards.com/_next/image?url=%2Flogo-no-bg.png&w=32&q=75" alt="Videoyards Logo" class="w-8 h-8 rounded-full object-cover">
+      <span class="font-semibold text-[17px] tracking-tight">Videoyards</span>
+        </a>
+        <p class="text-sm text-[var(--muted)] leading-relaxed max-w-xs mb-6">Transform ordinary screen recordings into extraordinary content with professional video editing and mockup design tools, with the help of auto-zoom, custom cursor, backgrounds, overlays, and other video and audio effects.</p>
+        <div class="flex items-center gap-3">
+          <a href="https://x.com/YaramasaGautham" aria-label="X (Twitter)" class="w-9 h-9 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://videoyards.com/bug-report" aria-label="Report a bug" class="w-9 h-9 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] transition-colors">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M8 12H4M20 12h-4M8 8L5 5M16 8l3-3M8 17l-3 3M16 17l3 3M9 6V5a3 3 0 0 1 6 0v1"/></svg>
+          </a>
+          <a href="https://videoyards.com/changelog" aria-label="Changelog" class="w-9 h-9 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] transition-colors">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Columns -->
+      <div>
+        <h4 class="eyebrow mb-4">Product</h4>
+        <ul class="space-y-3">
+          <li><a href="#top" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Demo</a></li>
+          <li><a href="#features" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Features</a></li>
+          <li><a href="#pricing" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Pricing</a></li>
+          <li><a href="#use-cases" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Use Cases</a></li>
+          <li><a href="https://videoyards.com/changelog" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="eyebrow mb-4">Company</h4>
+        <ul class="space-y-3">
+          <li><a href="https://videoyards.com/contact-us" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Contact Us</a></li>
+          <li><a href="https://videoyards.com/privacy-policy" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Privacy Policy</a></li>
+          <li><a href="https://videoyards.com/terms-service" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Terms of Service</a></li>
+          <li><a href="https://videoyards.com/refund-policy" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Refund Policy</a></li>
+          <li><a href="https://videoyards.com/bug-report" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Report Bug</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="eyebrow mb-4">Blogs</h4>
+        <ul class="space-y-3">
+          <li><a href="https://videoyards.com/blog/top-5-screen-recording-chrome-extensions-2025" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Top 5 Screen Recording Extensions</a></li>
+          <li><a href="https://videoyards.com/blog/top-screen-studio-alternatives-windows-users-2025" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Top Screen Studio Alternatives</a></li>
+          <li><a href="https://videoyards.com/blog/best-tools-creating-saas-demo-videos-2025" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Tools for Creating SaaS Demos</a></li>
+          <li><a href="https://videoyards.com/blog/screen-studio-vs-videoyards" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Screen Studio vs Videoyards</a></li>
+          <li><a href="https://videoyards.com/blog/loom-vs-videoyards-2025" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Loom vs Videoyards</a></li>
+          <li><a href="https://videoyards.com/blog/cursorful-vs-videoyards-best-alternative-to-screen-studio" class="text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">Cursorful vs Videoyards</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-[var(--border)] mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-xs text-[var(--dim)] font-mono">© 2025 Videoyards. All rights reserved.</p>
+      <div class="flex items-center gap-5">
+        <a href="https://videoyards.com/privacy-policy" class="text-xs text-[var(--dim)] font-mono hover:text-[var(--muted)] transition-colors">Privacy</a>
+        <a href="https://videoyards.com/terms-service" class="text-xs text-[var(--dim)] font-mono hover:text-[var(--muted)] transition-colors">Terms</a>
+        <a href="https://videoyards.com/refund-policy" class="text-xs text-[var(--dim)] font-mono hover:text-[var(--muted)] transition-colors">Refund</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Mobile menu
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuClose = document.getElementById('menu-close');
+
+  function openMenu() {
+    mobileMenu.classList.remove('hidden');
+    mobileMenu.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    mobileMenu.classList.add('hidden');
+    mobileMenu.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+  menuToggle.addEventListener('click', openMenu);
+  menuClose.addEventListener('click', closeMenu);
+  document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) closeMenu();
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-trigger').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const item = trigger.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    });
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        trigger.click();
+      }
+    });
+  });
+
+  // Testimonials carousel
+  const quotes = [
+    { text: "Create engaging software tutorials with professional cursor effects and zooms that guide viewers through each step.", name: "Tutorial Creators", role: "Use case" },
+    { text: "Showcase your product features with polished screen recordings that highlight key functionality.", name: "Product Demos", role: "Use case" },
+    { text: "Help students follow along with clear, focused screen recordings that emphasize important information.", name: "Educational Content", role: "Use case" },
+    { text: "Create clear visual instructions to help customers resolve issues quickly and effectively.", name: "Customer Support", role: "Use case" },
+    { text: "Impress potential clients with professional screen recordings that showcase your solutions.", name: "Sales Presentations", role: "Use case" },
+    { text: "Develop effective training materials that guide employees through complex processes.", name: "Internal Training", role: "Use case" },
+  ];
+
+  let currentQuote = 0;
+  const quoteText = document.getElementById('quote-text');
+  const quoteName = document.getElementById('quote-name');
+  const quoteRole = document.getElementById('quote-role');
+  const dotsContainer = document.getElementById('quote-dots');
+
+  // Build dots
+  quotes.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'h-1.5 transition-all duration-300';
+    dot.style.borderRadius = '999px';
+    dot.setAttribute('aria-label', `Go to use case ${i + 1}`);
+    dot.addEventListener('click', () => showQuote(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  function showQuote(idx) {
+    currentQuote = idx;
+    const q = quotes[idx];
+    quoteText.style.opacity = '0';
+    quoteName.style.opacity = '0';
+    quoteRole.style.opacity = '0';
+    setTimeout(() => {
+      quoteText.textContent = `"${q.text}"`;
+      quoteName.textContent = q.name;
+      quoteRole.textContent = q.role;
+      quoteText.style.opacity = '1';
+      quoteName.style.opacity = '1';
+      quoteRole.style.opacity = '1';
+    }, 200);
+    // Update dots
+    Array.from(dotsContainer.children).forEach((dot, i) => {
+      if (i === idx) {
+        dot.classList.add('dot-active');
+        dot.classList.remove('dot-idle');
+      } else {
+        dot.classList.remove('dot-active');
+        dot.classList.add('dot-idle');
+      }
+    });
+  }
+
+  // Init dots
+  Array.from(dotsContainer.children).forEach((dot, i) => {
+    if (i === 0) { dot.classList.add('dot-active'); }
+    else { dot.classList.add('dot-idle'); }
+  });
+
+  // Apply transitions
+  [quoteText, quoteName, quoteRole].forEach(el => {
+    el.style.transition = 'opacity 0.2s ease';
+  });
+
+  document.getElementById('prev-quote').addEventListener('click', () => {
+    showQuote((currentQuote - 1 + quotes.length) % quotes.length);
+  });
+  document.getElementById('next-quote').addEventListener('click', () => {
+    showQuote((currentQuote + 1) % quotes.length);
+  });
+
+  // Auto-rotate (reduced-motion safe)
+  let autoRotate;
+  if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    autoRotate = setInterval(() => {
+      showQuote((currentQuote + 1) % quotes.length);
+    }, 6000);
+  }
+
+  // Reveal on scroll
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Smooth scroll offset
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        const top = target.getBoundingClientRect().top + window.pageYOffset - 100;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

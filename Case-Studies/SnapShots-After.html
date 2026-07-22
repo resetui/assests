@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- ── Tailwind runtime ── sections are styled with Tailwind utility classes
+       (incl. arbitrary values like bg-[#0b0b0c]); the Play CDN compiles them
+       in-browser so this single file renders standalone with no build step. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://res.cloudinary.com/ddokaqkrl/image/upload/ydkdylpnkixslghyylig.png" />
+  <title>Getsnapshots</title>
+  <meta property="og:title" content="Getsnapshots" />
+  <meta name="description" content="Create beautiful mockups, Open Graph images, Device Mockups, Social banners effortlessly without any watermarks." />
+  <meta property="og:description" content="Create beautiful mockups, Open Graph images, Device Mockups, Social banners effortlessly without any watermarks." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://oafigsv8yj.ufs.sh/f/b7ZUAnePqlpydctMx0VVA9S1UZiNxWHkBYjofKD5gRObEJyp" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      33% { transform: translate(8%, 6%) scale(1.08) rotate(8deg); }
+      66% { transform: translate(-6%, 10%) scale(0.95) rotate(-5deg); }
+    }
+
+    .reveal {
+      opacity: 0;
+      animation: fadeSlide 1000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .mesh-blob {
+      animation: drift 30s linear infinite;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .mesh-blob {
+        animation: none !important;
+      }
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    /* Do NOT set overflow-x on html/body — it breaks position:sticky in Chrome. */
+    html, body { margin: 0; padding: 0; width: 100%; background-color: #fcfbf9; }
+    html { scroll-behavior: smooth; }
+    img, video, iframe, canvas, svg { max-width: 100%; height: auto; display: block; }
+    /* Offset in-page anchor jumps so the sticky navbar doesn't cover the target. */
+    [id] { scroll-margin-top: 88px; }
+
+    /* ── Export guarantee: first navbar/header stays sticky while scrolling ── */
+    body > [data-section-kind="nav"],
+    body > [data-section-kind="header"],
+    body > nav:first-of-type,
+    body > header:first-of-type {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 1000 !important;
+    }
+  </style>
+  <style>
+    /* ── Section styles ── */
+    
+  </style>
+</head>
+<body>
+<header id="nav" data-section-index="0" data-section-kind="nav" data-resetui-plan-id="plan-nav" class="sticky top-0 z-50 w-full border-b border-[#e5e5e5] bg-[#fcfbf9]/85 backdrop-blur-md" data-resetui-section-id="sec-00-nav">
+    <div class="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-20">
+      <a href="https://www.getsnapshots.app/" class="flex items-center gap-3" data-resetui-component-id="sec-00-nav-a-1">
+        <img src="https://res.cloudinary.com/ddokaqkrl/image/upload/ydkdylpnkixslghyylig.png" alt="Getsnapshots" class="block h-8 w-auto" data-resetui-component-id="sec-00-nav-img-1">
+        <span class="font-['Playfair_Display',serif] text-xl font-semibold tracking-tight text-[#171717]">Getsnapshots</span>
+      </a>
+      <nav class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex">
+        <a href="https://www.getsnapshots.app/" class="text-sm font-medium text-[#555555] transition-colors hover:text-[#171717]" data-resetui-component-id="sec-00-nav-a-2">Home</a>
+        <a href="https://www.getsnapshots.app/#features" class="text-sm font-medium text-[#555555] transition-colors hover:text-[#171717]" data-resetui-component-id="sec-00-nav-a-3">Features</a>
+        <a href="https://www.getsnapshots.app/#pricing" class="text-sm font-medium text-[#555555] transition-colors hover:text-[#171717]" data-resetui-component-id="sec-00-nav-a-4">Pricing</a>
+      </nav>
+      <a href="https://www.getsnapshots.app/#pricing" class="inline-flex items-center rounded-full bg-[#4338ca] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_30px_-10px_rgba(67,56,202,0.35)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#4f46e5] hover:scale-[1.03]" data-resetui-component-id="sec-00-nav-a-5">Upgrade to Pro</a>
+    </div>
+  </header>
+<div id="resetui-export-x-guard" style="overflow-x:hidden;max-width:100%;">
+<section id="hero" data-section-index="1" data-section-kind="section" data-resetui-plan-id="plan-content-1" class="relative -mt-16 w-full overflow-hidden bg-[#fcfbf9] pt-48 pb-32 text-[#171717]" data-resetui-section-id="sec-01-section">
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0">
+      <div class="mesh-blob absolute -top-[10%] -left-[10%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(circle,rgba(79,70,229,0.18)_0%,transparent_70%)] blur-3xl"></div>
+      <div class="mesh-blob absolute top-[20%] -right-[10%] h-[60%] w-[60%] rounded-full bg-[radial-gradient(circle,rgba(221,214,254,0.35)_0%,transparent_70%)] blur-3xl" style="animation-delay:-10s"></div>
+      <div class="mesh-blob absolute -bottom-[10%] left-[20%] h-[50%] w-[50%] rounded-full bg-[radial-gradient(circle,rgba(199,210,254,0.25)_0%,transparent_70%)] blur-3xl" style="animation-delay:-20s"></div>
+    </div>
+
+    <div class="relative z-10 mx-auto w-full max-w-[1320px] px-6 md:px-12 lg:px-20">
+      <div class="flex flex-col items-center text-center">
+        <span class="reveal inline-block font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.35em] text-[#4338ca]" style="animation-delay:0.05s">AI-Powered Visual Studio</span>
+        <h1 class="reveal mt-6 max-w-[1120px] font-['Playfair_Display',serif] text-[48px] md:text-[64px] lg:text-[76px] font-bold leading-[1.03] tracking-[-0.035em]" style="animation-delay:0.12s" data-resetui-component-id="sec-01-section-h1-1"><span class="block">Turn your boring Screenshots into</span><span class="block"><em class="italic text-[#4338ca]">stunning visuals</em>.</span></h1>
+        <p class="reveal mt-8 max-w-[60ch] text-xl leading-[1.6] text-[#555555]" style="animation-delay:0.2s" data-resetui-component-id="sec-01-section-p-1">Create beautiful mockups, Open Graph images, Device Mockups, Social banners effortlessly without any watermarks.</p>
+        <div class="reveal mt-10 flex items-center gap-6" style="animation-delay:0.28s">
+          <a href="https://www.getsnapshots.app/image-editor" class="group inline-flex items-center gap-2 rounded-full bg-[#4338ca] px-8 py-4 text-sm font-semibold text-white shadow-[0_10px_40px_-12px_rgba(67,56,202,0.35)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#4f46e5] hover:scale-[1.03]" data-resetui-component-id="sec-01-section-a-1">
+            Start Creating Now
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" aria-hidden="true" data-resetui-component-id="sec-01-section-svg-1"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+          </a>
+          <a href="https://www.getsnapshots.app/#demo" class="group inline-flex items-center gap-2 text-sm font-semibold text-[#171717] transition-colors hover:text-[#4338ca]" data-resetui-component-id="sec-01-section-a-2">
+            See How It Works
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" aria-hidden="true" data-resetui-component-id="sec-01-section-svg-2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="reveal mx-auto mt-20 max-w-[1000px]" style="animation-delay:0.36s">
+        <div class="overflow-hidden rounded-2xl border border-[#e5e5e5] bg-[#fffefa] shadow-[0_24px_70px_-20px_rgba(0,0,0,0.08)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.02] hover:-translate-y-4 hover:shadow-[0_30px_80px_-20px_rgba(67,56,202,0.18)]">
+          <img src="https://oafigsv8yj.ufs.sh/f/b7ZUAnePqlpyDMomOsipzUF2cEIOXyAT0LWn5ftbPVZh9ivY" alt="app demo" class="block aspect-video w-full object-cover" data-resetui-component-id="sec-01-section-img-1">
+        </div>
+      </div>
+    </div>
+
+    <div aria-hidden="true" class="absolute bottom-0 left-0 w-full leading-none">
+      <svg class="block h-[120px] w-full" viewBox="0 0 1440 120" preserveAspectRatio="none" fill="#f6f3ee" data-resetui-component-id="sec-01-section-svg-3">
+        <path d="M0,0 C360,120 1080,0 1440,80 L1440,120 L0,120 Z"></path>
+      </svg>
+    </div>
+  </section>
+<section data-section-index="2" data-section-kind="section" data-resetui-plan-id="plan-content-2" class="relative w-full bg-[#f6f3ee] py-24 text-[#171717]" data-resetui-section-id="sec-02-section">
+    <div class="mx-auto w-full max-w-[1200px] px-20">
+      <div class="mb-14 flex flex-col items-center text-center">
+        <span class="reveal font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.35em] text-[#4338ca]" style="animation-delay:0.05s">Open Graphs</span>
+        <h2 class="reveal mt-4 font-['Playfair_Display',serif] text-[44px] font-bold leading-[1.1] tracking-[-0.02em]" style="animation-delay:0.12s" data-resetui-component-id="sec-02-section-h2-1">See How It <em class="italic text-[#4338ca]">Transforms</em></h2>
+        <p class="reveal mt-5 max-w-[55ch] text-lg leading-[1.6] text-[#555555]" style="animation-delay:0.2s" data-resetui-component-id="sec-02-section-p-1">Watch your plain screenshots transform into stunning visuals in seconds</p>
+      </div>
+      <div class="reveal relative mx-auto max-w-[900px]" style="animation-delay:0.28s">
+        <div class="overflow-hidden rounded-2xl border border-[#e5e5e5] bg-[#fffefa] shadow-[0_24px_70px_-20px_rgba(0,0,0,0.08)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.02] hover:-translate-y-4 hover:shadow-[0_30px_80px_-20px_rgba(67,56,202,0.18)]">
+          <img src="https://oafigsv8yj.ufs.sh/f/b7ZUAnePqlpyezCoW2aH1FHk3YfnBRZoIqd42szKvD5i0cQS" alt="Open Graph Example" class="block h-auto w-full" data-resetui-component-id="sec-02-section-img-1">
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute -left-16 top-1/2 h-8 w-8 -translate-y-1/2 text-[#4338ca]/30" aria-hidden="true" data-resetui-component-id="sec-02-section-svg-1"><path d="m15 18-6-6 6-6"></path></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute -right-16 top-1/2 h-8 w-8 -translate-y-1/2 text-[#4338ca]/30" aria-hidden="true" data-resetui-component-id="sec-02-section-svg-2"><path d="m9 18 6-6-6-6"></path></svg>
+      </div>
+    </div>
+  </section>
+<section id="demo" data-section-index="3" data-section-kind="section" data-resetui-plan-id="plan-content-3" class="relative w-full bg-[#fcfbf9] py-24 text-[#171717]" data-resetui-section-id="sec-03-section">
+    <div class="mx-auto w-full max-w-[1200px] px-20">
+      <div class="mb-14 text-center">
+        <span class="reveal font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.35em] text-[#4338ca]" style="animation-delay:0.05s">Demo</span>
+        <h2 class="reveal mt-4 font-['Playfair_Display',serif] text-[48px] md:text-[56px] font-bold leading-[1.08] tracking-[-0.03em]" style="animation-delay:0.12s" data-resetui-component-id="sec-03-section-h2-1">How to <em class="italic text-[#4338ca]">use?</em></h2>
+        <p class="reveal mx-auto mt-5 max-w-[58ch] text-lg leading-[1.6] text-[#555555]" style="animation-delay:0.18s">See how quickly you can turn a plain screenshot into a polished, share-ready visual in just a few simple steps.</p>
+      </div>
+      <div class="reveal mx-auto max-w-[900px] overflow-hidden rounded-2xl border border-[#e5e5e5] bg-[#fffefa] shadow-[0_24px_70px_-20px_rgba(0,0,0,0.08)]" style="animation-delay:0.2s">
+        <video src="https://oafigsv8yj.ufs.sh/f/b7ZUAnePqlpytW3Ihy0xgVAZYImiqoaSQdtbepBrT58HOzGn" controls class="block aspect-video w-full object-cover" data-resetui-component-id="sec-03-section-video-1"></video>
+      </div>
+    </div>
+  </section>
+<section id="features" data-section-index="4" data-section-kind="section" data-resetui-plan-id="plan-content-4" class="relative w-full bg-[#fffefa] py-24 text-[#171717]" data-resetui-section-id="sec-04-section">
+    <div class="mx-auto w-full max-w-[1200px] px-20">
+      <div class="mb-16 text-center">
+        <span class="reveal font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.35em] text-[#4338ca]" style="animation-delay:0.05s">Capabilities</span>
+        <h2 class="reveal mt-4 font-['Playfair_Display',serif] text-[44px] font-bold leading-[1.1] tracking-[-0.02em]" style="animation-delay:0.12s" data-resetui-component-id="sec-04-section-h2-1">Our <em class="italic text-[#4338ca]">Features</em></h2>
+        <p class="reveal mx-auto mt-5 max-w-[58ch] text-lg leading-[1.6] text-[#555555]" style="animation-delay:0.2s">Everything you need to create polished screenshots, social graphics, and product visuals without complicated design tools.</p>
+      </div>
+
+      <div class="grid grid-cols-2 items-start gap-16">
+        <div class="reveal sticky top-32" style="animation-delay:0.2s">
+          <div class="overflow-hidden rounded-2xl border border-[#e5e5e5] shadow-[0_24px_70px_-20px_rgba(0,0,0,0.08)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.02] hover:-translate-y-4 hover:shadow-[0_30px_80px_-20px_rgba(67,56,202,0.18)]">
+            <img src="https://oafigsv8yj.ufs.sh/f/b7ZUAnePqlpyylm8SbrOaY74Vr8RCTFEtLPwmzHvpUixufGe" alt="Image editor preview" class="block aspect-[3/2] w-full object-cover" data-resetui-component-id="sec-04-section-img-1">
+          </div>
+        </div>
+
+        <div class="reveal flex flex-col gap-4" style="animation-delay:0.28s">
+          <details class="group rounded-2xl border border-[#e5e5e5] bg-[#fcfbf9] p-6 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] open:border-[#4338ca]/30 open:bg-white open:shadow-[0_12px_40px_-16px_rgba(67,56,202,0.12)]" open>
+            <summary class="flex cursor-pointer list-none items-center justify-between">
+              <span class="flex items-center gap-3 font-['Playfair_Display',serif] text-xl font-semibold text-[#171717]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-1"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" x2="12" y2="15"></line></svg>
+                Social Banners
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#555555] transition-transform duration-500 group-open:rotate-45" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+            </summary>
+            <p class="mt-4 leading-relaxed text-[#555555]" data-resetui-component-id="sec-04-section-p-1">Transform your screenshots into professional banners for social media and beyond</p>
+          </details>
+
+          <details class="group rounded-2xl border border-[#e5e5e5] bg-[#fcfbf9] p-6 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] open:border-[#4338ca]/30 open:bg-white open:shadow-[0_12px_40px_-16px_rgba(67,56,202,0.12)]">
+            <summary class="flex cursor-pointer list-none items-center justify-between">
+              <span class="flex items-center gap-3 font-['Playfair_Display',serif] text-xl font-semibold text-[#171717]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-3"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                Platform Ready
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#555555] transition-transform duration-500 group-open:rotate-45" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-4"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+            </summary>
+            <p class="mt-4 leading-relaxed text-[#555555]" data-resetui-component-id="sec-04-section-p-2">Create stunning banners for Product Hunt, LinkedIn, Twitter, and more</p>
+          </details>
+
+          <details class="group rounded-2xl border border-[#e5e5e5] bg-[#fcfbf9] p-6 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] open:border-[#4338ca]/30 open:bg-white open:shadow-[0_12px_40px_-16px_rgba(67,56,202,0.12)]">
+            <summary class="flex cursor-pointer list-none items-center justify-between">
+              <span class="flex items-center gap-3 font-['Playfair_Display',serif] text-xl font-semibold text-[#171717]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-5"><circle cx="13.5" cy="6.5" r="2.5"></circle><path d="M13.5 9 9 22l4.5-3.5L18 22Z"></path></svg>
+                Custom Styling
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#555555] transition-transform duration-500 group-open:rotate-45" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-6"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+            </summary>
+            <p class="mt-4 leading-relaxed text-[#555555]" data-resetui-component-id="sec-04-section-p-3">Add Backgrounds, and custom styling options</p>
+          </details>
+
+          <details class="group rounded-2xl border border-[#e5e5e5] bg-[#fcfbf9] p-6 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] open:border-[#4338ca]/30 open:bg-white open:shadow-[0_12px_40px_-16px_rgba(67,56,202,0.12)]">
+            <summary class="flex cursor-pointer list-none items-center justify-between">
+              <span class="flex items-center gap-3 font-['Playfair_Display',serif] text-xl font-semibold text-[#171717]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-7"><path d="m21 16-4 4-4-4"></path><path d="M17 20V4"></path><path d="m3 8 4-4 4 4"></path><path d="M7 4v16"></path></svg>
+                3D Effects
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#555555] transition-transform duration-500 group-open:rotate-45" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-8"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+            </summary>
+            <p class="mt-4 leading-relaxed text-[#555555]" data-resetui-component-id="sec-04-section-p-4">Apply 3D perspectives and isometric effects to make images stand out</p>
+          </details>
+
+          <details class="group rounded-2xl border border-[#e5e5e5] bg-[#fcfbf9] p-6 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] open:border-[#4338ca]/30 open:bg-white open:shadow-[0_12px_40px_-16px_rgba(67,56,202,0.12)]">
+            <summary class="flex cursor-pointer list-none items-center justify-between">
+              <span class="flex items-center gap-3 font-['Playfair_Display',serif] text-xl font-semibold text-[#171717]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-9"><path d="M6 3v18"></path><path d="M18 3v18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
+                Aspect Ratios
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#555555] transition-transform duration-500 group-open:rotate-45" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-10"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+            </summary>
+            <p class="mt-4 leading-relaxed text-[#555555]" data-resetui-component-id="sec-04-section-p-5">Download in multiple aspect ratios (16:9, 9:16, 1:1, etc.)</p>
+          </details>
+
+          <details class="group rounded-2xl border border-[#e5e5e5] bg-[#fcfbf9] p-6 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] open:border-[#4338ca]/30 open:bg-white open:shadow-[0_12px_40px_-16px_rgba(67,56,202,0.12)]">
+            <summary class="flex cursor-pointer list-none items-center justify-between">
+              <span class="flex items-center gap-3 font-['Playfair_Display',serif] text-xl font-semibold text-[#171717]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-11"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                No Watermarks
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[#555555] transition-transform duration-500 group-open:rotate-45" aria-hidden="true" data-resetui-component-id="sec-04-section-svg-12"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+            </summary>
+            <p class="mt-4 leading-relaxed text-[#555555]" data-resetui-component-id="sec-04-section-p-6">Clean exports with no watermarks, what you create is yours</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+<section id="pricing" data-section-index="5" data-section-kind="section" data-resetui-plan-id="plan-content-5" class="relative w-full bg-[#f6f3ee] py-24 text-[#171717]" data-resetui-section-id="sec-05-section">
+    <div class="mx-auto w-full max-w-[1200px] px-20">
+      <div class="mb-14 text-center">
+        <span class="reveal font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.35em] text-[#4338ca]" style="animation-delay:0.05s">Pricing</span>
+        <h2 class="reveal mt-4 font-['Playfair_Display',serif] text-[44px] font-bold leading-[1.1] tracking-[-0.02em]" style="animation-delay:0.12s" data-resetui-component-id="sec-05-section-h2-1">Simple <em class="italic text-[#4338ca]">Pricing</em></h2>
+        <p class="reveal mx-auto mt-5 max-w-[55ch] text-lg leading-[1.6] text-[#555555]" style="animation-delay:0.2s" data-resetui-component-id="sec-05-section-p-1">Pay once, use forever. No subscriptions.</p>
+      </div>
+
+      <div class="reveal mx-auto max-w-[880px]" style="animation-delay:0.28s">
+        <div class="mb-10 grid grid-cols-2 gap-6">
+          <div class="rounded-2xl border border-[#e5e5e5] bg-[#fffefa] p-8 shadow-[0_12px_40px_-20px_rgba(0,0,0,0.06)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 hover:shadow-[0_20px_50px_-16px_rgba(67,56,202,0.12)]">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#ede9fe] text-[#4338ca]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true" data-resetui-component-id="sec-05-section-svg-1"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+            </div>
+            <h3 class="mt-5 font-['Playfair_Display',serif] text-2xl font-semibold" data-resetui-component-id="sec-05-section-h3-1">Lightning Fast Workflow</h3>
+            <p class="mt-3 leading-relaxed text-[#555555]" data-resetui-component-id="sec-05-section-p-2">Don't waste time saving files. Copy directly to your clipboard and paste into Twitter, Slack, or Figma.</p>
+          </div>
+          <div class="rounded-2xl border border-[#e5e5e5] bg-[#fffefa] p-8 shadow-[0_12px_40px_-20px_rgba(0,0,0,0.06)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 hover:shadow-[0_20px_50px_-16px_rgba(67,56,202,0.12)]">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#ede9fe] text-[#4338ca]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true" data-resetui-component-id="sec-05-section-svg-2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+            </div>
+            <h3 class="mt-5 font-['Playfair_Display',serif] text-2xl font-semibold" data-resetui-component-id="sec-05-section-h3-2">Professional 4K Output</h3>
+            <p class="mt-3 leading-relaxed text-[#555555]" data-resetui-component-id="sec-05-section-p-3">Generate crisp, high-resolution images suitable for print, web, and marketing materials without pixelation.</p>
+          </div>
+        </div>
+
+        <div class="overflow-hidden rounded-3xl border border-[#e5e5e5] bg-[#fffefa] shadow-[0_24px_70px_-20px_rgba(0,0,0,0.08)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 hover:shadow-[0_30px_80px_-20px_rgba(67,56,202,0.18)]">
+          <div class="h-1.5 bg-[#4338ca]"></div>
+          <div class="p-10">
+            <div class="flex items-center justify-between">
+              <span class="font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.3em] text-[#4338ca]">Pro Lifetime</span>
+              <span class="rounded-full bg-[#ede9fe] px-3 py-1 text-xs font-semibold text-[#4338ca]">Early Bird</span>
+            </div>
+            <p class="mt-3 text-sm text-[#555555]" data-resetui-component-id="sec-05-section-p-4">One-time payment. Unlock professional power tools.</p>
+            <div class="mt-5 flex items-end gap-4">
+              <span class="font-['Playfair_Display',serif] text-6xl font-bold tracking-tight text-[#171717]">$19</span>
+              <span class="mb-3 text-[#555555]">one-time</span>
+              <span class="mb-3 text-sm text-[#555555] line-through decoration-[#555555]/50">$29</span>
+            </div>
+
+            <p class="mt-8 font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.3em] text-[#555555]" data-resetui-component-id="sec-05-section-p-5">PRO FEATURES:</p>
+            <ul class="mt-5 grid grid-cols-2 gap-4" data-resetui-component-id="sec-05-section-ul-1">
+              <li class="flex items-start gap-3 text-sm text-[#555555]" data-resetui-component-id="sec-05-section-li-1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 h-4 w-4 flex-shrink-0 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-05-section-svg-3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                4K Ultra-HD Exports
+              </li>
+              <li class="flex items-start gap-3 text-sm text-[#555555]" data-resetui-component-id="sec-05-section-li-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 h-4 w-4 flex-shrink-0 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-05-section-svg-4"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                PNG Downloads
+              </li>
+              <li class="flex items-start gap-3 text-sm text-[#555555]" data-resetui-component-id="sec-05-section-li-3">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 h-4 w-4 flex-shrink-0 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-05-section-svg-5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                3D animations in Device Mockups
+              </li>
+              <li class="flex items-start gap-3 text-sm text-[#555555]" data-resetui-component-id="sec-05-section-li-4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 h-4 w-4 flex-shrink-0 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-05-section-svg-6"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                One-Click Copy to Clipboard
+              </li>
+              <li class="flex items-start gap-3 text-sm text-[#555555]" data-resetui-component-id="sec-05-section-li-5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 h-4 w-4 flex-shrink-0 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-05-section-svg-7"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Priority Support
+              </li>
+              <li class="flex items-start gap-3 text-sm text-[#555555]" data-resetui-component-id="sec-05-section-li-6">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 h-4 w-4 flex-shrink-0 text-[#4338ca]" aria-hidden="true" data-resetui-component-id="sec-05-section-svg-8"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                All Future Pro Updates Included
+              </li>
+            </ul>
+
+            <a href="mailto:teja@getsnapshots.app?subject=Upgrade to Pro" class="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-[#4338ca] py-4 text-sm font-semibold text-white shadow-[0_10px_40px_-12px_rgba(67,56,202,0.35)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#4f46e5] hover:scale-[1.02]" data-resetui-component-id="sec-05-section-a-1">
+              Upgrade to Pro
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true" data-resetui-component-id="sec-05-section-svg-9"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+            <p class="mt-4 text-center text-xs leading-relaxed text-[#555555]" data-resetui-component-id="sec-05-section-p-6">Important: Please Sign In with your email account before upgrading so we can link your license.</p>
+            <p class="mt-2 text-center text-xs text-[#555555]" data-resetui-component-id="sec-05-section-p-7">Secure payment via Dodo Payments</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<section data-section-index="6" data-section-kind="section" data-resetui-plan-id="plan-content-6" class="relative w-full bg-[#171717] py-24 text-[#fcfbf9]" data-resetui-section-id="sec-06-section">
+    <div class="mx-auto w-full max-w-[1200px] px-20">
+      <div class="grid grid-cols-2 items-center gap-16">
+        <div class="reveal" style="animation-delay:0.12s">
+          <span class="font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.35em] text-[#c7d2fe]">Device Mockups</span>
+          <h2 class="mt-4 font-['Playfair_Display',serif] text-[44px] font-bold leading-[1.1] tracking-[-0.02em]" data-resetui-component-id="sec-06-section-h2-1">Transform Your Designs Into <em class="italic text-[#c7d2fe]">Stunning Mockups</em></h2>
+          <p class="mt-6 max-w-[55ch] text-lg leading-[1.6] text-[#e5e5e5]" data-resetui-component-id="sec-06-section-p-1">Showcase your apps, websites, and designs in realistic device frames that impress clients and boost conversions.</p>
+          <div class="mt-10 flex items-center gap-6">
+            <a href="https://www.getsnapshots.app/image-editor" class="group inline-flex items-center gap-2 rounded-full bg-[#4338ca] px-8 py-4 text-sm font-semibold text-white shadow-[0_10px_40px_-12px_rgba(79,70,229,0.35)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#4f46e5] hover:scale-[1.03]" data-resetui-component-id="sec-06-section-a-1">
+              Start Creating Now
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" aria-hidden="true" data-resetui-component-id="sec-06-section-svg-1"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+            <a href="https://www.getsnapshots.app/#demo" class="group inline-flex items-center gap-2 text-sm font-semibold text-[#fcfbf9] transition-colors hover:text-[#c7d2fe]" data-resetui-component-id="sec-06-section-a-2">
+              See How It Works
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" aria-hidden="true" data-resetui-component-id="sec-06-section-svg-2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="reveal" style="animation-delay:0.24s">
+          <div class="overflow-hidden rounded-2xl border border-white/10 bg-[#242424] shadow-[0_24px_70px_-20px_rgba(0,0,0,0.4)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.02] hover:-translate-y-4 hover:shadow-[0_30px_80px_-20px_rgba(79,70,229,0.25)]">
+            <img src="https://oafigsv8yj.ufs.sh/f/b7ZUAnePqlpy7yxbcl3F9dqpufcTQOVLi4jYUrw86PAv3s2X" alt="Landing preview" class="block aspect-[3/2] w-full object-cover" data-resetui-component-id="sec-06-section-img-1">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<footer data-section-index="7" data-section-kind="footer" data-resetui-plan-id="plan-footer" class="relative w-full bg-[#fcfbf9] px-4 py-10 md:px-8 md:py-14 text-[#fcfbf9]" data-resetui-section-id="sec-07-footer">
+    <div class="mx-auto w-full max-w-[1320px] rounded-[36px] md:rounded-[52px] border border-black/5 bg-[#242424] px-6 py-14 md:px-12 md:py-16 lg:px-20 lg:py-20 shadow-[0_24px_70px_-24px_rgba(0,0,0,0.28)]">
+      <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <a href="https://www.getsnapshots.app/" class="flex items-center gap-3" data-resetui-component-id="sec-07-footer-a-1">
+            <img src="https://res.cloudinary.com/ddokaqkrl/image/upload/ydkdylpnkixslghyylig.png" alt="Snap Shots Logo" class="block h-10 w-auto" data-resetui-component-id="sec-07-footer-img-1">
+            <span class="font-['Playfair_Display',serif] text-xl font-semibold tracking-tight">Getsnapshots</span>
+          </a>
+          <p class="mt-6 max-w-[32ch] text-sm leading-relaxed text-[#e5e5e5]/80" data-resetui-component-id="sec-07-footer-p-1">Turn any screenshot into a stunning visual with overlays, padding, aspect ratios, and 3D effects, fast and simple.</p>
+          <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" alt="Fazier badge" class="mt-6 block h-11 w-auto rounded-md" data-resetui-component-id="sec-07-footer-img-2">
+        </div>
+
+        <div>
+          <h4 class="font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.3em] text-[#c7d2fe]" data-resetui-component-id="sec-07-footer-h4-1">Product</h4>
+          <ul class="mt-6 space-y-3 text-sm text-[#e5e5e5]/80" data-resetui-component-id="sec-07-footer-ul-1">
+            <li data-resetui-component-id="sec-07-footer-li-1"><a href="https://www.getsnapshots.app/" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-2">Snap Shots</a></li>
+            <li data-resetui-component-id="sec-07-footer-li-2"><a href="https://www.getsnapshots.app/screenshots" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-3">Screen Shots</a></li>
+            <li data-resetui-component-id="sec-07-footer-li-3"><a href="https://www.getsnapshots.app/social-media-banner" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-4">Social Media Banner</a></li>
+            <li data-resetui-component-id="sec-07-footer-li-4"><a href="https://www.getsnapshots.app/product-showcase" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-5">Product Showcase</a></li>
+            <li data-resetui-component-id="sec-07-footer-li-5"><a href="https://www.getsnapshots.app/#pricing" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-6">Pricing</a></li>
+            <li data-resetui-component-id="sec-07-footer-li-6"><a href="https://www.getsnapshots.app/#features" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-7">Features</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.3em] text-[#c7d2fe]" data-resetui-component-id="sec-07-footer-h4-2">Connect</h4>
+          <ul class="mt-6 space-y-3 text-sm text-[#e5e5e5]/80" data-resetui-component-id="sec-07-footer-ul-2">
+            <li data-resetui-component-id="sec-07-footer-li-7"><a href="https://twitter.com/rtrdev7" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-8">twitter</a></li>
+            <li data-resetui-component-id="sec-07-footer-li-8"><a href="mailto:teja@getsnapshots.app" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-9">contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.3em] text-[#c7d2fe]" data-resetui-component-id="sec-07-footer-h4-3">Legal</h4>
+          <ul class="mt-6 space-y-3 text-sm text-[#e5e5e5]/80" data-resetui-component-id="sec-07-footer-ul-3">
+            <li data-resetui-component-id="sec-07-footer-li-9"><a href="https://www.getsnapshots.app/tos" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-10">Terms of services</a></li>
+            <li data-resetui-component-id="sec-07-footer-li-10"><a href="https://www.getsnapshots.app/privacy" class="transition-colors hover:text-[#fcfbf9]" data-resetui-component-id="sec-07-footer-a-11">Privacy policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-16 flex items-center justify-between border-t border-white/10 pt-8">
+        <p class="text-sm text-[#e5e5e5]/60" data-resetui-component-id="sec-07-footer-p-2">© 2025 SnapShot. All rights reserved</p>
+      </div>
+    </div>
+  </footer>
+</div>
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  var DURATION = 260;
+  document.querySelectorAll('details').forEach(function (d) {
+    var summary = d.querySelector('summary');
+    if (!summary) return;
+    summary.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (d.dataset.animating === '1') return;
+      d.dataset.animating = '1';
+      var collapsed = summary.offsetHeight;
+      function clear() {
+        d.style.height = ''; d.style.overflow = ''; d.style.transition = '';
+        delete d.dataset.animating;
+      }
+      function animate(from, to, after) {
+        d.style.overflow = 'hidden';
+        d.style.height = from + 'px';
+        void d.offsetHeight; // force reflow so the transition runs
+        d.style.transition = 'height ' + DURATION + 'ms ease';
+        d.style.height = to + 'px';
+        window.setTimeout(function () { if (after) after(); clear(); }, DURATION + 30);
+      }
+      if (d.open) {
+        animate(d.scrollHeight, collapsed, function () { d.open = false; });
+      } else {
+        d.open = true;
+        animate(collapsed, d.scrollHeight, null);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

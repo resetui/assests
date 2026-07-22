@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResetUI | Agentic Landing Page Redesign</title>
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Fonts: Chivo Mono + Instrument Sans (Google), Geist Pixel Square (Vercel CDN), Chalet (local w/ Helvetica fallback) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: "#0a0a0a",
+          cream: "#f0ede6",
+          ember: "#ed452e",
+          emberdark: "#d93d26",
+          go: "#21c45e",
+          volt: "#2b4fff",
+        },
+        fontFamily: {
+          chalet: ["Chalet", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+          pixel: ["Geist Pixel Square", "Chivo Mono", "monospace"],
+          mono: ["Chivo Mono", "ui-monospace", "monospace"],
+          sans: ["Instrument Sans", "Helvetica Neue", "Arial", "sans-serif"],
+        },
+      },
+    },
+  };
+</script>
+
+<style type="text/css">
+  /* ============ FONTS ============ */
+  /* Geist Pixel Square — free (OFL), served from the official npm package */
+  @font-face {
+    font-family: "Geist Pixel Square";
+    src: url("https://cdn.jsdelivr.net/npm/geist@1.7.2/dist/fonts/geist-pixel/GeistPixel-Square.woff2") format("woff2");
+    font-weight: 100 900;
+    font-display: swap;
+  }
+  /* Chalet is a commercial face (House Industries). It is picked up automatically
+     if installed locally; otherwise Helvetica Neue is the metric-compatible fallback. */
+  @font-face {
+    font-family: "Chalet";
+    src: local("Chalet New York Nineteen Sixty"), local("Chalet-NewYorkNineteenSixty"), local("Chalet");
+    font-display: swap;
+  }
+
+  html { width: 100%; max-width: 100%; overflow-x: clip; background: #0a0a0a; }
+  body { margin: 0; width: 100%; max-width: 100%; overflow-x: clip; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: #ed452e; }
+  ::selection { background: #ed452e; color: #0a0a0a; }
+
+  /* ============ COMPONENTS ============ */
+  .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 9px 16px;
+    background: rgba(10, 10, 10, .88);
+    border: 1px solid rgba(237, 69, 46, .2);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    font-family: "Chivo Mono", monospace;
+    font-size: 12px; line-height: 1; letter-spacing: 1.44px; text-transform: uppercase;
+    color: #ed452e; white-space: nowrap;
+  }
+  .badge i {
+    width: 8px; height: 8px; background: #ed452e; flex: none;
+    animation: badgeblink 2.4s steps(1) infinite;
+  }
+  @keyframes badgeblink { 0%, 100% { opacity: 1 } 50% { opacity: .35 } }
+
+  .content-shell { width: min(1200px, calc(100% - 40px)); margin-inline: auto; }
+  .content-shell-absolute { left: 50%; width: min(1200px, calc(100% - 40px)); transform: translateX(-50%); }
+  .page-rail-left { left: max(20px, calc((100% - 1200px) / 2)); }
+  .page-rail-right { right: max(20px, calc((100% - 1200px) / 2)); }
+  .hrule { width: min(1200px, calc(100% - 40px)); height: 1px; background: rgba(240, 237, 230, .14); margin: 0 auto; }
+  .break-free-cta { max-width: calc(100% - 32px); }
+
+  /* Hero background video */
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 1;
+    pointer-events: none;
+  }
+  .hero-video-shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(10, 10, 10, .68) 0%, rgba(10, 10, 10, .38) 58%, rgba(10, 10, 10, .25) 100%),
+      linear-gradient(180deg, rgba(10, 10, 10, .16) 0%, rgba(10, 10, 10, .03) 54%, rgba(10, 10, 10, .52) 100%);
+    pointer-events: none;
+  }
+
+  @media (max-width: 1023px) {
+    .hero-title { font-size: clamp(58px, 10vw, 84px) !important; letter-spacing: -3px !important; }
+    .problem-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-rows: auto !important; }
+    .problem-grid > * { grid-column: auto !important; grid-row: auto !important; }
+    .problem-grid > :first-child { grid-column: 1 / -1; grid-row: auto; min-height: 380px; border-left: 0; border-right: 0; border-bottom: 1px solid rgba(240,237,230,.14); }
+    .problem-grid > :nth-child(2), .problem-grid > :nth-child(4) { border-right: 1px solid rgba(240,237,230,.14); }
+    .problem-grid > :nth-child(2), .problem-grid > :nth-child(3), .problem-grid > :nth-child(4) { border-bottom: 1px solid rgba(240,237,230,.14); }
+    .offline-section { height: auto !important; }
+    .offline-divider { display: none; }
+    .offline-layout { min-height: 720px; flex-direction: column; justify-content: center; padding-block: 48px; }
+    .feature-triptych { height: auto !important; grid-template-columns: 1fr !important; }
+    .feature-triptych > :nth-child(2), .feature-triptych > :nth-child(4) { display: none; }
+    .feature-triptych > div { min-height: 200px; border-bottom: 1px solid rgba(240,237,230,.14); }
+    .approach-grid { grid-template-columns: 1fr !important; }
+    .approach-grid > :last-child { margin-left: 0; height: 600px; }
+    .cap-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .pricing-grid { grid-template-columns: 1fr !important; }
+    .testimonial-track { grid-auto-columns: 100% !important; }
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .device-blueprint { width: min(630px, calc(100% - 40px)) !important; }
+    .device-blueprint > .blueprint-note { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 48px; }
+    .footer-grid > :first-child { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 639px) {
+    .content-shell, .hrule { width: calc(100% - 32px); }
+    .content-shell-absolute { width: calc(100% - 32px); }
+    .page-rail-left { left: 16px; }
+    .page-rail-right { right: 16px; }
+    .hero-copy { padding: 64px 0 48px !important; }
+    .hero-title { font-size: clamp(44px, 15vw, 64px) !important; line-height: .98 !important; letter-spacing: -2px !important; }
+    .hero-lede { width: 100% !important; font-size: 16px !important; }
+    .hero-actions { flex-direction: column; align-items: stretch; }
+    .hero-actions a { justify-content: center; }
+    main h2 { font-size: 40px !important; line-height: 1 !important; letter-spacing: -1.3px !important; }
+    .problem-grid { grid-template-columns: 1fr !important; }
+    .problem-grid > :first-child { min-height: 320px; }
+    .problem-grid > :nth-child(2), .problem-grid > :nth-child(4) { border-right: 0; }
+    .offline-layout { padding-inline: 0 !important; }
+    .offline-visual { width: 100% !important; transform: scale(.72); margin-block: -70px; }
+    .offline-copy, .offline-copy p { width: 100% !important; }
+    .approach-grid > :last-child { height: 520px; }
+    .model-card { width: calc(100% - 32px) !important; padding: 24px !important; }
+    .cap-grid, .stats-grid, .footer-grid { grid-template-columns: 1fr !important; }
+    .cap-grid { padding-inline: 0 !important; }
+    .pricing-card, .testimonial-card { min-height: auto !important; }
+    .faq-list { margin-inline: 0 !important; }
+    .faq { padding-inline: 20px !important; }
+    .footer-inner { padding-inline: 0 !important; }
+    .footer-grid > :first-child { grid-column: auto; }
+    .break-free-title span { font-size: 54px !important; line-height: .98 !important; letter-spacing: -1.8px !important; }
+  }
+
+  /* hero ticker */
+  @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+  .ticker-track { display: flex; width: max-content; animation: marquee 32s linear infinite; }
+  .ticker-track:hover { animation-play-state: paused; }
+  .ticker-item { text-shadow: 0 0 .5px #0a0a0a; }
+
+  /* Restrained button hover: no offset shadow or positional movement. */
+  .btn-hard,
+  .btn-hard-ember {
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease, opacity .2s ease, filter .2s ease;
+  }
+  .btn-hard:hover {
+    box-shadow: none;
+    transform: none;
+    filter: brightness(.9);
+  }
+  .btn-hard-ember:hover {
+    box-shadow: none;
+    transform: none;
+    opacity: .82;
+  }
+
+  /* scroll reveal */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.2,.6,.2,1), transform .7s cubic-bezier(.2,.6,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* terminal caret */
+  @keyframes caret { 0%, 49% { opacity: 1 } 50%, 100% { opacity: 0 } }
+  .caret { display: inline-block; width: 8px; height: 15px; background: #ed452e; vertical-align: -2px; animation: caret 1s steps(1) infinite; }
+
+  /* status dots */
+  @keyframes glowpulse { 0%, 100% { box-shadow: 0 0 8px 0 rgba(237,69,46,.4) } 50% { box-shadow: 0 0 10px 2px rgba(237,69,46,.75) } }
+  .dot-glow { animation: glowpulse 2s ease-in-out infinite; }
+
+  /* diagram connector flow */
+  @keyframes dashflow { to { stroke-dashoffset: -24; } }
+  .flowline { stroke-dasharray: 6 6; animation: dashflow 1.2s linear infinite; }
+  @keyframes severedpulse { 0%, 100% { opacity: .4 } 50% { opacity: 1 } }
+  .severed { animation: severedpulse 2.2s ease-in-out infinite; }
+
+  /* globe idle drift */
+  @keyframes dashdrift { to { stroke-dashoffset: 120; } }
+  .globe-drift { animation: dashdrift 14s linear infinite; }
+
+  /* capability cards */
+  .cap-card { transition: background-color .2s ease, border-color .2s ease, transform .2s ease; }
+  .cap-card:hover { background: rgba(237, 69, 46, .03); border-color: rgba(237, 69, 46, .2); transform: translateY(-2px); }
+
+  .pricing-card, .testimonial-card { transition: background-color .2s ease, border-color .2s ease, transform .2s ease; }
+  .pricing-card:hover, .testimonial-card:hover { background: rgba(237, 69, 46, .03); border-color: rgba(237, 69, 46, .2); transform: translateY(-2px); }
+  .testimonial-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 48px) / 3);
+    gap: 24px;
+    transition: transform .45s cubic-bezier(.2,.6,.2,1);
+    will-change: transform;
+  }
+  .testimonial-nav:disabled { opacity: .28; cursor: not-allowed; }
+  .testimonial-nav:disabled:hover { box-shadow: none; transform: none; }
+
+  /* how-it-works steps */
+  .step .step-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.2,.6,.2,1); }
+  .step.active .step-body { grid-template-rows: 1fr; }
+  .step .step-num { color: rgba(240, 237, 230, .25); transition: color .3s; }
+  .step .step-title { color: rgba(240, 237, 230, .35); transition: color .3s; }
+  .step.active .step-num { color: #ed452e; }
+  .step.active .step-title { color: #f0ede6; }
+  .step .step-bar { background: rgba(240, 237, 230, .08); transition: background .3s; }
+  .step.active .step-bar { background: #ed452e; }
+
+  /* FAQ accordion */
+  .faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s cubic-bezier(.2,.6,.2,1); }
+  .faq.open .faq-body { grid-template-rows: 1fr; }
+  .faq-chev { transition: transform .3s ease; }
+  .faq.open .faq-chev { transform: rotate(180deg); }
+  .faq:hover { background: rgba(255, 255, 255, .02); }
+
+  /* CTA */
+  @keyframes ctaglow { 0%, 100% { box-shadow: 0 0 40px 0 rgba(237,69,46,.4) } 50% { box-shadow: 0 0 56px 6px rgba(237,69,46,.6) } }
+  .cta-btn { animation: ctaglow 3s ease-in-out infinite; transition: background-color .2s ease, filter .2s ease; }
+  .cta-btn:hover { transform: none; background: #d93d26; filter: brightness(.95); }
+</style>
+</head>
+
+<body class="bg-ink font-sans text-cream">
+<div id="page" class="relative w-full max-w-full overflow-x-clip bg-ink">
+
+  <!-- full-height vertical rails at x=120 / x=1320 -->
+  <div class="page-rail-left pointer-events-none absolute inset-y-0 z-[1] w-px bg-cream/[0.14]"></div>
+  <div class="page-rail-right pointer-events-none absolute inset-y-0 z-[1] w-px bg-cream/[0.14]"></div>
+
+  <!-- ================================================================
+       HERO — full red viewport
+  ================================================================= -->
+  <header class="relative z-[2] overflow-hidden bg-ink text-cream">
+    <!-- Decorative video background. The gradient keeps foreground copy legible. -->
+    <div class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" tabindex="-1">
+        <source src="https://7xkytvucp2.ufs.sh/f/m4bRQHrXdK3UO3oSJPy84ZUAmJVSzydN5TExbp6hlc9ruDHa" type="video/webm">
+      </video>
+      <div class="hero-video-shade"></div>
+    </div>
+
+    <!-- nav -->
+    <nav class="content-shell relative z-10 flex h-[86px] items-center justify-between">
+      <a href="#" class="font-pixel text-[26px] leading-none tracking-tight text-cream hover:text-cream"><img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="mr-2 inline-block h-7 w-7 rounded-full object-cover align-middle"><span class="align-middle">ResetUI</span></a>
+      <div class="flex items-center gap-8">
+        <a href="#" class="btn-hard-ember font-mono text-[12px] font-bold tracking-[0.6px] text-cream/70 hover:text-cream">Templates</a>
+        <a href="#early-access" class="btn-hard-ember bg-ember px-[19px] py-3 font-mono text-[12px] font-bold tracking-[0.6px] text-ink hover:text-ink">Start Free</a>
+      </div>
+    </nav>
+
+    <!-- hero copy -->
+    <div class="content-shell hero-copy relative z-10 px-12 pb-[64px] pt-[96px]">
+      <h1 class="hero-title reveal m-0 font-chalet text-[106px] font-bold leading-[0.93] tracking-[-4.5px] text-cream">
+        Agentic web design.<br>Real context. Production code.
+      </h1>
+      <p class="hero-lede reveal mt-10 w-[476px] max-w-full font-sans text-[18.4px] font-semibold leading-[1.6] text-cream/75">
+        ResetUI captures an existing landing page, plans a fresh visual direction, and generates editable, production-ready front-end code.
+      </p>
+      <div class="hero-actions reveal mt-10 flex gap-4">
+        <a href="#early-access" class="btn-hard inline-flex items-center bg-ember px-8 py-4 font-mono text-[13.6px] font-bold text-ink hover:text-ink">Start Free</a>
+        <a href="#approach" class="btn-hard inline-flex items-center border border-cream/30 px-8 py-4 font-mono text-[13.6px] font-bold text-cream hover:text-cream">See Workflow</a>
+      </div>
+    </div>
+
+    <!-- ticker -->
+    <div class="relative z-10 overflow-hidden border-y border-cream/[0.14] py-3">
+      <div class="ticker-track gap-16 pr-16 opacity-70">
+        <!-- track A -->
+        <div class="flex shrink-0 items-center gap-16">
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Source capture</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Creative planning</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Full-page generation</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Project-aware chat</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Recoverable versions</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Production export</span><span>•</span>
+        </div>
+        <!-- track B (duplicate for seamless loop) -->
+        <div class="flex shrink-0 items-center gap-16" aria-hidden="true">
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Source capture</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Creative planning</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Full-page generation</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Project-aware chat</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Recoverable versions</span><span>•</span>
+          <span class="ticker-item font-pixel text-[13px] uppercase tracking-[1.3px]">Production export</span><span>•</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-[2]">
+
+    <!-- ================================================================
+         THE PROBLEM — bordered grid
+    ================================================================= -->
+    <section class="mt-16">
+      <div class="hrule"></div>
+      <div class="content-shell border-x-0">
+        <!-- top: badge + headline -->
+        <div class="flex flex-col items-center px-12 pb-10 pt-12">
+          <div class="badge reveal"><i></i><span>The problem</span></div>
+          <h2 class="reveal mt-[30px] w-full font-chalet text-[66px] font-bold leading-[0.98] tracking-[-2.1px] text-cream">
+            Generic AI misses your page.<br>And your brand pays for it.
+          </h2>
+        </div>
+        <div class="h-px w-full bg-cream/[0.14]"></div>
+
+        <!-- bottom: illustration + 2x2 grid -->
+        <div class="problem-grid grid grid-cols-[400px_400px_400px] grid-rows-[210px_210px]">
+          <!-- surveillance texture (spans both rows) -->
+          <div class="col-start-2 row-span-2 row-start-1 flex items-center justify-center border-x border-cream/[0.14]">
+            <svg id="surveil" viewBox="0 0 380 380" class="h-[380px] w-[380px]">
+              <g stroke="#f0ede6" fill="none" opacity="0.28">
+                <circle cx="190" cy="190" r="174" stroke-width="0.4"/>
+                <circle cx="190" cy="190" r="142" stroke-width="0.4"/>
+                <circle cx="190" cy="190" r="111" stroke-width="0.4"/>
+                <circle cx="190" cy="190" r="79" stroke-width="0.4"/>
+                <circle cx="190" cy="190" r="47" stroke-width="0.4"/>
+                <line x1="190" y1="0" x2="190" y2="380" stroke-width="0.24"/>
+                <line x1="0" y1="190" x2="380" y2="190" stroke-width="0.24"/>
+                <!-- tick marks -->
+                <g stroke-width="0.32">
+                  <line x1="190" y1="16" x2="190" y2="28"/><line x1="190" y1="352" x2="190" y2="364"/>
+                  <line x1="16" y1="190" x2="28" y2="190"/><line x1="352" y1="190" x2="364" y2="190"/>
+                  <line x1="313" y1="67" x2="304" y2="76"/><line x1="67" y1="67" x2="76" y2="76"/>
+                  <line x1="313" y1="313" x2="304" y2="304"/><line x1="67" y1="313" x2="76" y2="304"/>
+                </g>
+                <!-- corner brackets -->
+                <g stroke-width="0.48">
+                  <path d="M32 56 V32 H56"/><path d="M324 32 H348 V56"/>
+                  <path d="M348 324 V348 H324"/><path d="M56 348 H32 V324"/>
+                </g>
+                <!-- dashed grid cells -->
+                <g stroke-width="0.2" stroke-dasharray="2.4 4.8">
+                  <rect x="88" y="71" width="103" height="91"/><rect x="191" y="71" width="103" height="91"/>
+                  <rect x="88" y="217" width="103" height="91"/><rect x="191" y="217" width="103" height="91"/>
+                  <rect x="48" y="142" width="115" height="48"/><rect x="218" y="142" width="115" height="48"/>
+                  <rect x="48" y="190" width="115" height="48"/><rect x="218" y="190" width="115" height="48"/>
+                </g>
+                <!-- registration dots -->
+                <g fill="#f0ede6" stroke="none" opacity="0.5">
+                  <rect x="85" y="69" width="5" height="5"/><rect x="291" y="69" width="5" height="5"/>
+                  <rect x="85" y="307" width="5" height="5"/><rect x="291" y="307" width="5" height="5"/>
+                  <rect x="46" y="141" width="4" height="4"/><rect x="331" y="141" width="4" height="4"/>
+                  <rect x="46" y="236" width="4" height="4"/><rect x="331" y="236" width="4" height="4"/>
+                </g>
+                <!-- eye -->
+                <g stroke-width="0.79">
+                  <path d="M95 190 Q190 135 285 190 Q190 245 95 190 Z"/>
+                  <circle cx="190" cy="190" r="27.5"/>
+                </g>
+                <text x="190" y="378" fill="#f0ede6" stroke="none" font-family="Geist Pixel Square, monospace" font-size="6" text-anchor="middle" letter-spacing="1">SOURCE SCAN ACTIVE</text>
+                <text x="372" y="190" fill="#f0ede6" stroke="none" font-family="Geist Pixel Square, monospace" font-size="5" transform="rotate(-90 372 190)" text-anchor="middle" letter-spacing="1">PAGE SIGNALS</text>
+              </g>
+              <!-- pupil follows the cursor -->
+              <circle id="pupil" cx="190" cy="190" r="11" fill="#ed452e"/>
+            </svg>
+          </div>
+
+          <!-- 001 -->
+          <div class="reveal col-start-1 row-start-1 border-b border-cream/[0.14] p-8">
+            <div class="flex items-baseline justify-between">
+              <span class="font-mono text-[10.4px] uppercase tracking-[1px] text-ember">Lost context</span>
+              <span class="font-mono text-[9.6px] tracking-[1.9px] text-cream/20">001</span>
+            </div>
+            <h3 class="mt-[11px] font-chalet text-[20px] font-bold leading-[1.13] tracking-[-0.43px] text-cream">They discard the source.</h3>
+            <p class="mt-[11px] font-sans text-[12.8px] leading-[1.6] text-cream/75">Copy, hierarchy, links, media, and brand signals disappear when the redesign begins from an empty prompt.</p>
+          </div>
+          <!-- 002 -->
+          <div class="reveal col-start-3 row-start-1 border-b border-cream/[0.14] p-8">
+            <div class="flex items-baseline justify-between">
+              <span class="font-mono text-[10.4px] uppercase tracking-[1px] text-ember">Generic composition</span>
+              <span class="font-mono text-[9.6px] tracking-[1.9px] text-cream/20">002</span>
+            </div>
+            <h3 class="mt-[11px] font-chalet text-[20px] font-bold leading-[1.13] tracking-[-0.43px] text-cream">They repeat the same layout.</h3>
+            <p class="mt-[11px] font-sans text-[12.8px] leading-[1.6] text-cream/75">Without a creative plan, every industry gets the same predictable hero, card grid, and vague call to action.</p>
+          </div>
+          <!-- 003 -->
+          <div class="reveal col-start-1 row-start-2 p-8">
+            <div class="flex items-baseline justify-between">
+              <span class="font-mono text-[10.4px] uppercase tracking-[1px] text-ember">Ungrounded media</span>
+              <span class="font-mono text-[9.6px] tracking-[1.9px] text-cream/20">003</span>
+            </div>
+            <h3 class="mt-[11px] font-chalet text-[20px] font-bold leading-[1.13] tracking-[-0.43px] text-cream">They misuse your media.</h3>
+            <p class="mt-[11px] font-sans text-[12.8px] leading-[1.6] text-cream/75">Source images belong in meaningful foreground roles, never as accidental hero or CTA backgrounds.</p>
+          </div>
+          <!-- 004 -->
+          <div class="reveal col-start-3 row-start-2 p-8">
+            <div class="flex items-baseline justify-between">
+              <span class="font-mono text-[10.4px] uppercase tracking-[1px] text-ember">Disposable output</span>
+              <span class="font-mono text-[9.6px] tracking-[1.9px] text-cream/20">004</span>
+            </div>
+            <h3 class="mt-[11px] font-chalet text-[20px] font-bold leading-[1.13] tracking-[-0.43px] text-cream">They lose your progress.</h3>
+            <p class="mt-[11px] font-sans text-[12.8px] leading-[1.6] text-cream/75">One-shot mockups leave no project memory, targeted editing, recoverable history, or production-ready export.</p>
+          </div>
+        </div>
+      </div>
+      <div class="hrule"></div>
+    </section>
+
+    <!-- ================================================================
+         INTRODUCING RIG — topo texture + local flow diagram
+    ================================================================= -->
+    <section class="relative py-32">
+      <div class="content-shell-absolute pointer-events-none absolute top-[58px] mix-blend-lighten">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABdwAAAHlCAYAAADvDz4SAAAQAElEQVR4AezYWXIcSZIEUMjc/87TXIoCEsglFt9M/Yl0kQQywt30WX7M6P99fHz8v/8Y+A74DvgO+A74DvgO+A74DvgO+A74DvgO+A5Efwf8//76D98B3wHfAd8B34EB34GfhfuP/5vK/wgQIECAAAECswTcS4AAAQIECBAgQIAAAQIEMgQU7q/26DMCBAgQIECAAAECBAgQIEAgX0BCAgQIECDQSEDh3gjSMQQIECBAgACBHgLOJECAAAECBAgQIECAAIE6Agr3OrtabVLzECBAgAABAgQIECBAgAABAvkCEhIgQIDACQGF+wksjxIgQIAAAQIECKwkYBYCBAgQIECAAAECBAisJaBwX2sfpkkRkIMAAQIECBAgQIAAAQIECBDIF5CQAAECXwQU7l9A/EiAAAECBAgQIEAgQUAGAgQIECBAgAABAgTGCyjcx5u7kcDuAvITIECAAAECBAgQIECAAAEC+QISEthSQOG+5dqFJkCAAAECBAgQILCzgOwECBAgQIAAAQIE+ggo3Pu4OpUAAQLXBLxFgAABAgQIECBAgAABAgQI5AtIGCugcI9drWAECBAgQIAAAQIECBA4L+ANAgQIECBAgACB6wIK9+t23iRAgACBsQJuI0CAAAECBAgQIECAAAECBPIFSidUuJden+EJECBAgAABAgQIECBAYJyAmwgQIECAAAECrwUU7q99fEqAAAECBGoImJIAAQIECBAgQIAAAQIECBCYLtC9cJ+e0AAECBAgQIAAAQIECBAgQIBAdwEXECBAgAABAh8fCnffAgIECBAgQCBdQD4CBAgQIECAAAECBAgQIDBEQOE+hPnZJX5PgAABAgQIECBAgAABAgQI5AtISIAAAQK7CCjcd9m0nAQIECBAgACBRwJ+R4AAAQIECBAgQIAAAQLNBBTuzSgd1FrAeQQIECBAgAABAgQIECBAgEC+gIQECBBIElC4J21TFgIECBAgQIAAgZYCziJAgAABAgQIECBAgMApAYX7KS4PE1hFwBwECBAgQIAAAQIECBAgQIBAvoCEBAhUE1C4V9uYeQkQIECAAAECBAisIGAGAgQIECBAgAABAgS+CSjcv5H4BQEC1QXMT4AAAQIECBAgQIAAAQIECOQLSEhgRQGF+4pbMRMBAgQIECBAgAABApUFzE6AAAECBAgQILCpgMJ908WLTYDArgJyEyBAgAABAgQIECBAgAABAvkCEs4SULjPkncvAQIECBAgQIAAAQIEdhSQmQABAgQIECAQLKBwD16uaAQIECBwTsDTBAgQIECAAAECBAgQIECAQL5Az4QK9566ziZAgAABAgQIECBAgAABAscFPEmAAAECBAgUF1C4F1+g8QkQIECAwBgBtxAgQIAAAQIECBAgQIAAAQLvBOoX7u8S+pwAAQIECBAgQIAAAQIECBCoLyABAQIECBAoIKBwL7AkIxIgQIAAAQJrC5iOAAECBAgQIECAAAECBAj8FFC4/1TI/U8yAgQIECBAgAABAgQIECBAIF9AQgIECBBYREDhvsgijEGAAAECBAgQyBSQigABAgQIECBAgAABAvsIKNz32bWkXwX8TIAAAQIECBAgQIAAAQIECOQLSEiAAIGBAgr3gdiuIkCAAAECBAgQIPC3gH8TIECAAAECBAgQIJAloHDP2qc0BFoJOIcAAQIECBAgQIAAAQIECBDIF5CQAIHGAgr3xqCOI0CAAAECBAgQIECghYAzCBAgQIAAAQIECNQTULjX25mJCRCYLeB+AgQIECBAgAABAgQIECBAIF9AQgIXBBTuF9C8QoAAAQIECBAgQIAAgZkC7iZAgAABAgQIEFhTQOG+5l5MRYAAgaoC5iZAgAABAgQIECBAgAABAgTyBSR8IqBwfwLj1wQIECBAgAABAgQIECBQUcDMBAgQIECAAIF5Agr3efZuJkCAAIHdBOQlQIAAAQIECBAgQIAAAQIEogV+Fe7RCYUjQIAAAQIECBAgQIAAAQIEfgn4gwABAgQIEOgroHDv6+t0AgQIECBA4JiApwgQIECAAAECBAgQIECAQHkBhfvbFXqAAAECBAgQIECAAAECBAgQyBeQkAABAgQI3BdQuN83dAIBAgQIECBAoK+A0wkQIECAAAECBAgQIECghIDCvcSa1h3SZAQIECBAgAABAgQIECBAgEC+gIQECBAgcExA4X7MyVMECBAgQIAAAQJrCpiKAAECBAgQIECAAAECywgo3JdZhUHyBCQiQIAAAQIECBAgQIAAAQIE8gUkJECAwKeAwv3Twr8IECBAgAABAgQIZAlIQ4AAAQIECBAgQIDAUAGF+1BulxEg8EfA3wQIECBAgAABAgQIECBAgEC+gIQEdhNQuO+2cXkJECBAgAABAgQIEPgp4D8CBAgQIECAAAECzQUU7s1JHUiAAIG7At4nQIAAAQIECBAgQIAAAQIE8gUkTBRQuCduVSYCBAgQIECAAAECBAjcEfAuAQIECBAgQIDAJQGF+yU2LxEgQIDALAH3EiBAgAABAgQIECBAgAABAvkCVRMq3KtuztwECBAgQIAAAQIECBAgMEPAnQQIECBAgACBpwIK96c0PiBAgAABAtUEzEuAAAECBAgQIECAAAECBAjMFBhTuM9M6G4CBAgQIECAAAECBAgQIEBgjIBbCBAgQIDA5gIK982/AOITIECAAIFdBOQkQIAAAQIECBAgQIAAAQK9BRTuvYXfn+8JAgQIECBAgAABAgQIECBAIF9AQgIECBDYQEDhvsGSRSRAgAABAgQIvBbwKQECBAgQIECAAAECBAi0EFC4t1B0Rj8BJxMgQIAAAQIECBAgQIAAAQL5AhISIEAgREDhHrJIMQgQIECAAAECBPoIOJUAAQIECBAgQIAAAQJHBRTuR6U8R2A9ARMRIECAAAECBAgQIECAAAEC+QISEiBQSEDhXmhZRiVAgAABAgQIECCwloBpCBAgQIAAAQIECBD4W0Dh/reGfxMgkCMgCQECBAgQIECAAAECBAgQIJAvICGBxQQU7ostxDgECBAgQIAAAQIECGQISEGAAAECBAgQILCfgMJ9v51LTIAAAQIECBAgQIAAAQIECBAgQIBAvoCEEwQU7hPQXUmAAAECBAgQIECAAIG9BaQnQIAAAQIECGQKKNwz9yoVAQIECFwV8B4BAgQIECBAgAABAgQIECCQL9ApocK9E6xjCRAgQIAAAQIECBAgQIDAFQHvECBAgAABAnUFFO51d2dyAgQIECAwWsB9BAgQIECAAAECBAgQIECAwAuBkML9RUIfESBAgAABAgQIECBAgAABAiECYhAgQIAAgbUFFO5r78d0BAgQIECAQBUBcxIgQIAAAQIECBAgQIDA9gIK9w2+AiISIECAAAECBAgQIECAAAEC+QISEiBAgMB8AYX7/B2YgAABAgQIECCQLiAfAQIECBAgQIAAAQIEthBQuG+xZiGfC/iEAAECBAgQIECAAAECBAgQyBeQkAABAmMEFO5jnN1CgAABAgQIECBA4LGA3xIgQIAAAQIECBAgECOgcI9ZpSAE2gs4kQABAgQIECBAgAABAgQIEMgXkJAAgXYCCvd2lk4iQIAAAQIECBAgQKCtgNMIECBAgAABAgQIlBJQuJdal2EJEFhHwCQECBAgQIAAAQIECBAgQIBAvoCEBM4JKNzPeXmaAAECBAgQIECAAAECawiYggABAgQIECBAYDkBhftyKzEQAQIE6gtIQIAAAQIECBAgQIAAAQIECOQLSPhdQOH+3cRvCBAgQIAAAQIECBAgQKC2gOkJECBAgAABAlMEFO5T2F1KgAABAvsKSE6AAAECBAgQIECAAAECBAikCnwW7qkJ5SJAgAABAgQIECBAgAABAgQ+BfyLAAECBAgQ6CagcO9G62ACBAgQIEDgrIDnCRAgQIAAAQIECBAgQIBAZQGF+7HteYoAAQIECBAgQIAAAQIECBDIF5CQAAECBAjcElC43+LzMgECBAgQIEBglIB7CBAgQIAAAQIECBAgQGB1AYX76huqMJ8ZCRAgQIAAAQIECBAgQIAAgXwBCQkQIEDgrYDC/S2RBwgQIECAAAECBFYXMB8BAgQIECBAgAABAgRWEFC4r7AFMyQLyEaAAAECBAgQIECAAAECBAjkC0hIgACBXwIK918M/iBAgAABAgQIECCQKiAXAQIECBAgQIAAAQKjBBTuo6TdQ4DAdwG/IUCAAAECBAgQIECAAAECBPIFJCSwkYDCfaNli0qAAAECBAgQIECAwL8CfiJAgAABAgQIECDQUkDh3lLTWQQIEGgn4CQCBAgQIECAAAECBAgQIEAgX0DCMAGFe9hCxSFAgAABAgQIECBAgEAbAacQIECAAAECBAicFVC4nxXzPAECBAjMFzABAQIECBAgQIAAAQIECBAgkC9QMKHCveDSjEyAAAECBAgQIECAAAECcwXcToAAAQIECBB4JKBwf6TidwQIECBAoK6AyQkQIECAAAECBAgQIECAAIFJAgML90kJXUuAAAECBAgQIECAAAECBAgMFHAVAQIECBDYV0Dhvu/uJSdAgAABAvsJSEyAAAECBAgQIECAAAECBDoKKNw74p452rMECBAgQIAAAQIECBAgQIBAvoCEBAgQIJAtoHDP3q90BAgQIECAAIGjAp4jQIAAAQIECBAgQIAAgZsCCvebgF4fIeAOAgQIECBAgAABAgQIECBAIF9AQgIECNQXULjX36EEBAgQIECAAAECvQWcT4AAAQIECBAgQIAAgQMCCvcDSB4hsLKA2QgQIECAAAECBAgQIECAAIF8AQkJEKghoHCvsSdTEiBAgAABAgQIEFhVwFwECBAgQIAAAQIECPwnoHD/D8JfBAgkCshEgAABAgQIECBAgAABAgQI5AtISGAdAYX7OrswCQECBAgQIECAAAECaQLyECBAgAABAgQIbCWgcN9q3cISIEDgU8C/CBAgQIAAAQIECBAgQIAAgXwBCccKKNzHeruNAAECBAgQIECAAAECBH4L+JMAAQIECBAgECegcI9bqUAECBAgcF/ACQQIECBAgAABAgQIECBAgEC+QPuECvf2pk4kQIAAAQIECBAgQIAAAQL3BLxNgAABAgQIlBRQuJdcm6EJECBAgMA8ATcTIECAAAECBAgQIECAAAECjwWSCvfHCf2WAAECBAgQIECAAAECBAgQSBKQhQABAgQILCugcF92NQYjQIAAAQIE6gmYmAABAgQIECBAgAABAgR2FlC477J9OQkQIECAAAECBAgQIECAAIF8AQkJECBAYKqAwn0qv8sJECBAgAABAvsISEqAAAECBAgQIECAAIF0AYV7+oblOyLgGQIECBAgQIAAAQIECBAgQCBfQEICBAh0F1C4dyd2AQECBAgQIECAAIF3Aj4nQIAAAQIECBAgQCBBQOGesEUZCPQUcDYBAgQIECBAgAABAgQIECCQLyAhAQJNCA97nQAAEABJREFUBBTuTRgdQoAAAQIECBAgQIBALwHnEiBAgAABAgQIEKgioHCvsilzEiCwooCZCBAgQIAAAQIECBAgQIAAgXwBCQkcFlC4H6byIAECBAgQIECAAAECBFYTMA8BAgQIECBAgMBKAgr3lbZhFgIECCQJyEKAAAECBAgQIECAAAECBAjkC0j4j4DC/R8OPxAgQIAAAQIECBAgQIBAioAcBAgQIECAAIHRAgr30eLuI0CAAAECHx8MCBAgQIAAAQIECBAgQIAAgUCBL4V7YEKRCBAgQIAAAQIECBAgQIAAgS8CfiRAgAABAgR6CCjce6g6kwABAgQIELgu4E0CBAgQIECAAAECBAgQIFBUQOF+YnEeJUCAAAECBAgQIECAAAECBPIFJCRAgAABAlcFFO5X5bxHgAABAgQIEBgv4EYCBAgQIECAAAECBAgQWFhA4b7wcmqNZloCBAgQIECAAAECBAgQIEAgX0BCAgQIEHgloHB/peMzAgQIECBAgACBOgImJUCAAAECBAgQIECAwGQBhfvkBbh+DwEpCRAgQIAAAQIECBAgQIAAgXwBCQkQIKBw9x0gQIAAAQIECBAgkC8gIQECBAgQIECAAAECAwQU7gOQXUGAwCsBnxEgQIAAAQIECBAgQIAAAQL5AhIS2ENA4b7HnqUkQIAAAQIECBAgQOCZgN8TIECAAAECBAgQaCSgcG8E6RgCBAj0EHAmAQIECBAgQIAAAQIECBAgkC8gYY6Awj1nl5IQIECAAAECBAgQIECgtYDzCBAgQIAAAQIETggo3E9geZQAAQIEVhIwCwECBAgQIECAAAECBAgQIJAvUCuhwr3WvkxLgAABAgQIECBAgAABAqsImIMAAQIECBAg8EVA4f4FxI8ECBAgQCBBQAYCBAgQIECAAAECBAgQIEBgvMDown18QjcSIECAAAECBAgQIECAAAECowXcR4AAAQIEthRQuG+5dqEJECBAgMDOArITIECAAAECBAgQIECAAIE+Agr3Pq7XTvUWAQIECBAgQIAAAQIECBAgkC8gIQECBAjECijcY1crGAECBAgQIEDgvIA3CBAgQIAAAQIECBAgQOC6gML9up03xwq4jQABAgQIECBAgAABAgQIEMgXkJAAAQKlBRTupddneAIECBAgQIAAgXECbiJAgAABAgQIECBAgMBrAYX7ax+fEqghYEoCBAgQIECAAAECBAgQIEAgX0BCAgSWF1C4L78iAxIgQIAAAQIECBBYX8CEBAgQIECAAAECBAh8fCjcfQsIEEgXkI8AAQIECBAgQIAAAQIECBDIF5CQwBICCvcl1mAIAgQIECBAgAABAgRyBSQjQIAAAQIECBDYRUDhvsum5SRAgMAjAb8jQIAAAQIECBAgQIAAAQIE8gUkHCagcB9G7SICBAgQIECAAAECBAgQ+CrgZwIECBAgQIBAkoDCPWmbshAgQIBASwFnESBAgAABAgQIECBAgAABAvkCTRMq3JtyOowAAQIECBAgQIAAAQIECLQScA4BAgQIECBQTUDhXm1j5iVAgAABAisImIEAAQIECBAgQIAAAQIECBD4JhBXuH9L6BcECBAgQIAAAQIECBAgQIBAnIBABAgQIEBgRQGF+4pbMRMBAgQIECBQWcDsBAgQIECAAAECBAgQILCpgMJ9q8UL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dpZOIkCAAAECBNoKOI0AAQIECBAgQIAAAQIECJQSULhfWpeXCBAgQIAAAQIECBAgQIAAgXwBCQkQIECAwDkBhfs5L08TIECAAAECBNYQMAUBAgQIECBAgAABAgQILCegcF9uJfUHkoAAAQIECBAgQIAAAQIECBDIF5CQAAECBL4LKNy/m/gNAQIECBAgQIBAbQHTEyBAgAABAgQIECBAYIqAwn0Ku0v3FZCcAAECBAgQIECAAAECBAgQyBeQkACBXQUU7rtuXm4CBAgQIECAAIE9BaQmQIAAAQIECBAgQKCbgMK9G62DCRA4K+B5AgQIECBAgAABAgQIECBAIF9AQgLJAgr35O3KRoAAAQIECBAgQIDAGQHPEiBAgAABAgQIELgloHC/xedlAgQIjBJwDwECBAgQIECAAAECBAgQIJAvIGF1AYV79Q2anwABAgQIECBAgAABAiME3EGAAAECBAgQIPBWQOH+lsgDBAgQILC6gPkIECBAgAABAgQIECBAgACBfIEKCRXuFbZkRgIECBAgQIAAAQIECBBYWcBsBAgQIECAAIFfAgr3Xwz+IECAAAECqQJyESBAgAABAgQIECBAgAABAqME5hXuoxK6hwABAgQIECBAgAABAgQIEJgn4GYCBAgQILCRgMJ9o2WLSoAAAQIECPwr4CcCBAgQIECAAAECBAgQINBSQOHeUrPdWU4iQIAAAQIECBAgQIAAAQIE8gUkJECAAIEwAYV72ELFIUCAAAECBAi0EXAKAQIECBAgQIAAAQIECJwVULifFfP8fAETECBAgAABAgQIECBAgAABAvkCEhIgQKCggMK94NKMTIAAAQIECBAgMFfA7QQIECBAgAABAgQIEHgkoHB/pOJ3BOoKmJwAAQIECBAgQIAAAQIECBDIF5CQAIFFBRTuiy7GWAQIECBAgAABAgRqCpiaAAECBAgQIECAwL4CCvd9dy85gf0EJCZAgAABAgQIECBAgAABAgTyBSQkMFFA4T4R39UECBAgQIAAAQIECOwlIC0BAgQIECBAgEC2gMI9e7/SESBA4KiA5wgQIECAAAECBAgQIECAAIF8AQk7CyjcOwM7ngABAgQIECBAgAABAgSOCHiGAAECBAgQIFBfQOFef4cSECBAgEBvAecTIECAAAECBAgQIECAAAEC+QINEircGyA6ggABAgQIECBAgAABAgQI9BRwNgECBAgQIFBDQOFeY0+mJECAAAECqwqYiwABAgQIECBAgAABAgQIEPhPILhw/y+hvwgQIECAAAECBAgQIECAAIFgAdEIECBAgMA6Agr3dXZhEgIECBAgQCBNQB4CBAgQIECAAAECBAgQ2EpA4b7Vuj/D+hcBAgQIECBAgAABAgQIECCQLyAhAQIECE7FDB0AABAASURBVIwVULiP9XYbAQIECBAgQIDAbwF/EiBAgAABAgQIECBAIE5A4R63UoHuCziBAAECBAgQIECAAAECBAgQyBeQkAABAu0FFO7tTZ1IgAABAgQIECBA4J6AtwkQIECAAAECBAgQKCmgcC+5NkMTmCfgZgIECBAgQIAAAQIECBAgQCBfQEICBK4JKNyvuXmLAAECBAgQIECAAIE5Am4lQIAAAQIECBAgsKyAwn3Z1RiMAIF6AiYmQIAAAQIECBAgQIAAAQIE8gUkJPBcQOH+3MYnBAgQIECAAAECBAgQqCVgWgIECBAgQIAAgakCCvep/C4nQIDAPgKSEiBAgAABAgQIECBAgAABAvkCuydUuO/+DZCfAAECBAgQIECAAAECewhISYAAAQIECBDoLqBw707sAgIECBAg8E7A5wQIECBAgAABAgQIECBAgECCwOvCPSGhDAQIECBAgAABAgQIECBAgMBrAZ8SIECAAAECTQQU7k0YHUKAAAECBAj0EnAuAQIECBAgQIAAAQIECBCoIqBwv74pbxIgQIAAAQIECBAgQIAAAQL5AhISIECAAIHDAgr3w1QeJECAAAECBAisJmAeAgQIECBAgAABAgQIEFhJQOG+0jaSZpGFAAECBAgQIECAAAECBAgQyBeQkAABAgT+EVC4/8PhBwIECBAgQIAAgRQBOQgQIECAAAECBAgQIDBaQOE+Wtx9BD4+GBAgQIAAAQIECBAgQIAAAQL5AhISILChgMJ9w6WLTIAAAQIECBAgsLuA/AQIECBAgAABAgQI9BBQuPdQdSYBAtcFvEmAAAECBAgQIECAAAECBAjkC0hIIFRA4R66WLEIECBAgAABAgQIELgm4C0CBAgQIECAAAECVwUU7lflvEeAAIHxAm4kQIAAAQIECBAgQIAAAQIE8gUkLCygcC+8PKMTIECAAAECBAgQIEBgrIDbCBAgQIAAAQIEXgko3F/p+IwAAQIE6giYlAABAgQIECBAgAABAgQIEMgXWDyhwn3xBRmPAAECBAgQIECAAAECBGoImJIAAQIECBAgoHD3HSBAgAABAvkCEhIgQIAAAQIECBAgQIAAAQIDBCYX7gMSuoIAAQIECBAgQIAAAQIECBCYLOB6AgQIECCwh4DCfY89S0mAAAECBAg8E/B7AgQIECBAgAABAgQIECDQSEDh3giyxzHOJECAAAECBAgQIECAAAECBPIFJCRAgACBHAGFe84uJSFAgAABAgQItBZwHgECBAgQIECAAAECBAicEFC4n8Dy6EoCZiFAgAABAgQIECBAgAABAgTyBSQkQIBALQGFe619mZYAAQIECBAgQGAVAXMQIECAAAECBAgQIEDgi4DC/QuIHwkkCMhAgAABAgQIECBAgAABAgQI5AtISIDAegIK9/V2YiICBAgQIECAAAEC1QXMT4AAAQIECBAgQGBLAYX7lmsXmsDOArITIECAAAECBAgQIECAAAEC+QISEpgjoHCf4+5WAgQIECBAgAABAgR2FZCbAAECBAgQIEAgVkDhHrtawQgQIHBewBsECBAgQIAAAQIECBAgQIBAvoCE/QQU7v1snUyAAAECBAgQIECAAAEC5wQ8TYAAAQIECBAoLaBwL70+wxMgQIDAOAE3ESBAgAABAgQIECBAgAABAvkC9xIq3O/5eZsAAQIECBAgQIAAAQIECIwRcAsBAgQIECCwvIDCffkVGZAAAQIECKwvYEICBAgQIECAAAECBAgQIEDg4yO9cLdjAgQIECBAgAABAgQIECBAIF9AQgIECBAgsISAwn2JNRiCAAECBAgQyBWQjAABAgQIECBAgAABAgR2EVC477LpRzn9jgABAgQIECBAgAABAgQIEMgXkJAAAQIEhgko3IdRu4gAAQIECBAgQOCrgJ8JECBAgAABAgQIECCQJKBwT9qmLC0FnEWAAAECBAgQIECAAAECBAjkC0hIgACBpgIK96acDiNAgAABAgQIECDQSsA5BAgQIECAAAECBAhUE1C4V9uYeQmsIGAGAgQIECBAgAABAgQIECBAIF9AQgIETgso3E+TeYEAAQIECBAgQIAAgdkC7idAgAABAgQIECCwooDCfcWtmIkAgcoCZidAgAABAgQIECBAgAABAgTyBSQk8FBA4f6QxS8JECBAgAABAgQIECBQVcDcBAgQIECAAAECswQU7rPk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kykJrCpgLgIECBAgQIAAAQIECBAgQCBfQEICBA4KKNwPQnmMAAECBAgQIECAAIEVBcxEgAABAgQIECBAYB0Bhfs6uzAJAQJpAvIQIECAAAECBAgQIECAAAEC+QISEvhLQOH+F4Z/EiBAgAABAgQIECBAIElAFgIECBAgQIAAgbECCvex3m4jQIAAgd8C/iRAgAABAgQIECBAgAABAgTyBbZLqHDfbuUCEyBAgAABAgQIECBAgMDHBwMCBAgQIECAQHsBhXt7UycSIECAAIF7At4mQIAAAQIECBAgQIAAAQIESgqcKtxLJjQ0AQIECBAgQIAAAQIECBAgcErAwwQIECBAgMA1AYX7NTdvESBAgAABAnME3EqAAAECBAgQIECAAAECBJYVULg3W42DCBAgQIAAAQIECBAgQIAAgXwBCQkQIECAwHMBhftzG58QIECAAAECBGoJmJYAAQIECBAgQIAAAQIEpgoo3Kfy73O5pAQIECBAgAABAgQIECBAgEC+gIQECBDYXUDhvvs3QH4CBAgQIECAwB4CUhIgQIAAAQIECBAgQKC7gMK9O7ELCLwT8DkBAgQIECBAgAABAgQIECCQLyAhAQI7CCjcd9iyjAQIECBAgAABAgReCfiMAAECBAgQIECAAIEmAgr3JowOIUCgl4BzCRAgQIAAAQIECBAgQIAAgXwBCQmkCCjcUzYpBwECBAgQIECAAAECPQScSYAAAQIECBAgQOCwgML9MJUHCRAgsJqAeQgQIECAAAECBAgQIECAAIF8AQkrCSjcK23LrAQIECBAgAABAgQIEFhJwCwECBAgQIAAAQL/CCjc/+HwAwECBAikCMhBgAABAgQIECBAgAABAgQI5AusllDhvtpGzEOAAAECBAgQIECAAAECCQIyECBAgAABAhsKKNw3XLrIBAgQILC7gPwECBAgQIAAAQIECBAgQIBAD4G1CvceCZ1JgAABAgQIECBAgAABAgQIrCVgGgIECBAgECqgcA9drFgECBAgQIDANQFvESBAgAABAgQIECBAgACBqwIK96ty499zIwECBAgQIECAAAECBAgQIJAvICEBAgQIFBZQuBdentEJECBAgAABAmMF3EaAAAECBAgQIECAAAECrwQU7q90fFZHwKQECBAgQIAAAQIECBAgQIBAvoCEBAgQWFxA4b74goxHgAABAgQIECBQQ8CUBAgQIECAAAECBAgQULj7DhDIF5CQAAECBAgQIECAAAECBAgQyBeQkACBBQQU7gsswQgECBAgQIAAAQIEsgWkI0CAAAECBAgQILCHgMJ9jz1LSYDAMwG/J0CAAAECBAgQIECAAAECBPIFJCQwSEDhPgjaNQQIECBAgAABAgQIEHgk4HcECBAgQIAAAQI5Agr3nF1KQoAAgdYCziNAgAABAgQIECBAgAABAgTyBSRsKKBwb4jpKAIECBAgQIAAAQIECBBoKeAsAgQIECBAgEAtAYV7rX2ZlgABAgRWETAHAQIECBAgQIAAAQIECBAgkC9wMqHC/SSYxwkQIECAAAECBAgQIECAwAoCZiBAgAABAgTWE1C4r7cTExEgQIAAgeoC5idAgAABAgQIECBAgAABAlsKbFa4b7ljoQkQIECAAAECBAgQIECAwGYC4hIgQIAAgTkCCvc57m4lQIAAAQIEdhWQmwABAgQIECBAgAABAgRiBRTusas9H8wbBAgQIECAAAECBAgQIECAQL6AhAQIECDQT0Dh3s/WyQQIECBAgAABAucEPE2AAAECBAgQIECAAIHSAgr30usz/DgBNxEgQIAAAQIECBAgQIAAAQL5AhISIEDgnoDC/Z6ftwkQIECAAAECBAiMEXALAQIECBAgQIAAAQLLCyjcl1+RAQmsL2BCAgQIECBAgAABAgQIECBAIF9AQgIE3gso3N8beYIAAQIECBAgQIAAgbUFTEeAAAECBAgQIEBgCQGF+xJrMAQBArkCkhEgQIAAAQIECBAgQIAAAQL5AhIS+C2gcP/t4E8CBAgQIECAAAECBAhkCkhFgAABAgQIECAwTEDhPozaRQQIECDwVcDPBAgQIECAAAECBAgQIECAQL7ATgkV7jttW1YCBAgQIECAAAECBAgQ+FvAvwkQIECAAAECTQUU7k05HUaAAAECBFoJOIcAAQIECBAgQIAAAQIECBCoJnC+cK+W0LwECBAgQIAAAQIECBAgQIDAeQFvECBAgAABAqcFFO6nybxAgAABAgQIzBZwPwECBAgQIECAAAECBAgQWFFA4d52K04jQIAAAQIECBAgQIAAAQIE8gUkJECAAAECDwUU7g9Z/JIAAQIECBAgUFXA3AQIECBAgAABAgQIECAwS0DhPkt+x3tlJkCAAAECBAgQIECAAAECBPIFJCRAgMDGAgr3jZcvOgECBAgQIEBgNwF5CRAgQIAAAQIECBAg0FNA4d5T19kEjgt4kgABAgQIECBAgAABAgQIEMgXkJAAgXABhXv4gsUjQIAAAQIECBAgcEzAUwQIECBAgAABAgQI3BVQuN8V9D4BAv0F3ECAAAECBAgQIECAAAECBAjkC0hIIEBA4R6wRBEIECBAgAABAgQIEOgr4HQCBAgQIECAAAECRwQU7keUPEOAAIF1BUxGgAABAgQIECBAgAABAgQI5AtIWERA4V5kUcYkQIAAAQIECBAgQIDAmgKmIkCAAAECBAgQ+COgcP8j4W8CBAgQyBOQiAABAgQIECBAgAABAgQIEMgXWCihwn2hZRiFAAECBAgQIECAAAECBLIEpCFAgAABAgT2ElC477VvaQkQIECAwB8BfxMgQIAAAQIECBAgQIAAAQKNBRYs3BsndBwBAgQIECBAgAABAgQIECCwoICRCBAgQIBAnoDCPW+nEhEgQIAAAQJ3BbxPgAABAgQIECBAgAABAgQuCCjcL6DNfMXdBAgQIECAAAECBAgQIECAQL6AhAQIECBQU0DhXnNvpiZAgAABAgQIzBJwLwECBAgQIECAAAECBAg8EVC4P4Hx64oCZiZAgAABAgQIECBAgAABAgTyBSQkQIDAugIK93V3YzICBAgQIECAAIFqAuYlQIAAAQIECBAgQGBrAYX71usXficBWQkQIECAAAECBAgQIECAAIF8AQkJEJgroHCf6+92AgQIECBAgAABArsIyEmAAAECBAgQIEAgXkDhHr9iAQkQeC/gCQIECBAgQIAAAQIECBAgQCBfQEIC/QUU7v2N3UCAAAECBAgQIECAAIHXAj4lQIAAAQIECBCIEFC4R6xRCAIECPQTcDIBAgQIECBAgAABAgQIECCQLyBhGwGFextHpxAgQIAAAQIECBAgQIBAHwGnEiBAgAABAgTKCCjcy6zKoAQIECCwnoCJCBAgQIAAAQIECBAgQIAAgXyB4wkV7setPEmAAAECBAgQIECAAAECBNYSMA0BAgQIECCwlIDCfal1GIYAAQIECOQISEKAAAECBAgQIECAAAECBHYT2LFw323H8hIgQIAAAQIECBAgQIAAgR0FZCZAgAABAsMFFO7DyV1IgAABAgQIECBAgAABAgQIECBAgAABAokCCvfErd7J5F0CBAgQIECAAAECBAgQIEAgX0BCAgQIEOgioHDvwupQAgQIECBAgACBqwLeI0CAAAECBAgQIECAQFUBhXvVzZl7hoA7CRAgQIAAAQIECBAgQIAAgXwBCQkQIHBZQOF+mc6LBAgQIECAAAECBEYLuI8AAQIECBAgQIAAgZUFFO4rb8dsBCoJmJUAAQIECBAgQIAAAQIECBDIF5CQAIGXAgr3lzw+JECAAAECBAgQIECgioA5CRAgQIAAAQIECMwWULjP3oD7CRDYQUBGAgQIECBAgAABAgQIECBAIF9AQgIfCndfAgIECBAgQIAAAQIECMQLCEiAAAECBAgQIDBCQOE+QtkdBAgQIPBcwCcECBAgQIAAAQIECBAgQIBAvsAmCRXumyxaTAIECBAgQIAAAQIECBB4LOC3BAgQIECAAIFWAgr3VpLOIUCAAAEC7QWcSIAAAQIECBAgQIAAAQIECBQSuFi4F0poVAIECBAgQIAAAQIECBAgQOCigNcIECBAgACBMwIK9zNaniVAgAABAgTWETAJAQIECBAgQIAAAQIECBBYTEDh3mEhjiRAgAABAgQIECBAgAABAgTyBSQkQIAAAQJfBRTuX0X8TIAAAQIECBCoLyABAQIECBAgQIAAAQIECEwQULhPQN/7SukJECBAgAABAgQIECBAgACBfAEJCRAgsKeAwn3PvUtNgAABAgQIENhXQHICBAgQIECAAAECBAh0ElC4d4J1LIErAt4hQIAAAQIECBAgQIAAAQIE8gUkJEAgV0DhnrtbyQgQIECAAAECBAicFfA8AQIECBAgQIAAAQI3BBTuN/C8SoDASAF3ESBAgAABAgQIECBAgAABAvkCEhKoLaBwr70/0xMgQIAAAQIECBAgMErAPQQIECBAgAABAgTeCCjc3wD5mAABAhUEzEiAAAECBAgQIECAAAECBAjkC0i4voDCff0dmZAAAQIECBAgQIAAAQKrC5iPAAECBAgQIEDg4+PjfwAAAP//18dkBAAAAAZJREFUAwDytNo65YEXqQAAAABJRU5ErkJggg==" alt="" class="w-full">
+      </div>
+      <div class="relative flex flex-col items-center">
+        <div class="badge reveal"><i></i><span>Introducing ResetUI</span></div>
+        <h2 class="reveal mt-6 text-center font-chalet text-[66px] font-bold leading-[0.98] tracking-[-2.1px] text-cream" style="text-shadow:0 0 32px #0a0a0a,0 0 16px #0a0a0a">
+          Everything connected.<br>Own the redesign.
+        </h2>
+        <p class="reveal mt-6 w-[400px] text-center font-sans text-[16px] leading-[1.6] text-cream/75" style="text-shadow:0 0 16px #0a0a0a,0 0 8px #0a0a0a">
+          One agentic workflow keeps source context, creative direction, generated code, chat edits, and versions connected.
+        </p>
+
+        <!-- flow diagram: your machine vs cloud/telemetry -->
+        <div class="reveal mt-24">
+        <svg width="1000" height="500" viewBox="0 0 1000 500" class="block">
+          <!-- SOURCE PAGE dashed boundary -->
+          <rect x="9" y="121" width="982" height="200" rx="4" fill="none" stroke="rgba(240,237,230,0.08)" stroke-width="1.8" stroke-dasharray="7.1 7.1"/>
+          <rect x="27" y="109" width="171" height="25" fill="#0a0a0a"/>
+          <text x="36" y="126" fill="rgba(240,237,230,0.3)" font-family="Geist Pixel Square, monospace" font-size="11">SOURCE PAGE</text>
+
+          <!-- YOUR CONTENT -->
+          <rect x="36" y="179" width="196" height="89" fill="rgba(10,10,10,0.95)" stroke="rgba(240,237,230,0.15)" stroke-width="1.8"/>
+          <text x="134" y="216" fill="rgba(240,237,230,0.4)" font-family="Geist Pixel Square, monospace" font-size="12.5" text-anchor="middle">YOUR CONTENT</text>
+          <text x="134" y="239" fill="rgba(240,237,230,0.25)" font-family="Geist Pixel Square, monospace" font-size="9.8" text-anchor="middle">COPY · LINKS · MEDIA</text>
+
+          <!-- connector code -> rig -->
+          <line x1="232" y1="223" x2="345" y2="223" stroke="rgba(33,196,94,0.15)" stroke-width="1.8"/>
+          <line x1="232" y1="223" x2="345" y2="223" stroke="rgba(33,196,94,0.5)" stroke-width="2.5" class="flowline"/>
+
+          <!-- RIG core -->
+          <rect x="345" y="139" width="286" height="168" fill="rgba(10,10,10,0.95)" stroke="rgba(240,237,230,0.2)" stroke-width="2.7"/>
+          <text x="488" y="196" fill="#f0ede6" font-family="Geist Pixel Square, monospace" font-size="21.4" text-anchor="middle">RESETUI</text>
+          <text x="488" y="223" fill="#21c45e" font-family="Geist Pixel Square, monospace" font-size="9.8" text-anchor="middle">✓ AGENTIC WORKFLOW</text>
+          <line x1="375" y1="259" x2="600" y2="259" stroke="rgba(240,237,230,0.08)" stroke-width="0.9"/>
+          <text x="428" y="286" fill="rgba(240,237,230,0.25)" font-family="Geist Pixel Square, monospace" font-size="8.9" text-anchor="middle">CAPTURE</text>
+          <text x="488" y="286" fill="rgba(240,237,230,0.25)" font-family="Geist Pixel Square, monospace" font-size="8.9" text-anchor="middle">PLAN</text>
+          <text x="550" y="286" fill="rgba(240,237,230,0.25)" font-family="Geist Pixel Square, monospace" font-size="8.9" text-anchor="middle">GENERATE</text>
+
+          <!-- connector rig -> response -->
+          <line x1="630" y1="223" x2="755" y2="223" stroke="rgba(33,196,94,0.15)" stroke-width="1.8"/>
+          <line x1="630" y1="223" x2="755" y2="223" stroke="rgba(33,196,94,0.5)" stroke-width="2.5" class="flowline"/>
+
+          <!-- RESPONSE -->
+          <rect x="755" y="179" width="214" height="89" fill="rgba(10,10,10,0.95)" stroke="rgba(240,237,230,0.15)" stroke-width="1.8"/>
+          <text x="862" y="216" fill="rgba(240,237,230,0.4)" font-family="Geist Pixel Square, monospace" font-size="12.5" text-anchor="middle">DESIGN</text>
+          <text x="862" y="239" fill="#21c45e" font-family="Geist Pixel Square, monospace" font-size="9.8" text-anchor="middle">EDITABLE · VERSIONED</text>
+
+          <!-- CLOUD (severed, above) -->
+          <rect x="380" y="9" width="214" height="57" fill="rgba(10,10,10,0.95)" stroke="rgba(240,237,230,0.1)" stroke-width="1.8"/>
+          <text x="487" y="43" fill="rgba(240,237,230,0.4)" font-family="Geist Pixel Square, monospace" font-size="12.5" text-anchor="middle">GENERIC AI</text>
+          <line x1="488" y1="66" x2="488" y2="139" stroke="#ed452e" stroke-width="0.9" stroke-dasharray="5.4 8.9" opacity="0.4"/>
+          <g class="severed">
+            <circle cx="488" cy="102" r="10.5" fill="#0a0a0a" stroke="#ed452e" stroke-width="2.2"/>
+            <line x1="482" y1="96" x2="494" y2="108" stroke="#ed452e" stroke-width="2.2"/>
+            <line x1="494" y1="96" x2="482" y2="108" stroke="#ed452e" stroke-width="2.2"/>
+          </g>
+
+          <!-- PAGE SIGNALS (severed, below) -->
+          <rect x="380" y="384" width="214" height="57" fill="rgba(10,10,10,0.95)" stroke="rgba(240,237,230,0.1)" stroke-width="1.8"/>
+          <text x="487" y="418" fill="rgba(240,237,230,0.4)" font-family="Geist Pixel Square, monospace" font-size="12.5" text-anchor="middle">PAGE SIGNALS</text>
+          <line x1="488" y1="307" x2="488" y2="384" stroke="#ed452e" stroke-width="0.9" stroke-dasharray="5.4 8.9" opacity="0.4"/>
+          <g class="severed" style="animation-delay:1.1s">
+            <circle cx="488" cy="345" r="10.5" fill="#0a0a0a" stroke="#ed452e" stroke-width="2.2"/>
+            <line x1="482" y1="339" x2="494" y2="351" stroke="#ed452e" stroke-width="2.2"/>
+            <line x1="494" y1="339" x2="482" y2="351" stroke="#ed452e" stroke-width="2.2"/>
+          </g>
+        </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         WORK OFFLINE — globe + severed flow
+    ================================================================= -->
+    <section>
+      <div class="hrule"></div>
+      <div class="offline-section relative h-[560px]">
+        <div class="offline-divider absolute inset-y-0 left-1/2 w-px bg-cream/[0.14]"></div>
+        <div class="content-shell offline-layout flex h-full items-center gap-16 px-12">
+
+          <!-- globe visual, clipped by section -->
+          <div class="offline-visual relative h-[560px] w-[520px] shrink-0">
+            <div class="absolute -left-[48px] top-0 h-[560px] w-[568px] overflow-hidden">
+              <svg viewBox="0 0 900 900" class="absolute -left-[360px] -top-[170px] h-[900px] w-[900px]">
+                <g fill="none">
+                  <circle cx="450" cy="450" r="394" stroke="rgba(240,237,230,0.1)" stroke-width="2.25"/>
+                  <circle cx="450" cy="450" r="394" stroke="rgba(240,237,230,0.02)" stroke-width="112"/>
+                  <!-- latitude bands -->
+                  <ellipse cx="450" cy="225" rx="309" ry="28" stroke="rgba(240,237,230,0.06)" stroke-width="1.4"/>
+                  <ellipse cx="450" cy="323" rx="365" ry="28" stroke="rgba(240,237,230,0.07)" stroke-width="1.4"/>
+                  <ellipse cx="450" cy="408" rx="388" ry="28" stroke="rgba(240,237,230,0.07)" stroke-width="1.4"/>
+                  <ellipse cx="450" cy="492" rx="388" ry="28" stroke="rgba(240,237,230,0.07)" stroke-width="1.4"/>
+                  <ellipse cx="450" cy="576" rx="365" ry="28" stroke="rgba(240,237,230,0.07)" stroke-width="1.4"/>
+                  <ellipse cx="450" cy="675" rx="309" ry="28" stroke="rgba(240,237,230,0.06)" stroke-width="1.4"/>
+                  <!-- meridians (dashed, drifting) -->
+                  <g class="globe-drift">
+                    <ellipse cx="450" cy="450" rx="91" ry="394" stroke="rgba(240,237,230,0.1)" stroke-width="2.25" stroke-dasharray="16.9 14.1"/>
+                    <ellipse cx="450" cy="450" rx="309" ry="394" stroke="rgba(240,237,230,0.06)" stroke-width="1.4" stroke-dasharray="11.3 16.9"/>
+                    <ellipse cx="450" cy="450" rx="219" ry="394" stroke="rgba(240,237,230,0.06)" stroke-width="1.4" stroke-dasharray="11.3 16.9"/>
+                    <line x1="450" y1="56" x2="450" y2="408" stroke="rgba(240,237,230,0.08)" stroke-width="2.25" stroke-dasharray="11.3 11.3"/>
+                    <line x1="450" y1="492" x2="450" y2="844" stroke="rgba(240,237,230,0.08)" stroke-width="2.25" stroke-dasharray="11.3 11.3"/>
+                  </g>
+                  <!-- center: wifi-off marker -->
+                  <rect x="416" y="416" width="68" height="68" stroke="rgba(240,237,230,0.1)" stroke-width="1.4"/>
+                  <g stroke="#ed452e" stroke-width="2.8" class="severed">
+                    <path d="M436 446 q14 -12 28 0" fill="none"/>
+                    <path d="M442 452 q8 -7 16 0" fill="none"/>
+                    <line x1="449" y1="458" x2="451" y2="458"/>
+                    <line x1="434" y1="436" x2="466" y2="462"/>
+                  </g>
+                  <!-- debris dots -->
+                  <g fill="rgba(240,237,230,0.13)" stroke="none">
+                    <rect x="277" y="305" width="8" height="8"/><rect x="586" y="277" width="8" height="8"/>
+                    <rect x="219" y="473" width="11" height="11"/><rect x="671" y="502" width="8" height="8"/>
+                    <rect x="361" y="615" width="8" height="8"/><rect x="543" y="669" width="11" height="11"/>
+                  </g>
+                </g>
+              </svg>
+
+              <!-- severed 3-card flow, over the globe -->
+              <div class="absolute left-[183px] top-[130px] flex w-[202px] flex-col items-center">
+                <div class="border border-cream/10 bg-ink/95 px-6 py-3 font-mono text-[11.2px] uppercase tracking-[1.7px] text-cream/40">Blank canvas</div>
+                <div class="flex flex-col items-center py-1">
+                  <div class="h-4 w-px border-l border-dashed border-ember"></div>
+                  <svg width="16" height="16" viewBox="0 0 16 16" class="severed my-0.5"><circle cx="8" cy="8" r="5" fill="#0a0a0a" stroke="#ed452e"/><line x1="5.5" y1="5.5" x2="10.5" y2="10.5" stroke="#ed452e"/><line x1="10.5" y1="5.5" x2="5.5" y2="10.5" stroke="#ed452e"/></svg>
+                  <div class="py-0.5 font-mono text-[8px] uppercase tracking-[1.2px] text-ember">Severed</div>
+                  <div class="h-4 w-px border-l border-dashed border-ember"></div>
+                </div>
+                <div class="flex w-[200px] flex-col items-center gap-1.5 border border-cream/20 bg-ink/95 px-8 py-5">
+                  <div class="font-mono text-[12.8px] uppercase tracking-[2.4px] text-cream">Your source page</div>
+                  <div class="flex items-center gap-1 opacity-80">
+                    <span class="font-mono text-[8.8px] uppercase tracking-[2.4px] text-go">✓ ResetUI context active</span>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center py-1">
+                  <div class="h-4 w-px border-l border-dashed border-ember"></div>
+                  <svg width="16" height="16" viewBox="0 0 16 16" class="severed my-0.5" style="animation-delay:1.1s"><circle cx="8" cy="8" r="5" fill="#0a0a0a" stroke="#ed452e"/><line x1="5.5" y1="5.5" x2="10.5" y2="10.5" stroke="#ed452e"/><line x1="10.5" y1="5.5" x2="5.5" y2="10.5" stroke="#ed452e"/></svg>
+                  <div class="py-0.5 font-mono text-[8px] uppercase tracking-[1.2px] text-ember">Severed</div>
+                  <div class="h-4 w-px border-l border-dashed border-ember"></div>
+                </div>
+                <div class="border border-cream/10 bg-ink/95 px-6 py-3 font-mono text-[11.2px] uppercase tracking-[1.7px] text-cream/40">Context stays attached</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- content -->
+          <div class="offline-copy w-[520px] max-w-full">
+            <div class="badge reveal"><i></i><span>Source capture</span></div>
+            <h2 class="reveal mt-6 font-chalet text-[51px] font-bold leading-[0.99] tracking-[-1.7px] text-cream">Capture the source</h2>
+            <p class="reveal mt-6 w-[440px] font-sans text-[16px] leading-[1.7] text-cream/75">Start with a public landing-page URL. ResetUI maps the content and brand context before design begins.</p>
+          </div>
+        </div>
+      </div>
+      <div class="hrule"></div>
+    </section>
+
+    <!-- ================================================================
+         THREE COLUMNS — Unlimited / Privacy / Latency
+    ================================================================= -->
+    <section class="content-shell my-0">
+      <div class="feature-triptych grid h-[200px] grid-cols-[399px_1px_399px_1px_399px] items-center">
+        <div class="reveal flex flex-col items-center px-8 text-center">
+          <div class="badge"><i></i><span>Direction</span></div>
+          <h3 class="mt-[11px] font-chalet text-[30px] font-bold leading-[1] tracking-[-1px] text-cream">Remove the blank canvas</h3>
+          <p class="mt-[11px] font-sans text-[13.6px] leading-[1.6] text-cream/75">Describe the result you want while the planner turns that direction into a coherent visual system and section manifest.</p>
+        </div>
+        <div class="h-full w-px bg-cream/[0.14]"></div>
+        <div class="reveal flex flex-col items-center px-8 text-center">
+          <div class="badge"><i></i><span>Media policy</span></div>
+          <h3 class="mt-[11px] font-chalet text-[30px] font-bold leading-[1] tracking-[-1px] text-cream">Keep media grounded</h3>
+          <p class="mt-[11px] font-sans text-[13.6px] leading-[1.6] text-cream/75">Approved source images and video remain meaningful foreground content, never hero or CTA backgrounds.</p>
+        </div>
+        <div class="h-full w-px bg-cream/[0.14]"></div>
+        <div class="reveal flex flex-col items-center px-8 text-center">
+          <div class="badge"><i></i><span>Versioning</span></div>
+          <h3 class="mt-[11px] font-chalet text-[30px] font-bold leading-[1] tracking-[-1px] text-cream">Keep every direction</h3>
+          <p class="mt-[11px] font-sans text-[13.6px] leading-[1.6] text-cream/75">Every accepted generation or chat edit becomes a recoverable design version inside the same project.</p>
+        </div>
+      </div>
+      <div class="h-px bg-cream/[0.14]"></div>
+    </section>
+
+    <!-- ================================================================
+         OUR APPROACH — steps + model-size panel
+    ================================================================= -->
+    <section id="approach" class="content-shell pt-32">
+      <div class="flex flex-col items-center px-12">
+        <div class="badge reveal"><i></i><span>Our Approach</span></div>
+        <h2 class="reveal mt-6 text-center font-chalet text-[53px] font-bold leading-[0.98] tracking-[-1.7px] text-cream">Context beats imitation.</h2>
+        <p class="reveal mt-6 w-[620px] text-center font-sans text-[16px] leading-[1.6] text-cream/75">ResetUI combines bounded source evidence, deliberate creative planning, and focused execution for one job: an original, usable redesign.</p>
+      </div>
+
+      <div class="approach-grid mt-12 grid grid-cols-[480px_720px]">
+        <!-- steps -->
+        <div id="steps" class="flex flex-col">
+          <div class="step relative cursor-pointer border border-cream/[0.14] py-6 pl-8 pr-5" data-step="1">
+            <div class="step-bar absolute bottom-px left-0 top-px w-[2px]"></div>
+            <div class="step-num font-mono text-[9.6px] uppercase tracking-[1.9px]">Step 01</div>
+            <h3 class="step-title mt-2 font-chalet text-[30px] font-bold leading-[1.11] tracking-[-0.64px]">Capture the existing page as structured context.</h3>
+            <div class="step-body"><div class="overflow-hidden">
+              <p class="pt-4 font-sans text-[14.4px] leading-[1.7] text-cream/75">Copy, links, media, hierarchy, and brand signals become a bounded source inventory instead of a visual layout to clone.</p>
+            </div></div>
+          </div>
+          <div class="step active relative -mt-px cursor-pointer border border-cream/[0.14] py-6 pl-8 pr-5" data-step="2">
+            <div class="step-bar absolute bottom-px left-0 top-px w-[2px]"></div>
+            <div class="step-num font-mono text-[9.6px] uppercase tracking-[1.9px]">Step 02</div>
+            <h3 class="step-title mt-2 font-chalet text-[30px] font-bold leading-[1.11] tracking-[-0.64px]">Plan a new design before generating code.</h3>
+            <div class="step-body"><div class="overflow-hidden">
+              <p class="pt-4 font-sans text-[14.4px] leading-[1.7] text-cream/75">DeepSeek defines the visual system, section composition, motion, media roles, and generation manifest.</p>
+              <p class="pt-2 font-sans text-[14.4px] leading-[1.7] text-cream/75">The source stays useful for content and identity while the planner deliberately creates a different composition.</p>
+            </div></div>
+          </div>
+          <div class="step relative -mt-px cursor-pointer border border-cream/[0.14] py-6 pl-8 pr-5" data-step="3">
+            <div class="step-bar absolute bottom-px left-0 top-px w-[2px]"></div>
+            <div class="step-num font-mono text-[9.6px] uppercase tracking-[1.9px]">Step 03</div>
+            <h3 class="step-title mt-2 font-chalet text-[30px] font-bold leading-[1.11] tracking-[-0.64px]">Execute the plan as a complete working page.</h3>
+            <div class="step-body"><div class="overflow-hidden">
+              <p class="pt-4 font-sans text-[14.4px] leading-[1.7] text-cream/75">Kimi receives the plan and source context, then builds the full responsive page with the selected visual system.</p>
+            </div></div>
+          </div>
+        </div>
+
+        <!-- illustration panel -->
+        <div class="relative -ml-px flex self-stretch items-center justify-center overflow-hidden border border-cream/[0.14] bg-white/[0.02]">
+          <img src="data:image/png;base64,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" alt="" class="absolute inset-0 h-full w-full object-cover">
+          <div class="model-card relative w-[380px] max-w-full border border-ember bg-ink/[0.88] p-8 backdrop-blur-lg" style="border-radius:6px">
+            <div class="border-b border-ember/[0.12] pb-3 font-mono text-[10.4px] uppercase tracking-[1.56px] text-cream">Context Layers</div>
+            <pre class="mt-4 whitespace-pre-wrap font-mono text-[11.2px] leading-[1.8] text-cream/45">Workflow context (structured inputs)
+
+Source capture  <span class="text-cream/45">████████████████████</span> CAPTURED
+Creative plan   <span class="text-cream/45">██████░░░░░░░░░░░░░░</span> PLANNED
+<span class="text-cream/70">ResetUI       ████████████████████ GENERATED</span>
+
+One connected project memory.
+Context retained: <span class="text-go">100%</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="mt-32 h-px bg-cream/[0.14]"></div>
+    </section>
+
+    <!-- ================================================================
+         CAPABILITIES — 6 cards
+    ================================================================= -->
+    <section class="content-shell pt-32">
+      <div class="flex flex-col items-center px-6">
+        <div class="badge reveal"><i></i><span>Capabilities</span></div>
+        <h2 class="reveal mt-6 text-center font-chalet text-[53px] font-bold leading-[0.98] tracking-[-1.7px] text-cream">Your source page, unleashed.</h2>
+      </div>
+      <div class="cap-grid mt-8 grid grid-cols-3 gap-6 px-6 py-10">
+        <div class="cap-card reveal h-[224px] border border-cream/[0.14] bg-white/[0.02] px-8 pt-10">
+          <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">[ 01 ]</div>
+          <h3 class="mt-3 font-chalet text-[20px] font-bold leading-[1.18] tracking-[-0.43px] text-cream">Understands the source page.</h3>
+          <p class="mt-3 font-sans text-[13.6px] leading-[1.6] text-cream/75">Captures visible copy, links, media, hierarchy, metadata, and brand signals before the creative plan is written.</p>
+        </div>
+        <div class="cap-card reveal h-[224px] border border-cream/[0.14] bg-white/[0.02] px-8 pt-10">
+          <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">[ 02 ]</div>
+          <h3 class="mt-3 font-chalet text-[20px] font-bold leading-[1.18] tracking-[-0.43px] text-cream">Separates evidence from imitation.</h3>
+          <p class="mt-3 font-sans text-[13.6px] leading-[1.6] text-cream/75">Uses source content and identity as evidence while explicitly preventing a clone of the original composition.</p>
+        </div>
+        <div class="cap-card reveal h-[224px] border border-cream/[0.14] bg-white/[0.02] px-8 pt-10">
+          <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">[ 03 ]</div>
+          <h3 class="mt-3 font-chalet text-[20px] font-bold leading-[1.18] tracking-[-0.43px] text-cream">Plans before generating.</h3>
+          <p class="mt-3 font-sans text-[13.6px] leading-[1.6] text-cream/75">DeepSeek turns the prompt and captured context into a concrete visual system, media policy, and section manifest.</p>
+        </div>
+        <div class="cap-card reveal h-[224px] border border-cream/[0.14] bg-white/[0.02] px-8 pt-10">
+          <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">[ 04 ]</div>
+          <h3 class="mt-3 font-chalet text-[20px] font-bold leading-[1.18] tracking-[-0.43px] text-cream">Generates complete pages.</h3>
+          <p class="mt-3 font-sans text-[13.6px] leading-[1.6] text-cream/75">Kimi implements the full responsive experience with working interactions and production-oriented front-end code.</p>
+        </div>
+        <div class="cap-card reveal h-[224px] border border-cream/[0.14] bg-white/[0.02] px-8 pt-10">
+          <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">[ 05 ]</div>
+          <h3 class="mt-3 font-chalet text-[20px] font-bold leading-[1.18] tracking-[-0.43px] text-cream">Keeps edits project-aware.</h3>
+          <p class="mt-3 font-sans text-[13.6px] leading-[1.6] text-cream/75">Chat edits target the current project and selected section, then commit each accepted result as a recoverable version.</p>
+        </div>
+        <div class="cap-card reveal h-[224px] border border-cream/[0.14] bg-white/[0.02] px-8 pt-10">
+          <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">[ 06 ]</div>
+          <h3 class="mt-3 font-chalet text-[20px] font-bold leading-[1.18] tracking-[-0.43px] text-cream">Exports usable code.</h3>
+          <p class="mt-3 font-sans text-[13.6px] leading-[1.6] text-cream/75">Export standalone HTML with Tailwind and JavaScript, or a one-file React, Next.js, Vue, or Svelte implementation.</p>
+        </div>
+      </div>
+      <div class="mt-20 h-px bg-cream/[0.14]"></div>
+    </section>
+
+    <!-- ================================================================
+         STATS STRIP
+    ================================================================= -->
+    <section class="content-shell">
+      <div class="stats-grid grid grid-cols-4 divide-x divide-cream/[0.14] border-x border-b border-cream/[0.14]">
+        <div class="reveal p-8">
+          <div class="font-mono text-[12px] uppercase tracking-[1.8px] text-ember">Generation</div>
+          <div class="mt-3 font-pixel text-[38px] leading-[1.05] text-cream">5 credits</div>
+          <div class="mt-3 font-mono text-[12px] text-cream/40">One complete redesign</div>
+        </div>
+        <div class="reveal p-8">
+          <div class="font-mono text-[12px] uppercase tracking-[1.8px] text-ember">Chat edit</div>
+          <div class="mt-3 font-pixel text-[38px] leading-[1.05] text-cream">1 credit</div>
+          <div class="mt-3 font-mono text-[12px] text-cream/40">Project-aware change</div>
+        </div>
+        <div class="reveal p-8">
+          <div class="font-mono text-[12px] uppercase tracking-[1.8px] text-ember">Code export</div>
+          <div class="mt-3 font-pixel text-[38px] leading-[1.05] text-cream">2 credits</div>
+          <div class="mt-3 font-mono text-[12px] text-cream/40">Production-ready output</div>
+        </div>
+        <div class="reveal p-8">
+          <div class="font-mono text-[12px] uppercase tracking-[1.8px] text-ember">Versions</div>
+          <div class="mt-3 font-pixel text-[38px] leading-[1.05] text-cream">Recoverable</div>
+          <div class="mt-3 font-mono text-[12px] text-cream/40">Every accepted direction</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         TERMINAL — built for control freaks
+    ================================================================= -->
+    <section class="relative py-32">
+      <div class="flex flex-col items-center">
+        <div class="badge reveal"><i></i><span>Agentic intelligence</span></div>
+        <h2 class="reveal mt-6 text-center font-chalet text-[53px] font-bold leading-[0.98] tracking-[-1.7px] text-cream">Designed for creative control</h2>
+      </div>
+
+      <div class="device-blueprint relative mx-auto mt-12 w-[630px] max-w-full">
+        <!-- blueprint annotations LEFT -->
+        <div class="blueprint-note pointer-events-none absolute -left-[220px] top-0 h-full w-[200px]">
+          <div class="absolute right-0 top-[188px] flex items-center">
+            <div class="text-right">
+              <div class="font-pixel text-[10px] uppercase tracking-[1px] text-white">Source Context</div>
+              <div class="mt-0.5 w-[148px] font-pixel text-[10px] uppercase leading-[1.5] tracking-[1px] text-cream/45">Captured and bounded</div>
+            </div>
+            <div class="mx-3 h-px w-[29px] bg-cream/15"></div>
+            <div class="h-[4px] w-[4px] border border-cream/25"></div>
+          </div>
+          <div class="absolute right-0 top-[277px] flex items-center">
+            <div class="text-right">
+              <div class="font-pixel text-[10px] uppercase tracking-[1px] text-white">DeepSeek</div>
+              <div class="mt-0.5 w-[148px] font-pixel text-[10px] uppercase leading-[1.5] tracking-[1px] text-cream/45">Creative planner</div>
+            </div>
+            <div class="mx-3 h-px w-[40px] bg-cream/15"></div>
+            <div class="h-[4px] w-[4px] border border-cream/25"></div>
+          </div>
+          <div class="absolute right-0 top-[366px] flex items-center">
+            <div class="text-right">
+              <div class="font-pixel text-[10px] uppercase tracking-[1px] text-white">Project Memory</div>
+              <div class="mt-0.5 w-[148px] font-pixel text-[10px] uppercase leading-[1.5] tracking-[1px] text-cream/45">Source, chat, and versions</div>
+            </div>
+            <div class="mx-3 h-px w-[32px] bg-cream/15"></div>
+            <div class="h-[4px] w-[4px] border border-cream/25"></div>
+          </div>
+        </div>
+        <!-- blueprint annotations RIGHT -->
+        <div class="blueprint-note pointer-events-none absolute -right-[220px] top-0 h-full w-[200px]">
+          <div class="absolute left-0 top-[188px] flex items-center">
+            <div class="h-[4px] w-[4px] border border-cream/25"></div>
+            <div class="mx-3 h-px w-[33px] bg-cream/15"></div>
+            <div>
+              <div class="font-pixel text-[10px] uppercase tracking-[1px] text-white">Kimi Executor</div>
+              <div class="mt-0.5 w-[148px] font-pixel text-[10px] uppercase leading-[1.5] tracking-[1px] text-cream/45">Complete page implementation</div>
+            </div>
+          </div>
+          <div class="absolute left-0 top-[277px] flex items-center">
+            <div class="h-[4px] w-[4px] border border-cream/25"></div>
+            <div class="mx-3 h-px w-[28px] bg-cream/15"></div>
+            <div>
+              <div class="font-pixel text-[10px] uppercase tracking-[1px] text-white">Design Guardrails</div>
+              <div class="mt-0.5 w-[157px] font-pixel text-[10px] uppercase leading-[1.5] tracking-[1px] text-cream/45">Media roles and plan adherence</div>
+            </div>
+          </div>
+          <div class="absolute left-0 top-[366px] flex items-center">
+            <div class="h-[4px] w-[4px] border border-cream/25"></div>
+            <div class="mx-3 h-px w-[32px] bg-cream/15"></div>
+            <div>
+              <div class="font-pixel text-[10px] uppercase tracking-[1px] text-white">Exportable</div>
+              <div class="mt-0.5 w-[148px] font-pixel text-[10px] uppercase leading-[1.5] tracking-[1px] text-cream/45">Usable front-end code</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- device -->
+        <div class="relative rounded-[10px] border border-cream/[0.06] p-5"
+             style="background:linear-gradient(180deg,#1a1a1a 0%,#121212 50%,#0d0d0d 100%);box-shadow:0 20px 60px rgba(0,0,0,.4),0 -1px 0 rgba(0,0,0,.5),0 2px 0 rgba(240,237,230,.04)">
+          <!-- vents -->
+          <div class="flex justify-center gap-1">
+            <div class="h-[3px] w-[114px] rounded-[1px] bg-cream/[0.04]"></div>
+            <div class="h-[3px] w-[114px] rounded-[1px] bg-cream/[0.04]"></div>
+            <div class="h-[3px] w-[114px] rounded-[1px] bg-cream/[0.04]"></div>
+            <div class="h-[3px] w-[114px] rounded-[1px] bg-cream/[0.04]"></div>
+            <div class="h-[3px] w-[114px] rounded-[1px] bg-cream/[0.04]"></div>
+          </div>
+          <!-- screen bezel -->
+          <div class="mt-3 rounded-[6px] border border-cream/[0.06] p-[2px] pb-2" style="box-shadow:inset 0 2px 8px 1px rgba(0,0,0,.5)">
+            <div class="bg-[#050505]">
+              <!-- terminal chrome -->
+              <div class="flex h-[39px] items-center justify-between border-b border-cream/[0.06] bg-cream/[0.02] px-5">
+                <div class="flex gap-1.5">
+                  <div class="h-2 w-2 rounded-full bg-cream/10"></div>
+                  <div class="h-2 w-2 rounded-full bg-cream/10"></div>
+                  <div class="h-2 w-2 rounded-full bg-cream/10"></div>
+                </div>
+                <div class="font-mono text-[12px] uppercase tracking-[1.2px] text-cream/30">resetui://project · ready</div>
+                <div class="dot-glow h-[6px] w-[6px] rounded-full bg-ember"></div>
+              </div>
+              <!-- terminal body (typed by JS) -->
+              <div id="terminal" class="h-[363px] px-7 py-7 font-mono text-[13.6px] leading-[1.8] text-cream/40"></div>
+            </div>
+          </div>
+          <!-- bezel bottom bar -->
+          <div class="mt-3 flex h-9 items-center justify-between border border-cream/[0.04] px-4">
+            <span class="font-mono text-[9.6px] uppercase tracking-[1.9px] text-cream/25">DeepSeek Planner</span>
+            <span class="dot-glow h-1 w-1 rounded-full bg-ember"></span>
+            <span class="font-mono text-[9.6px] uppercase tracking-[1.9px] text-ember opacity-50">RESETUI</span>
+            <span class="font-mono text-[9.6px] uppercase tracking-[1.9px] text-cream/25">Kimi Executor</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         PRICING
+    ================================================================= -->
+    <section class="content-shell pt-32">
+      <div class="flex flex-col items-center px-12">
+        <div class="badge reveal"><i></i><span>Pricing</span></div>
+        <h2 class="reveal mt-6 text-center font-chalet text-[53px] font-bold leading-[0.98] tracking-[-1.7px] text-cream">Start free. Upgrade when you need more.</h2>
+        <p class="reveal mt-6 w-[620px] max-w-full text-center font-sans text-[16px] leading-[1.6] text-cream/75">Clear credits cover generation, chat editing, and export. Pick the plan that matches how often you redesign.</p>
+      </div>
+
+      <div class="pricing-grid mt-8 grid grid-cols-3 gap-6 px-6 py-10">
+        <div class="pricing-card reveal flex min-h-[440px] flex-col border border-cream/[0.14] bg-white/[0.02] p-8">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">Free Starter</span>
+            <span class="font-mono text-[10px] uppercase tracking-[1.5px] text-cream/30">01</span>
+          </div>
+          <div class="mt-8 font-pixel text-[48px] leading-none text-cream">$0</div>
+          <div class="mt-3 font-mono text-[12px] uppercase tracking-[1.2px] text-cream/40">Free starting plan</div>
+          <p class="mt-8 font-sans text-[14px] leading-[1.7] text-cream/70">For trying one source-aware redesign with a curated visual template.</p>
+          <ul class="mb-8 mt-8 space-y-3 font-mono text-[12px] leading-[1.5] text-cream/50">
+            <li><span class="text-ember">+</span> 5 starting credits</li>
+            <li><span class="text-ember">+</span> 1 project</li>
+            <li><span class="text-ember">+</span> Up to 7 sections</li>
+          </ul>
+          <a href="#early-access" class="btn-hard mt-auto inline-flex h-12 items-center justify-center border border-cream/25 font-mono text-[12px] font-bold uppercase tracking-[1.2px] text-cream hover:text-cream">Start Free</a>
+        </div>
+
+        <div class="pricing-card reveal relative flex min-h-[440px] flex-col border border-ember bg-ink p-8">
+          <div class="absolute right-5 top-5 bg-ember px-3 py-1 font-mono text-[9.6px] font-bold uppercase tracking-[1.4px] text-ink">Most popular</div>
+          <div class="flex items-center justify-between pr-28">
+            <span class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">Indie Pro</span>
+            <span class="font-mono text-[10px] uppercase tracking-[1.5px] text-cream/30">02</span>
+          </div>
+          <div class="mt-8 font-pixel text-[48px] leading-none text-cream">$19</div>
+          <div class="mt-3 font-mono text-[12px] uppercase tracking-[1.2px] text-cream/40">Per month</div>
+          <p class="mt-8 font-sans text-[14px] leading-[1.7] text-cream/70">For ambitious redesigns with premium systems, custom prompts, chat editing, and code export.</p>
+          <ul class="mb-8 mt-8 space-y-3 font-mono text-[12px] leading-[1.5] text-cream/50">
+            <li><span class="text-ember">+</span> 50 monthly credits</li>
+            <li><span class="text-ember">+</span> Up to 20 sections</li>
+            <li><span class="text-ember">+</span> Project-aware chat</li>
+            <li><span class="text-ember">+</span> Production code export</li>
+          </ul>
+          <a href="#early-access" class="btn-hard mt-auto inline-flex h-12 items-center justify-center bg-ember font-mono text-[12px] font-bold uppercase tracking-[1.2px] text-ink hover:text-ink">Upgrade to Pro</a>
+        </div>
+
+        <div class="pricing-card reveal flex min-h-[440px] flex-col border border-cream/[0.14] bg-white/[0.02] p-8">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">Credit Usage</span>
+            <span class="font-mono text-[10px] uppercase tracking-[1.5px] text-cream/30">03</span>
+          </div>
+          <div class="mt-8 font-pixel text-[48px] leading-none text-cream">5 / 1 / 2</div>
+          <div class="mt-3 font-mono text-[12px] uppercase tracking-[1.2px] text-cream/40">Generation / chat / export</div>
+          <p class="mt-8 font-sans text-[14px] leading-[1.7] text-cream/70">Simple, explicit credit costs keep every design action understandable.</p>
+          <ul class="mb-8 mt-8 space-y-3 font-mono text-[12px] leading-[1.5] text-cream/50">
+            <li><span class="text-ember">+</span> Generation costs 5 credits</li>
+            <li><span class="text-ember">+</span> Chat edits cost 1 credit</li>
+            <li><span class="text-ember">+</span> Export costs 2 credits</li>
+          </ul>
+          <a href="#early-access" class="btn-hard mt-auto inline-flex h-12 items-center justify-center border border-cream/25 font-mono text-[12px] font-bold uppercase tracking-[1.2px] text-cream hover:text-cream">View Credit Usage</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         TESTIMONIALS
+    ================================================================= -->
+    <section class="content-shell pt-32">
+      <div class="flex flex-col items-center px-12">
+        <div class="badge reveal"><i></i><span>Testimonials</span></div>
+        <h2 class="reveal mt-6 text-center font-chalet text-[53px] font-bold leading-[0.98] tracking-[-1.7px] text-cream">Teams notice when the redesign understands them.</h2>
+        <div class="reveal mt-8 flex items-center gap-3">
+          <button id="testimonialPrev" type="button" class="testimonial-nav btn-hard flex h-12 w-12 items-center justify-center border border-cream/25 text-cream" aria-label="Previous testimonial">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4 L6 9 L11 14 M6 9 H15" stroke="currentColor" stroke-width="1.9"/></svg>
+          </button>
+          <button id="testimonialNext" type="button" class="testimonial-nav btn-hard flex h-12 w-12 items-center justify-center border border-cream/25 text-cream" aria-label="Next testimonial">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4 L12 9 L7 14 M3 9 H12" stroke="currentColor" stroke-width="1.9"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-8 overflow-hidden px-6 py-10">
+        <div id="testimonialTrack" class="testimonial-track">
+          <div class="testimonial-card reveal min-h-[310px] border border-cream/[0.14] bg-white/[0.02] p-8">
+            <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">First redesign</div>
+            <p class="mt-8 font-chalet text-[26px] font-bold leading-[1.12] tracking-[-0.52px] text-cream">"It used the content we already had, then gave the page a direction we would never have reached from a generic prompt."</p>
+            <div class="mt-8 border-t border-cream/[0.12] pt-5">
+              <div class="font-mono text-[12px] uppercase tracking-[1.5px] text-cream">Maya R.</div>
+              <div class="mt-1 font-sans text-[13.6px] text-cream/45">Founding designer</div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal min-h-[310px] border border-cream/[0.14] bg-white/[0.02] p-8">
+            <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">Source context</div>
+            <p class="mt-8 font-chalet text-[26px] font-bold leading-[1.12] tracking-[-0.52px] text-cream">"ResetUI understood the product hierarchy without tracing the old layout. The result felt new and still felt like us."</p>
+            <div class="mt-8 border-t border-cream/[0.12] pt-5">
+              <div class="font-mono text-[12px] uppercase tracking-[1.5px] text-cream">Jon Bell</div>
+              <div class="mt-1 font-sans text-[13.6px] text-cream/45">Product design lead</div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal min-h-[310px] border border-cream/[0.14] bg-white/[0.02] p-8">
+            <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">Chat editing</div>
+            <p class="mt-8 font-chalet text-[26px] font-bold leading-[1.12] tracking-[-0.52px] text-cream">"I changed one section in chat and the rest of the page stayed coherent. That project awareness is the difference."</p>
+            <div class="mt-8 border-t border-cream/[0.12] pt-5">
+              <div class="font-mono text-[12px] uppercase tracking-[1.5px] text-cream">Arun K.</div>
+              <div class="mt-1 font-sans text-[13.6px] text-cream/45">Growth engineer</div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal min-h-[310px] border border-cream/[0.14] bg-white/[0.02] p-8">
+            <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">Creative planning</div>
+            <p class="mt-8 font-chalet text-[26px] font-bold leading-[1.12] tracking-[-0.52px] text-cream">"The planner made real design choices before code generation. It reads like a composed page, not a pile of components."</p>
+            <div class="mt-8 border-t border-cream/[0.12] pt-5">
+              <div class="font-mono text-[12px] uppercase tracking-[1.5px] text-cream">Elena V.</div>
+              <div class="mt-1 font-sans text-[13.6px] text-cream/45">Staff product designer</div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal min-h-[310px] border border-cream/[0.14] bg-white/[0.02] p-8">
+            <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">Media handling</div>
+            <p class="mt-8 font-chalet text-[26px] font-bold leading-[1.12] tracking-[-0.52px] text-cream">"Our product images stayed useful without becoming a lazy hero background. The media placement finally made sense."</p>
+            <div class="mt-8 border-t border-cream/[0.12] pt-5">
+              <div class="font-mono text-[12px] uppercase tracking-[1.5px] text-cream">Chris N.</div>
+              <div class="mt-1 font-sans text-[13.6px] text-cream/45">Brand designer</div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal min-h-[310px] border border-cream/[0.14] bg-white/[0.02] p-8">
+            <div class="font-mono text-[11.2px] font-bold uppercase tracking-[1.68px] text-ember">Production export</div>
+            <p class="mt-8 font-chalet text-[26px] font-bold leading-[1.12] tracking-[-0.52px] text-cream">"The exported page was a working front end, not a screenshot. We could review, edit, and ship the same artifact."</p>
+            <div class="mt-8 border-t border-cream/[0.12] pt-5">
+              <div class="font-mono text-[12px] uppercase tracking-[1.5px] text-cream">Priya S.</div>
+              <div class="mt-1 font-sans text-[13.6px] text-cream/45">Indie founder</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-32 h-px bg-cream/[0.14]"></div>
+    </section>
+
+    <!-- ================================================================
+         FAQ
+    ================================================================= -->
+    <section class="content-shell pt-32">
+      <div class="flex flex-col items-center px-12">
+        <div class="badge reveal"><i></i><span>FAQ</span></div>
+        <h2 class="reveal mt-8 text-center font-chalet text-[53px] font-bold leading-[0.98] tracking-[-1.7px] text-cream">Frequently asked questions.</h2>
+      </div>
+      <div id="faqs" class="faq-list mx-12 my-8 py-8">
+        <div class="faq cursor-pointer border border-cream/[0.14] px-12">
+          <div class="flex h-[72px] items-center gap-5">
+            <span class="font-mono text-[11.2px] font-bold tracking-[1.68px] text-ember">01</span>
+            <span class="flex-1 font-chalet text-[19px] tracking-[-0.38px] text-cream">What is ResetUI?</span>
+            <svg class="faq-chev" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8 L10 13 L15 8" stroke="rgba(240,237,230,.5)" stroke-width="1.67"/></svg>
+          </div>
+          <div class="faq-body"><div class="overflow-hidden"><p class="pb-6 pl-9 pr-10 font-sans text-[14px] leading-[1.7] text-cream/60">ResetUI is an agentic web design generator that redesigns an existing landing page from its URL and your design direction.</p></div></div>
+        </div>
+        <div class="faq -mt-px cursor-pointer border border-cream/[0.14] px-12">
+          <div class="flex h-[72px] items-center gap-5">
+            <span class="font-mono text-[11.2px] font-bold tracking-[1.68px] text-ember">02</span>
+            <span class="flex-1 font-chalet text-[19px] tracking-[-0.38px] text-cream">How does the agentic workflow work?</span>
+            <svg class="faq-chev" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8 L10 13 L15 8" stroke="rgba(240,237,230,.5)" stroke-width="1.67"/></svg>
+          </div>
+          <div class="faq-body"><div class="overflow-hidden"><p class="pb-6 pl-9 pr-10 font-sans text-[14px] leading-[1.7] text-cream/60">ResetUI captures structured source context, uses DeepSeek for creative planning, and uses Kimi to execute the full-page implementation.</p></div></div>
+        </div>
+        <div class="faq -mt-px cursor-pointer border border-cream/[0.14] px-12">
+          <div class="flex h-[72px] items-center gap-5">
+            <span class="font-mono text-[11.2px] font-bold tracking-[1.68px] text-ember">03</span>
+            <span class="flex-1 font-chalet text-[19px] tracking-[-0.38px] text-cream">What do I need to start?</span>
+            <svg class="faq-chev" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8 L10 13 L15 8" stroke="rgba(240,237,230,.5)" stroke-width="1.67"/></svg>
+          </div>
+          <div class="faq-body"><div class="overflow-hidden"><p class="pb-6 pl-9 pr-10 font-sans text-[14px] leading-[1.7] text-cream/60">A publicly accessible landing-page URL and a prompt describing the direction you want.</p></div></div>
+        </div>
+        <div class="faq -mt-px cursor-pointer border border-cream/[0.14] px-12">
+          <div class="flex h-[72px] items-center gap-5">
+            <span class="font-mono text-[11.2px] font-bold tracking-[1.68px] text-ember">04</span>
+            <span class="flex-1 font-chalet text-[19px] tracking-[-0.38px] text-cream">Does ResetUI copy the source page?</span>
+            <svg class="faq-chev" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8 L10 13 L15 8" stroke="rgba(240,237,230,.5)" stroke-width="1.67"/></svg>
+          </div>
+          <div class="faq-body"><div class="overflow-hidden"><p class="pb-6 pl-9 pr-10 font-sans text-[14px] leading-[1.7] text-cream/60">No. ResetUI keeps source content and brand context as evidence while the planner creates a new visual system and composition.</p></div></div>
+        </div>
+        <div class="faq -mt-px cursor-pointer border border-cream/[0.14] px-12">
+          <div class="flex h-[72px] items-center gap-5">
+            <span class="font-mono text-[11.2px] font-bold tracking-[1.68px] text-ember">05</span>
+            <span class="flex-1 font-chalet text-[19px] tracking-[-0.38px] text-cream">Can I edit the generated design?</span>
+            <svg class="faq-chev" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8 L10 13 L15 8" stroke="rgba(240,237,230,.5)" stroke-width="1.67"/></svg>
+          </div>
+          <div class="faq-body"><div class="overflow-hidden"><p class="pb-6 pl-9 pr-10 font-sans text-[14px] leading-[1.7] text-cream/60">Yes. Project-aware chat can target a section, and every accepted edit creates a recoverable version.</p></div></div>
+        </div>
+        <div class="faq -mt-px cursor-pointer border border-cream/[0.14] px-12">
+          <div class="flex h-[72px] items-center gap-5">
+            <span class="font-mono text-[11.2px] font-bold tracking-[1.68px] text-ember">06</span>
+            <span class="flex-1 font-chalet text-[19px] tracking-[-0.38px] text-cream">How do ResetUI credits work?</span>
+            <svg class="faq-chev" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8 L10 13 L15 8" stroke="rgba(240,237,230,.5)" stroke-width="1.67"/></svg>
+          </div>
+          <div class="faq-body"><div class="overflow-hidden"><p class="pb-6 pl-9 pr-10 font-sans text-[14px] leading-[1.7] text-cream/60">Generation costs 5 credits, a chat edit costs 1 credit, and export costs 2 credits.</p></div></div>
+        </div>
+        <div class="faq -mt-px cursor-pointer border border-cream/[0.14] px-12">
+          <div class="flex h-[72px] items-center gap-5">
+            <span class="font-mono text-[11.2px] font-bold tracking-[1.68px] text-ember">07</span>
+            <span class="flex-1 font-chalet text-[19px] tracking-[-0.38px] text-cream">How is source media used?</span>
+            <svg class="faq-chev" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8 L10 13 L15 8" stroke="rgba(240,237,230,.5)" stroke-width="1.67"/></svg>
+          </div>
+          <div class="faq-body"><div class="overflow-hidden"><p class="pb-6 pl-9 pr-10 font-sans text-[14px] leading-[1.7] text-cream/60">Approved source images and videos stay in foreground content roles and are never used as hero or CTA backgrounds.</p></div></div>
+        </div>
+        <div class="faq -mt-px cursor-pointer border border-cream/[0.14] px-12">
+          <div class="flex h-[72px] items-center gap-5">
+            <span class="font-mono text-[11.2px] font-bold tracking-[1.68px] text-ember">08</span>
+            <span class="flex-1 font-chalet text-[19px] tracking-[-0.38px] text-cream">What can ResetUI export?</span>
+            <svg class="faq-chev" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8 L10 13 L15 8" stroke="rgba(240,237,230,.5)" stroke-width="1.67"/></svg>
+          </div>
+          <div class="faq-body"><div class="overflow-hidden"><p class="pb-6 pl-9 pr-10 font-sans text-[14px] leading-[1.7] text-cream/60">Standalone HTML with Tailwind CSS and JavaScript, or a one-file React, Next.js, Vue, or Svelte implementation.</p></div></div>
+        </div>
+      </div>
+      <div class="h-px bg-cream/[0.14]"></div>
+    </section>
+
+  </main>
+
+  <!-- ================================================================
+       CTA — break free from big AI
+  ================================================================= -->
+  <section id="early-access" class="relative z-[2] overflow-hidden border-b border-cream/[0.14]">
+    <!-- Reuse the hero video only inside the rail-aligned CTA box. -->
+    <div class="content-shell pointer-events-none absolute inset-y-0 left-1/2 z-0 -translate-x-1/2 overflow-hidden" aria-hidden="true">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" tabindex="-1">
+        <source src="https://7xkytvucp2.ufs.sh/f/m4bRQHrXdK3UO3oSJPy84ZUAmJVSzydN5TExbp6hlc9ruDHa" type="video/webm">
+      </video>
+      <div class="hero-video-shade"></div>
+    </div>
+
+    <!-- radial dim behind heading -->
+    <div class="pointer-events-none absolute left-1/2 top-[300px] z-[1] h-[1000px] w-[1600px] -translate-x-1/2 opacity-60"
+         style="background:radial-gradient(closest-side, rgba(10,10,10,1) 25%, rgba(10,10,10,0) 60%)"></div>
+
+    <div class="relative z-[2] flex flex-col items-center pb-[120px] pt-[96px]">
+      <!-- rig glyph -->
+      <svg width="65" height="64" viewBox="0 0 65 64" class="reveal">
+        <g fill="none" stroke="#ed452e" stroke-width="3">
+          <path d="M14 42 a 12 12 0 1 1 4 -23 a 15 15 0 0 1 29 3 a 10 10 0 0 1 3 20 Z" fill="#ed452e"/>
+        </g>
+        <line x1="8" y1="56" x2="57" y2="7" stroke="#0a0a0a" stroke-width="5"/>
+        <line x1="12" y1="60" x2="61" y2="11" stroke="#ed452e" stroke-width="3"/>
+      </svg>
+
+      <!-- heading with chromatic aberration -->
+      <div class="break-free-title reveal relative mt-12 text-center">
+        <div class="absolute inset-0 -translate-x-[2px] text-center opacity-60" aria-hidden="true" style="color:transparent;text-shadow:-1px 0 rgba(43,79,255,.45)">
+          <span class="font-chalet text-[107px] font-bold leading-[0.94] tracking-[-3.4px]">Bring your page<br>into focus</span>
+        </div>
+        <div class="absolute inset-0 translate-x-[2px] text-center opacity-60" aria-hidden="true" style="color:transparent;text-shadow:1px 0 rgba(237,69,46,.45)">
+          <span class="font-chalet text-[107px] font-bold leading-[0.94] tracking-[-3.4px]">Bring your page<br>into focus</span>
+        </div>
+        <h2 class="relative m-0 font-chalet text-[107px] font-bold leading-[0.94] tracking-[-3.4px] text-cream">Bring your page<br>into focus</h2>
+      </div>
+
+      <!-- button -->
+      <a href="#early-access" class="break-free-cta cta-btn reveal mt-14 inline-flex h-[89px] w-[500px] items-center justify-center gap-3 bg-ember px-12">
+        <span class="font-mono text-[20.8px] font-bold text-ink">Start Free</span>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9 H14 M9 4 L14 9 L9 14" stroke="#0a0a0a" stroke-width="1.9"/></svg>
+      </a>
+      <div class="reveal mt-3 font-mono text-[13.6px] text-cream/50">5 starting credits. No credit card.</div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       FOOTER
+  ================================================================= -->
+  <footer class="relative z-[2] overflow-hidden pb-8 pt-16">
+    <div class="content-shell footer-inner relative px-12">
+      <div class="footer-grid grid grid-cols-[520px_292px_292px]">
+        <div>
+          <a href="#" class="font-pixel text-[22px] leading-none text-ember hover:text-ember"><img src="https://cdn.jsdelivr.net/gh/resetui/assests@main/Org-Logo.jpg" alt="ResetUI logo" class="mr-2 inline-block h-6 w-6 rounded-full object-cover align-middle"><span class="align-middle">ResetUI</span></a>
+          <p class="mt-5 w-[280px] font-sans text-[13.6px] leading-[1.6] text-cream/40">Agentic landing-page redesign built from real source context and deliberate creative direction.</p>
+        </div>
+        <div>
+          <h3 class="m-0 font-mono text-[12px] font-bold uppercase tracking-[1.8px] text-cream/40">Product</h3>
+          <ul class="mt-5 list-none space-y-2.5 p-0">
+            <li><a href="#" class="font-sans text-[13.6px] text-cream/50 transition-colors hover:text-ember">Templates</a></li>
+            <li><a href="#" class="font-sans text-[13.6px] text-cream/50 transition-colors hover:text-ember">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="m-0 font-mono text-[12px] font-bold uppercase tracking-[1.8px] text-cream/40">Resources</h3>
+          <ul class="mt-5 list-none space-y-2.5 p-0">
+            <li><a href="#" class="font-sans text-[13.6px] text-cream/50 transition-colors hover:text-ember">Pricing</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-16 flex h-[47px] items-center justify-center border-y border-cream/[0.14]">
+        <span class="font-mono text-[12px] uppercase tracking-[1.2px] text-cream/35">© 2026 ResetUI. All rights reserved.</span>
+      </div>
+    </div>
+    <div class="content-shell pointer-events-none relative overflow-hidden select-none whitespace-nowrap text-center font-pixel text-[clamp(64px,20vw,285px)] leading-none text-cream opacity-[0.03]">ResetUI</div>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   Interactions & animations
+============================================================ */
+
+/* Scroll reveal */
+const io = new IntersectionObserver((entries) => {
+  for (const e of entries) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+}, { threshold: 0.15, rootMargin: "0px 0px -5% 0px" });
+document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+/* Surveillance eye — pupil follows the cursor */
+(function () {
+  const svg = document.getElementById("surveil");
+  const pupil = document.getElementById("pupil");
+  if (!svg || !pupil) return;
+  let tx = 0, ty = 0, x = 0, y = 0;
+  document.addEventListener("mousemove", (ev) => {
+    const r = svg.getBoundingClientRect();
+    const dx = ev.clientX - (r.left + r.width / 2);
+    const dy = ev.clientY - (r.top + r.height / 2);
+    const d = Math.hypot(dx, dy) || 1;
+    const m = Math.min(d / 14, 26);
+    tx = (dx / d) * m; ty = (dy / d) * m * 0.55;
+  });
+  (function tick() {
+    x += (tx - x) * 0.08; y += (ty - y) * 0.08;
+    pupil.setAttribute("cx", 190 + x); pupil.setAttribute("cy", 190 + y);
+    requestAnimationFrame(tick);
+  })();
+})();
+
+/* Steps accordion — auto-advances every 5s, manual click overrides and resets the timer */
+(function () {
+  const steps = Array.from(document.querySelectorAll("#steps .step"));
+  if (!steps.length) return;
+  let index = steps.findIndex((s) => s.classList.contains("active"));
+  if (index < 0) index = 0;
+  let timer = null;
+
+  function activate(i) {
+    index = i;
+    steps.forEach((s) => s.classList.remove("active"));
+    steps[index].classList.add("active");
+  }
+
+  function startAutoplay() {
+    clearInterval(timer);
+    timer = setInterval(() => activate((index + 1) % steps.length), 5000);
+  }
+
+  steps.forEach((step, i) => {
+    step.addEventListener("click", () => {
+      activate(i);
+      startAutoplay();
+    });
+  });
+
+  startAutoplay();
+})();
+
+/* Testimonials carousel */
+(function () {
+  const track = document.getElementById("testimonialTrack");
+  const prev = document.getElementById("testimonialPrev");
+  const next = document.getElementById("testimonialNext");
+  if (!track || !prev || !next) return;
+
+  const slides = Array.from(track.querySelectorAll(".testimonial-card"));
+  let index = 0;
+
+  function visibleCount() {
+    return window.matchMedia("(min-width: 1024px)").matches ? 3 : 1;
+  }
+
+  function update() {
+    const first = slides[0];
+    if (!first) return;
+    const styles = getComputedStyle(track);
+    const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+    const maxIndex = Math.max(0, slides.length - visibleCount());
+    index = Math.max(0, Math.min(index, maxIndex));
+    track.style.transform = `translateX(${-index * (first.getBoundingClientRect().width + gap)}px)`;
+    prev.disabled = index === 0;
+    next.disabled = index === maxIndex;
+  }
+
+  prev.addEventListener("click", () => {
+    index -= 1;
+    update();
+  });
+
+  next.addEventListener("click", () => {
+    index += 1;
+    update();
+  });
+
+  window.addEventListener("resize", update);
+  update();
+})();
+
+/* FAQ accordion */
+document.querySelectorAll("#faqs .faq").forEach((row) => {
+  row.addEventListener("click", () => {
+    const wasOpen = row.classList.contains("open");
+    document.querySelectorAll("#faqs .faq").forEach((r) => r.classList.remove("open"));
+    if (!wasOpen) row.classList.add("open");
+  });
+});
+
+/* Terminal boot sequence (typed on scroll into view) */
+(function () {
+  const term = document.getElementById("terminal");
+  if (!term) return;
+  const ASCII = "  RESETUI\n  AGENTIC REDESIGN\n  SOURCE → PLAN → GENERATE";
+  const seq = [
+    { type: "cmd",   text: "λ resetui create" },
+    { type: "ascii", text: ASCII },
+    { type: "out",   text: "> Capturing source page...", pause: 500 },
+    { type: "out",   text: "> Source context · READY", pause: 350 },
+    { type: "out",   text: "> DeepSeek creative plan · READY", pause: 350 },
+    { type: "out",   text: "> Kimi full-page execution · READY", pause: 450 },
+    { type: "ready" },
+    { type: "prompt", text: "λ redesign" },
+  ];
+  let started = false;
+  const tio = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting) && !started) { started = true; run(); tio.disconnect(); }
+  }, { threshold: 0.35 });
+  tio.observe(term);
+
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  async function typeInto(el, text, speed) {
+    for (const ch of text) { el.textContent += ch; await sleep(speed); }
+  }
+  async function run() {
+    for (const step of seq) {
+      if (step.type === "cmd") {
+        const l = document.createElement("div");
+        l.className = "text-ember";
+        const caret = document.createElement("span"); caret.className = "caret ml-1";
+        term.appendChild(l); l.appendChild(caret);
+        const t = document.createElement("span"); l.insertBefore(t, caret);
+        await typeInto(t, step.text, 55);
+        caret.remove();
+      } else if (step.type === "ascii") {
+        const p = document.createElement("pre");
+        p.className = "m-0 py-2 font-mono text-[9.6px] leading-[1.3] text-cream/20";
+        p.textContent = step.text;
+        term.appendChild(p);
+        await sleep(300);
+      } else if (step.type === "out") {
+        const l = document.createElement("div");
+        l.textContent = step.text;
+        term.appendChild(l);
+        await sleep(step.pause || 300);
+      } else if (step.type === "ready") {
+        const l = document.createElement("div");
+        l.className = "pt-2";
+        l.innerHTML = '<span class="text-ember">✓ Ready. </span><span class="text-[12px] text-cream/25">Project: ACTIVE · Versions: ON</span>';
+        term.appendChild(l);
+        await sleep(600);
+      } else if (step.type === "prompt") {
+        const l = document.createElement("div");
+        l.className = "pt-3 text-ember";
+        const t = document.createElement("span");
+        const caret = document.createElement("span"); caret.className = "caret ml-1";
+        l.appendChild(t); l.appendChild(caret);
+        term.appendChild(l);
+        await sleep(500);
+        await typeInto(t, step.text, 110);
+      }
+    }
+  }
+})();
+
+/* Waitlist form (demo) */
+function joinWaitlist(ev) {
+  ev.preventDefault();
+  const btn = ev.target.querySelector("button");
+  btn.textContent = "You're in ✓";
+  btn.style.background = "#21c45e";
+  return false;
+}
+</script>
+</body>
+</html>
