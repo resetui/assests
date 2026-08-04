@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResetUI | Agentic Landing Page Redesign</title>
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg">
+
+<!-- Tailwind (CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Geist (body / UI) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:    '#2D2D2D',
+          cream:  '#FFFFFF',
+          lav:    '#A5F3FC',
+          pink:   '#CFFAFE',
+          yellow: '#22D3EE',
+          purple: '#0891B2',
+          slate2: '#4A5565',
+          slate3: '#6A7282',
+        },
+        fontFamily: {
+          display: ['Gelica', 'Cooper BT', 'Georgia', 'serif'],
+          sans:    ['Geist', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        },
+        maxWidth: { rail: '1280px' },
+      }
+    }
+  }
+</script>
+
+<style>
+  /* ---------- Gelica (soft serif display) ---------- */
+  @font-face{font-family:'Gelica';font-weight:200;font-style:normal;font-display:swap;
+    src:url('https://db.onlinewebfonts.com/t/1ac17a932beb61da9653b6d3366a974b.woff2') format('woff2');}
+  @font-face{font-family:'Gelica';font-weight:300;font-style:normal;font-display:swap;
+    src:url('https://db.onlinewebfonts.com/t/06fa553af1b476114e31ed72eb32e4b2.woff2') format('woff2');}
+  @font-face{font-family:'Gelica';font-weight:400;font-style:normal;font-display:swap;
+    src:url('https://db.onlinewebfonts.com/t/0a9fef00f08d33dcbf1fa79672dd47e8.woff2') format('woff2');}
+  @font-face{font-family:'Gelica';font-weight:500;font-style:normal;font-display:swap;
+    src:url('https://db.onlinewebfonts.com/t/959f782bce4e76d41be770690be2f766.woff2') format('woff2');}
+  @font-face{font-family:'Gelica';font-weight:600;font-style:normal;font-display:swap;
+    src:url('https://db.onlinewebfonts.com/t/1bb49b7c1349ac9407bc6ada395adcee.woff2') format('woff2');}
+
+  :root{ --rail: 1280px; }
+  *{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Geist',system-ui,sans-serif;
+    color:#2D2D2D;
+    background:#FAF9F7;
+    background-attachment:fixed;
+  }
+
+  /* 1440 design frame, 1280 inner rail (consistent vertical lines) */
+  .frame{ width:1440px; max-width:100%; margin-inline:auto; }
+  .rail{ width:1280px; max-width:calc(100% - 80px); margin-inline:auto; }
+
+  .font-display{ font-family:'Gelica','Cooper BT','Georgia',serif; font-feature-settings:"calt" 0,"liga" 0; }
+
+  /* gradient text-button arrow pill */
+  .grad-ring{ background:linear-gradient(135deg,#A5F3FC 0%,#67E8F9 50%,#22D3EE 100%); }
+  .btn-dark{ background:linear-gradient(180deg,#2D2D2D 10%,#000 100%); color:#F6F6F6; }
+  .btn-dark:hover{ filter:brightness(1.12); }
+  .btn-ghost{ background:#fff; box-shadow:inset 0 0 0 1px #E7E7E7; color:#2D2D2D; }
+  .btn-ghost:hover{ background:#fafafa; box-shadow:inset 0 0 0 1px #d8d8d8; }
+
+  .hero-cta{ position:relative; transition:transform .25s cubic-bezier(.2,.7,.3,1); }
+  .hero-cta:hover{ transform:translateY(-2px); }
+  .hero-cta .ring{ transition:opacity .25s, transform .25s; }
+  .hero-cta:hover .ring{ transform:scale(1.03); opacity:1; }
+
+  .chip{ transition:transform .2s, box-shadow .2s, background .2s; }
+  .chip:hover{ transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.06); }
+
+  .lift{ transition:transform .35s cubic-bezier(.2,.7,.3,1), box-shadow .35s; }
+  .lift:hover{ transform:translateY(-6px); }
+
+  /* nav */
+  #nav{ transition:box-shadow .3s, background .3s, transform .3s; }
+  #nav.scrolled{ box-shadow:0 8px 30px rgba(0,0,0,.10); }
+
+  /* animated hero gradient tiles */
+  .tilewrap{ filter:saturate(1.05); }
+  .tile{
+    background-image:linear-gradient(90deg,rgba(236,254,255,.9) 0%,rgba(34,211,238,.9) 25%,rgba(165,243,252,.9) 50%,rgba(8,145,178,.9) 75%,rgba(34,211,238,.9) 100%);
+    background-size:200% 100%; animation:slide 14s linear infinite;
+  }
+  @keyframes slide{ to{ background-position:-200% 0; } }
+
+  /* reveal on scroll */
+  .reveal{ opacity:0; transform:translateY(26px); transition:opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1); }
+  .reveal.in{ opacity:1; transform:none; }
+  .reveal.d1{ transition-delay:.08s } .reveal.d2{ transition-delay:.16s } .reveal.d3{ transition-delay:.24s } .reveal.d4{ transition-delay:.32s }
+  @media (prefers-reduced-motion: reduce){ .reveal{opacity:1!important;transform:none!important} .tile{animation:none} }
+
+  /* faq */
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .45s ease, opacity .35s ease; opacity:0; }
+  .faq-item.open .faq-a{ opacity:1; }
+  .faq-item.open .chev{ transform:rotate(45deg); }
+  .chev{ transition:transform .35s ease; }
+
+  /* testimonials */
+  .t-track{ display:flex; transition:transform .6s cubic-bezier(.2,.7,.3,1); }
+  .t-slide{ min-width:100%; }
+  .dot{ transition:width .3s, background .3s; }
+
+  /* play button pulse */
+  .play{ transition:transform .25s; }
+  .playwrap:hover .play{ transform:scale(1.08); }
+  .playwrap:hover .vthumb{ transform:scale(1.02); }
+  .vthumb{ transition:transform .8s cubic-bezier(.2,.7,.3,1); }
+
+  ::selection{ background:#22D3EE; color:#2D2D2D; }
+
+  /* watercolor placeholder for missing product shots */
+  .water{
+    background:
+      radial-gradient(120% 90% at 15% 18%, rgba(165,243,252,.9), transparent 55%),
+      radial-gradient(120% 90% at 85% 20%, rgba(186,230,253,.85), transparent 55%),
+      radial-gradient(120% 120% at 70% 95%, rgba(34,211,238,.85), transparent 55%),
+      radial-gradient(120% 120% at 20% 90%, rgba(8,145,178,.55), transparent 60%),
+      #ecfeff;
+  }
+  .mono{ font-family:'Geist',ui-monospace,monospace; }
+
+  /* Gelica DEMO font swaps $ and % for an ornament glyph — keep numerals/symbols in Geist (also matches the Figma, where prices use a sans face). */
+  [data-price],[data-old]{ font-family:'Geist',system-ui,sans-serif !important; font-weight:500; }
+  .num{ font-family:'Geist',system-ui,sans-serif; }
+</style>
+</head>
+
+<body class="overflow-x-hidden">
+
+<div class="frame relative">
+
+  <!-- ============================ HEADER / NAV ============================ -->
+  <header class="sticky top-0 z-50 pt-4 pb-2">
+    <div class="rail flex justify-center">
+      <nav id="nav" class="flex items-center justify-between gap-6 bg-white/95 backdrop-blur rounded-full pl-6 pr-2 h-[53.6px] w-[780px] max-w-full" style="box-shadow:inset 0 0 0 1px #D1D5DC;">
+        <a href="#top" class="flex items-center gap-2 text-[18px] font-semibold text-ink"><img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" alt="ResetUI logo" class="h-7 w-7 rounded-full object-cover"><span>ResetUI</span></a>
+        <div class="flex items-center gap-6">
+          <a href="#features" class="text-[13px] font-medium text-ink/70 hover:text-ink transition-colors">Features</a>
+          <a href="#pricing" class="text-[13px] font-medium text-ink/70 hover:text-ink transition-colors">Pricing</a>
+          <a href="#faq" class="text-[13px] font-medium text-ink/70 hover:text-ink transition-colors">FAQ</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="#" class="btn-ghost rounded-full h-9 px-4 flex items-center text-[12px] font-medium">Login</a>
+          <a href="#pricing" class="btn-dark rounded-full h-9 px-4 flex items-center text-[12px] font-medium">Get Started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================================ HERO ================================ -->
+  <section id="top" class="pt-12 pb-0">
+    <div class="rail text-center">
+      <div class="reveal mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-[12px] font-medium text-ink/70 shadow-[0_6px_20px_rgba(0,0,0,.05)] in">
+        <span class="h-2 w-2 rounded-full bg-yellow"></span>
+        Agentic landing-page redesign
+      </div>
+      <h1 class="reveal font-display font-light text-ink leading-[0.98] tracking-[-0.01em] text-[78px] md:text-[87px] in">
+        Redesign your landing page<br>with AI agents.
+      </h1>
+      <p class="reveal d1 mx-auto mt-6 max-w-[568px] text-[16px] leading-[26px] text-ink/80 in">
+        ResetUI captures your existing page, plans a new visual direction, generates the full redesign, and exports production-ready front-end code.
+      </p>
+
+      <!-- CTA -->
+      <div class="reveal d3 mt-10 flex justify-center in">
+        <a href="#pricing" class="hero-cta inline-flex">
+          <span class="relative inline-flex items-center rounded-full bg-[#1C1C1C] pl-5 pr-1 h-14 text-white">
+            <span class="text-[16px] font-medium pr-5">Start your redesign</span>
+            <span class="ml-1 grid place-items-center w-12 h-12 rounded-full bg-white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1C1C" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- inbox demo with animated gradient tiles -->
+    <div class="rail mt-12 relative">
+      <div class="tilewrap absolute inset-0 overflow-hidden rounded-[8px] opacity-95">
+        <div class="absolute inset-0 grid" style="grid-template-rows:repeat(4,1fr)">
+          <div class="grid" style="grid-template-columns:2fr 1fr 2fr;gap:8px">
+            <div class="tile"></div><div class="tile" style="animation-delay:-3s"></div><div class="tile" style="animation-delay:-6s"></div>
+          </div>
+          <div class="grid" style="grid-template-columns:1fr 2fr 1fr 3fr 1fr;gap:8px">
+            <div class="tile" style="animation-delay:-1s"></div><div class="tile" style="animation-delay:-5s"></div><div class="tile" style="animation-delay:-2s"></div><div class="tile" style="animation-delay:-7s"></div><div class="tile" style="animation-delay:-4s"></div>
+          </div>
+          <div class="grid" style="grid-template-columns:2fr 1fr 2fr 3fr 1fr;gap:8px">
+            <div class="tile" style="animation-delay:-6s"></div><div class="tile" style="animation-delay:-2s"></div><div class="tile" style="animation-delay:-8s"></div><div class="tile" style="animation-delay:-3s"></div><div class="tile" style="animation-delay:-1s"></div>
+          </div>
+          <div class="grid" style="grid-template-columns:1fr 2fr 1fr;gap:8px">
+            <div class="tile" style="animation-delay:-4s"></div><div class="tile" style="animation-delay:-7s"></div><div class="tile" style="animation-delay:-2s"></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal d2 relative p-12 in">
+        <div style="width:1052px;max-width:100%;height:520px;border-radius:12px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)">
+            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">ResetUI project canvas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================== LOGOS =============================== -->
+  <section class="py-20">
+    <div class="rail flex flex-col items-center gap-10">
+        <p class="reveal text-[16px] text-ink/80 in">One connected workflow from source capture to final code.</p>
+      <div class="reveal d1 flex flex-wrap justify-center items-center gap-x-12 gap-y-4 text-ink/55 in">
+        <span class="font-semibold tracking-[0.18em] text-[19px]">DEEPSEEK</span>
+        <span class="font-semibold text-[20px]">Kimi</span>
+        <span class="font-semibold text-[21px] tracking-tight">OpenAI</span>
+        <span class="font-medium text-[20px] lowercase">tailwind</span>
+        <span class="font-semibold text-[20px] tracking-tight">Next.js</span>
+        <span class="font-bold tracking-[0.05em] text-[20px]">VITE</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= WORKFLOW ============================= -->
+  <section class="py-16">
+    <div class="rail">
+      <div class="reveal flex items-end justify-between gap-6 flex-wrap in">
+        <div>
+          <h2 class="font-display text-[46px] leading-[48px] text-black">From URL to production code in three steps.</h2>
+          <p class="mt-3 max-w-[420px] text-[16px] leading-[24.8px] text-[#5D5D5D]">Capture the page you have, define a fresh visual direction, and generate a complete redesign you can refine and export.</p>
+        </div>
+          <a href="#pricing" class="btn-dark rounded-full h-11 px-6 flex items-center text-[14px] font-medium shrink-0">Start your redesign</a>
+      </div>
+
+      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- step 1 -->
+        <div class="reveal d1 flex flex-col gap-6 in">
+          <div class="px-2">
+            <h3 class="font-display font-light text-[23.4px] leading-[40px] text-ink">Capture your page</h3>
+            <p class="mt-1 text-[16px] leading-[25.6px] tracking-[-0.01em] text-ink/65">Paste a public landing-page URL so ResetUI can capture its verified content, links, and brand context.</p>
+          </div>
+          <div class="relative rounded-3xl overflow-hidden h-[300px] water grid place-items-center" style="box-shadow:inset 0 0 0 1px rgba(45,45,45,.05)">
+            <div style="width:78%;height:180px;border-radius:12px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+              <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Step Preview</span>
+            </div>
+            <span class="absolute top-4 left-4 rounded-full bg-[#1C1C1C] text-white text-[16px] font-medium px-3 py-[3px]">Step 1</span>
+          </div>
+        </div>
+        <!-- step 2 -->
+        <div class="reveal d2 flex flex-col gap-6 in">
+          <div class="px-2">
+            <h3 class="font-display font-light text-[23.4px] leading-[40px] text-ink">Set the direction</h3>
+            <p class="mt-1 text-[16px] leading-[25.6px] tracking-[-0.01em] text-ink/65">Describe the new look you want and let the planning agent turn it into a coherent creative brief.</p>
+          </div>
+          <div class="relative rounded-3xl overflow-hidden h-[300px] water grid place-items-center" style="box-shadow:inset 0 0 0 1px rgba(45,45,45,.05)">
+            <div style="width:78%;height:180px;border-radius:12px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+              <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Step Preview</span>
+            </div>
+            <span class="absolute top-4 left-4 rounded-full bg-[#1C1C1C] text-white text-[16px] font-medium px-3 py-[3px]">Step 2</span>
+          </div>
+        </div>
+        <!-- step 3 -->
+        <div class="reveal d3 flex flex-col gap-6 in">
+          <div class="px-2">
+            <h3 class="font-display font-light text-[23.4px] leading-[40px] text-ink">Generate and export</h3>
+            <p class="mt-1 text-[16px] leading-[25.6px] tracking-[-0.01em] text-ink/65">Create the full page, refine individual sections in chat, and export code for your preferred framework.</p>
+          </div>
+          <div class="relative rounded-3xl overflow-hidden h-[300px] water grid place-items-center" style="box-shadow:inset 0 0 0 1px rgba(45,45,45,.05)">
+            <div style="width:78%;height:180px;border-radius:12px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+              <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Step Preview</span>
+            </div>
+            <span class="absolute top-4 left-4 rounded-full bg-[#1C1C1C] text-white text-[16px] font-medium px-3 py-[3px]">Step 3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= FEATURES ============================= -->
+  <section class="py-12">
+    <div class="rail">
+      <div class="rounded-[24px] overflow-hidden" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px rgba(45,45,45,.05)">
+        <div class="reveal text-center pt-28 pb-4 px-16 in">
+          <h2 class="font-display text-[53px] leading-[58.8px] text-ink">Everything your redesign needs, connected.</h2>
+        </div>
+        <div id="feature-list">
+  <div class="reveal px-16 py-28 in">
+    <div class="flex items-center gap-20 flex-wrap lg:flex-nowrap ">
+      <div class="w-[524px] max-w-full">
+        <h3 class="font-display text-[48px] leading-[52.8px] text-ink">Source-aware capture</h3>
+        <p class="mt-6 text-[24px] leading-[30px] font-medium text-ink">Start from the page you already have.</p>
+        <p class="mt-4 text-[16px] leading-[26px] text-ink/80">ResetUI captures useful copy, links, calls to action, pricing, and approved media before redesign work begins.</p>
+        <p class="mt-4 text-[16px] leading-[26px] text-ink/80">Your new page stays grounded in the real product without copying the existing visual layout.</p>
+        <div class="mt-8 flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg grid place-items-center" style="background:#A5F3FC"><svg width="16" height="16" viewBox="0 0 24 24" fill="#2D2D2D"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z"></path></svg></span>
+          <span class="text-[14px] font-medium text-ink">Verified context stays connected throughout the project.</span>
+        </div>
+        <a href="#pricing" class="btn-dark inline-flex mt-8 rounded-full h-11 px-6 items-center text-[14px] font-medium">Start free</a>
+      </div>
+      <div class="flex-1 min-w-[420px]">
+        <div class="relative w-full aspect-[603/540] rounded-2xl overflow-hidden water grid place-items-center">
+          <div style="width:78%;height:55%;border-radius:12px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Feature Preview</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mx-16 border-t border-ink/5"></div>
+
+  <div class="reveal px-16 py-28 in">
+    <div class="flex items-center gap-20 flex-wrap lg:flex-nowrap lg:flex-row-reverse">
+      <div class="w-[524px] max-w-full">
+        <h3 class="font-display text-[48px] leading-[52.8px] text-ink">Agentic creative planning</h3>
+        <p class="mt-6 text-[24px] leading-[30px] font-medium text-ink">A clear visual system before generation.</p>
+        <p class="mt-4 text-[16px] leading-[26px] text-ink/80">Your prompt and captured context become a structured plan for composition, hierarchy, imagery, and motion.</p>
+        <p class="mt-4 text-[16px] leading-[26px] text-ink/80">Specialized agents keep creative direction and implementation aligned from the first section to the last.</p>
+        <div class="mt-8 flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg grid place-items-center" style="background:#A5F3FC"><svg width="16" height="16" viewBox="0 0 24 24" fill="#2D2D2D"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z"></path></svg></span>
+          <span class="text-[14px] font-medium text-ink">Plan-matched generation across the complete page.</span>
+        </div>
+        <a href="#pricing" class="btn-dark inline-flex mt-8 rounded-full h-11 px-6 items-center text-[14px] font-medium">See the workflow</a>
+      </div>
+      <div class="flex-1 min-w-[420px]">
+        <div class="relative w-full aspect-[603/540] rounded-2xl overflow-hidden water grid place-items-center">
+          <div style="width:78%;height:55%;border-radius:12px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Feature Preview</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mx-16 border-t border-ink/5"></div>
+
+  <div class="reveal px-16 py-28 in">
+    <div class="flex items-center gap-20 flex-wrap lg:flex-nowrap ">
+      <div class="w-[524px] max-w-full">
+        <h3 class="font-display text-[48px] leading-[52.8px] text-ink">Focused edits and export</h3>
+        <p class="mt-6 text-[24px] leading-[30px] font-medium text-ink">Refine the design without starting over.</p>
+        <p class="mt-4 text-[16px] leading-[26px] text-ink/80">Project-aware chat targets the relevant section while preserving everything else you have already accepted.</p>
+        <p class="mt-4 text-[16px] leading-[26px] text-ink/80">Export standalone HTML or a practical React, Next.js, Vue, or Svelte implementation when the page is ready.</p>
+        <div class="mt-8 flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg grid place-items-center" style="background:#A5F3FC"><svg width="16" height="16" viewBox="0 0 24 24" fill="#2D2D2D"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z"></path></svg></span>
+          <span class="text-[14px] font-medium text-ink">Every accepted edit creates a recoverable version.</span>
+        </div>
+        <a href="#pricing" class="btn-dark inline-flex mt-8 rounded-full h-11 px-6 items-center text-[14px] font-medium">Explore pricing</a>
+      </div>
+      <div class="flex-1 min-w-[420px]">
+        <div class="relative w-full aspect-[603/540] rounded-2xl overflow-hidden water grid place-items-center">
+          <div style="width:78%;height:55%;border-radius:12px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Feature Preview</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== DEMO VIDEO =========================== -->
+  <section class="py-24">
+    <div class="rail max-w-[1120px]">
+      <div class="reveal flex items-end justify-between gap-6 flex-wrap in">
+        <div>
+          <h2 class="font-display text-[45.6px] leading-[48px] text-black">See a complete ResetUI redesign.</h2>
+          <p class="mt-3 text-[16px] leading-[24.8px] text-[#5D5D5D]">Watch the workflow move from captured page context and creative direction to an editable final design.</p>
+        </div>
+          <a href="#pricing" class="btn-dark rounded-full h-11 px-6 flex items-center text-[14px] font-medium shrink-0" style="box-shadow:0 1px 3px rgba(0,0,0,.1);">Start free</a>
+      </div>
+
+      <div class="reveal d1 mt-12 relative in">
+        <div class="absolute -inset-4 rounded-[24px] opacity-70" style="background:linear-gradient(90deg,#A5F3FC 0%,#22D3EE 100%);filter:blur(2px)"></div>
+        <div class="relative rounded-[24px] overflow-hidden aspect-[1056/594]" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Video Preview</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== TESTIMONIALS =========================== -->
+  <section class="py-20">
+    <div class="rail max-w-[1057px]">
+      <div class="reveal overflow-hidden in">
+        <div id="t-track" class="t-track">
+  <div class="t-slide">
+    <div class="flex gap-16 items-start flex-wrap md:flex-nowrap pr-2">
+      <div class="w-64 h-64 rounded-3xl overflow-hidden shrink-0" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+        <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Avatar</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex gap-6">
+          <svg width="38" height="32" viewBox="0 0 38 32" fill="#2D2D2D" class="shrink-0"><path d="M0 32V18C0 8 5 1.5 15 0l1.5 4.5C10 6 7 9.5 7 14h7v18H0zm22 0V18C22 8 27 1.5 37 0l1.5 4.5C32 6 29 9.5 29 14h7v18H22z" opacity=".9"></path></svg>
+          <p class="font-display font-light text-[31px] leading-[40px] text-ink">ResetUI gave us a distinctive new landing page without losing the verified product story. The exported code was a practical starting point for our team.</p>
+        </div>
+        <div class="mt-8 pl-14">
+            <div class="text-[16px] font-medium text-ink">Maya Chen</div>
+            <div class="text-[16px] text-ink/65">Product Designer, Northstar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="t-slide">
+    <div class="flex gap-16 items-start flex-wrap md:flex-nowrap pr-2">
+      <div class="w-64 h-64 rounded-3xl overflow-hidden shrink-0" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+        <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Avatar</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex gap-6">
+          <svg width="38" height="32" viewBox="0 0 38 32" fill="#2D2D2D" class="shrink-0"><path d="M0 32V18C0 8 5 1.5 15 0l1.5 4.5C10 6 7 9.5 7 14h7v18H0zm22 0V18C22 8 27 1.5 37 0l1.5 4.5C32 6 29 9.5 29 14h7v18H22z" opacity=".9"></path></svg>
+          <p class="font-display font-light text-[31px] leading-[40px] text-ink">The planning step made the creative direction clear before generation, and targeted chat edits kept every revision focused.</p>
+        </div>
+        <div class="mt-8 pl-14">
+            <div class="text-[16px] font-medium text-ink">Jordan Lee</div>
+            <div class="text-[16px] text-ink/65">Founder, Metric</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="t-slide">
+    <div class="flex gap-16 items-start flex-wrap md:flex-nowrap pr-2">
+      <div class="w-64 h-64 rounded-3xl overflow-hidden shrink-0" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+        <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Avatar</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex gap-6">
+          <svg width="38" height="32" viewBox="0 0 38 32" fill="#2D2D2D" class="shrink-0"><path d="M0 32V18C0 8 5 1.5 15 0l1.5 4.5C10 6 7 9.5 7 14h7v18H0zm22 0V18C22 8 27 1.5 37 0l1.5 4.5C32 6 29 9.5 29 14h7v18H22z" opacity=".9"></path></svg>
+          <p class="font-display font-light text-[31px] leading-[40px] text-ink">We went from a URL and rough prompt to a complete landing page, then exported it in the framework our frontend team already uses.</p>
+        </div>
+        <div class="mt-8 pl-14">
+            <div class="text-[16px] font-medium text-ink">Samuel Ortiz</div>
+            <div class="text-[16px] text-ink/65">Creative Lead, Bloom Labs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="t-slide">
+    <div class="flex gap-16 items-start flex-wrap md:flex-nowrap pr-2">
+      <div class="w-64 h-64 rounded-3xl overflow-hidden shrink-0" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;">
+        <span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">Avatar</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex gap-6">
+          <svg width="38" height="32" viewBox="0 0 38 32" fill="#2D2D2D" class="shrink-0"><path d="M0 32V18C0 8 5 1.5 15 0l1.5 4.5C10 6 7 9.5 7 14h7v18H0zm22 0V18C22 8 27 1.5 37 0l1.5 4.5C32 6 29 9.5 29 14h7v18H22z" opacity=".9"></path></svg>
+          <p class="font-display font-light text-[31px] leading-[40px] text-ink">Recoverable versions made it easy to explore a bold direction, compare changes, and return to the strongest design.</p>
+        </div>
+        <div class="mt-8 pl-14">
+            <div class="text-[16px] font-medium text-ink">Avery Brooks</div>
+            <div class="text-[16px] text-ink/65">Design Director, Forma</div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+      </div>
+      <div class="mt-12 relative flex items-center justify-center">
+        <div id="t-dots" class="flex items-center gap-2"><button data-i="0" class="dot h-2 rounded-full w-6 bg-[#22D3EE]"></button><button data-i="1" class="dot h-2 rounded-full w-2 bg-[#22D3EE]/40"></button><button data-i="2" class="dot h-2 rounded-full w-2 bg-[#22D3EE]/40"></button><button data-i="3" class="dot h-2 rounded-full w-2 bg-[#22D3EE]/40"></button></div>
+        <div class="absolute right-0 flex items-center gap-4">
+          <button id="t-prev" class="grid place-items-center w-9 h-9 rounded-full" style="background:#22D3EE" aria-label="Previous">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1C1C" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
+          </button>
+          <button id="t-next" class="grid place-items-center w-9 h-9 rounded-full" style="background:#22D3EE" aria-label="Next">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1C1C1C" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= PRICING ============================= -->
+  <section id="pricing" class="py-12">
+    <div class="rail">
+      <div class="rounded-[24px] overflow-hidden" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px rgba(45,45,45,.05)">
+        <div class="reveal text-center pt-20 px-16 in">
+        <h2 class="font-display font-light text-[54px] leading-[68px] text-ink">Simple pricing for every<br>stage of your redesign.</h2>
+        </div>
+
+        <!-- billing toggle -->
+        <div class="reveal d1 mt-10 flex justify-center in">
+          <div class="flex items-center gap-1 rounded-full p-1" style="background:rgba(8,145,178,.10)">
+            <button data-bill="yearly" class="bill-btn rounded-full h-9 pl-[14px] pr-1.5 flex items-center gap-2 text-[16px] font-medium text-ink bg-white">
+              Bill Yearly
+              <span class="grad-ring relative rounded-full px-2 h-7 grid place-items-center text-[12px] font-medium text-[#18181B]" style="box-shadow:inset 0 0 0 1px #fff,0 1px 3px rgba(0,0,0,.1)">Save 20%</span>
+            </button>
+            <button data-bill="monthly" class="bill-btn rounded-full h-9 px-4 flex items-center text-[16px] font-medium text-ink/70">Bill Monthly</button>
+          </div>
+        </div>
+
+        <!-- plans -->
+        <div class="mt-12 px-16 pb-24">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch max-w-[1207px] mx-auto">
+
+            <!-- PLUS -->
+            <div class="reveal d1 lift relative rounded-[24px] p-6 flex flex-col in" style="background:linear-gradient(160deg,#ECFEFF 0%,#CFFAFE 60%,#A5F3FC 100%);box-shadow:inset 0 0 0 1px rgba(8,145,178,.12),0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1)">
+              <div class="text-[24px] font-medium text-slate3">Free Starter</div>
+              <div class="mt-1 flex items-end gap-3">
+                <span class="font-display text-[27.5px] leading-9 text-slate3 line-through" data-old="">$25</span>
+                <span class="font-display text-[47.8px] leading-[48px] text-ink" data-price="">$20</span>
+              </div>
+              <div class="mt-2 text-[14px] text-ink/65" data-sub="">For your first guided redesign</div>
+              <div class="mt-6 text-[18px] text-slate2">Start with one curated landing-page project.</div>
+              <ul class="mt-4 space-y-3 text-[16px] text-slate2 flex-1">
+                <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+                <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+                <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+                <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+              </ul>
+              <a href="#" class="btn-dark mt-6 rounded-full h-11 grid place-items-center text-[14px] font-medium">Get Started</a>
+              <p class="mt-3 text-center text-[14px] text-ink/80">One project included.</p>
+            </div>
+
+            <!-- PRO -->
+            <div class="reveal d2 relative rounded-[24px] grad-ring p-2 lift in" style="box-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1)">
+              <div class="text-center text-[16px] font-medium text-ink py-1">Most popular</div>
+              <div class="rounded-[18px] p-6 flex flex-col h-[calc(100%-34px)]" style="background:linear-gradient(160deg,#ECFEFF 0%,#CFFAFE 60%,#A5F3FC 100%)">
+              <div class="text-[24px] font-medium text-slate3">Indie Pro</div>
+                <div class="mt-1 flex items-end gap-3">
+                  <span class="font-display text-[28.8px] leading-9 text-slate3 line-through" data-old="">$50</span>
+                  <span class="font-display text-[48px] leading-[48px] text-ink" data-price="">$40</span>
+                </div>
+                <div class="mt-2 text-[14px] text-ink/65" data-sub="">50 redesign credits billed yearly</div>
+                <div class="mt-6 text-[18px] text-slate2">For custom direction, chat editing, and code export.</div>
+                <ul class="mt-4 space-y-3 text-[16px] text-slate2 flex-1">
+                  <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+                  <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet consectetur</li>
+                  <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+                  <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+                  <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+                </ul>
+                <a href="#" class="btn-dark mt-6 rounded-full h-11 grid place-items-center text-[14px] font-medium">Get Started</a>
+                <p class="mt-3 text-center text-[14px] text-ink/80">Cancel or change plans anytime.</p>
+              </div>
+            </div>
+
+            <!-- ENTERPRISE -->
+            <div class="reveal d3 lift relative rounded-[24px] p-6 flex flex-col in" style="background:linear-gradient(160deg,#ECFEFF 0%,#CFFAFE 60%,#A5F3FC 100%);box-shadow:inset 0 0 0 1px rgba(8,145,178,.12),0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1)">
+              <div class="text-[24px] font-medium text-slate3">Teams</div>
+              <div class="mt-1 font-display text-[46.3px] leading-[48px] text-ink">Get in touch</div>
+              <div class="mt-6 text-[18px] text-slate2">For higher-volume redesign workflows and shared projects.</div>
+              <ul class="mt-4 space-y-3 text-[16px] text-slate2 flex-1">
+                <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+                <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+                <li class="flex gap-2"><span class="shrink-0 mt-[2px] inline-grid place-items-center w-6 h-6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2c.6 4.8 2.6 6.8 7.4 7.4-4.8.6-6.8 2.6-7.4 7.4-.6-4.8-2.6-6.8-7.4-7.4C9.4 8.8 11.4 6.8 12 2z" transform="translate(0 2.6) scale(0.92)" fill="#67E8F9"></path></svg></span>Lorem ipsum dolor sit amet</li>
+              </ul>
+              <a href="#" class="btn-ghost mt-6 rounded-full h-11 grid place-items-center text-[14px] font-medium">Contact Us</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ COMPARISON ============================ -->
+  <section class="py-24">
+    <div class="rail max-w-[1120px]">
+      <div class="reveal text-center max-w-[576px] mx-auto in">
+          <h2 class="font-display text-[45.8px] leading-[48px] text-black">One workspace instead of<br>a fragmented design stack.</h2>
+          <p class="mt-6 text-[16px] leading-[24.8px] text-[#5D5D5D]">ResetUI connects capture, planning, generation, editing, history, and export in one recoverable project.</p>
+      </div>
+
+      <div class="reveal d1 mt-12 rounded-[24px] p-10 in" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px rgba(45,45,45,.05)">
+        <div class="flex items-center justify-center gap-12 flex-wrap">
+          <div class="w-[264px]">
+            <div style="width:256px;height:320px;border-radius:16px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;margin:0 auto;"><span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">App Preview</span></div>
+            <div class="flex items-center justify-between pt-4">
+              <span class="text-[12px] text-ink/65">In total</span>
+              <span class="flex items-baseline gap-0.5"><span class="num font-semibold text-[27px] text-ink">$93</span><span class="num font-semibold text-[18px] text-ink/65">/month</span></span>
+            </div>
+          </div>
+          <div class="font-display font-medium text-[46.5px] text-ink">vs</div>
+          <div class="w-[264px]">
+            <div style="width:256px;height:320px;border-radius:16px;background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;margin:0 auto;"><span style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:rgba(0,0,0,0.25);">App Preview</span></div>
+            <div class="flex items-center justify-between pt-4">
+              <span class="text-[12px] text-ink/65">In total</span>
+              <span class="relative flex items-baseline gap-0.5">
+                <span class="num font-semibold text-[27px] text-ink">$25</span><span class="num font-semibold text-[18px] text-ink/65">/month</span>
+                <span class="absolute -bottom-1 right-2 h-[6px] w-14 rounded-full grad-ring opacity-90"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= BENEFITS ============================= -->
+  <section class="py-12">
+    <div class="rail">
+      <div class="reveal rounded-[24px] overflow-hidden px-20 py-[72px] text-center in" style="background:linear-gradient(180deg,#2D2D2D 10%,#000 100%)">
+        <h2 class="font-display font-light text-[47.4px] leading-[58px] text-white">Designed for source-aware,<br>recoverable generation.</h2>
+        <div class="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left max-w-[1177px] mx-auto">
+          <div class="reveal d1 in">
+            <div class="w-10 h-10 rounded-[10px] mb-6" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px)"></div>
+            <h3 class="text-[22.3px] font-medium text-white mb-2">Verified page context</h3>
+            <p class="text-[18px] leading-7 text-[#D1D1D1]">Useful source content and approved media stay governed throughout the redesign.</p>
+          </div>
+          <div class="reveal d2 in">
+            <div class="w-10 h-10 rounded-[10px] mb-6" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px)"></div>
+            <h3 class="text-[23.8px] font-medium text-white mb-2">Distinct visual direction</h3>
+            <p class="text-[18px] leading-7 text-[#D1D1D1]">Your prompt drives a new system instead of cloning the existing layout.</p>
+          </div>
+          <div class="reveal d3 in">
+            <div class="w-10 h-10 rounded-[10px] mb-6" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px)"></div>
+            <h3 class="text-[23.1px] font-medium text-white mb-2 leading-10">Targeted chat edits</h3>
+            <p class="text-[18px] leading-7 text-[#D1D1D1]">Refine individual sections without regenerating the complete page.</p>
+          </div>
+          <div class="reveal d4 in">
+            <div class="w-10 h-10 rounded-[10px] mb-6" style="background-color:#e8e8e6;background-image:repeating-linear-gradient(135deg,rgba(0,0,0,0.07) 0 2px,transparent 2px 9px)"></div>
+            <h3 class="text-[23.8px] font-medium text-white mb-2">Production export</h3>
+            <p class="text-[18px] leading-7 text-[#D1D1D1]">Take the accepted design into the frontend framework you already use.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================== FAQ =============================== -->
+  <section class="py-24">
+    <div class="rail">
+      <div class="flex gap-20 items-start flex-wrap">
+        <div class="reveal w-[456px] max-w-full in">
+      <h2 class="font-display font-light text-[46.3px] leading-[58px] text-ink">Your questions,<br>answered.</h2>
+      <p class="mt-4 text-[16px] text-ink/80">Practical details before your first redesign. <a href="#contact" class="underline decoration-ink/30 underline-offset-2 hover:decoration-ink">Contact us</a></p>
+        </div>
+        <div class="reveal d1 flex-1 min-w-[420px] in">
+          <div id="faq-list" class="px-6">
+  <div class="faq-item border-b border-[#E5E5E5] border-t">
+    <button class="faq-q w-full flex items-center justify-between gap-4 py-8 text-left">
+        <span class="text-[18px] leading-7 font-medium text-ink/80">What does ResetUI need to start?</span>
+      <span class="chev shrink-0 text-ink/60"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></span>
+    </button>
+      <div class="faq-a"><p class="pb-8 pr-10 text-[16px] leading-7 text-ink/70">A publicly accessible landing-page URL and a prompt describing the visual direction you want.</p></div>
+  </div>
+  <div class="faq-item border-b border-[#E5E5E5] ">
+    <button class="faq-q w-full flex items-center justify-between gap-4 py-8 text-left">
+        <span class="text-[18px] leading-7 font-medium text-ink/80">Does ResetUI copy my current layout?</span>
+      <span class="chev shrink-0 text-ink/60"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></span>
+    </button>
+      <div class="faq-a"><p class="pb-8 pr-10 text-[16px] leading-7 text-ink/70">No. It preserves useful page context while generating a distinct visual system based on your direction.</p></div>
+  </div>
+  <div class="faq-item border-b border-[#E5E5E5] ">
+    <button class="faq-q w-full flex items-center justify-between gap-4 py-8 text-left">
+        <span class="text-[18px] leading-7 font-medium text-ink/80">Can I edit the generated design?</span>
+      <span class="chev shrink-0 text-ink/60"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></span>
+    </button>
+      <div class="faq-a"><p class="pb-8 pr-10 text-[16px] leading-7 text-ink/70">Yes. Project-aware chat applies focused changes and creates a recoverable version after each accepted edit.</p></div>
+  </div>
+  <div class="faq-item border-b border-[#E5E5E5] ">
+    <button class="faq-q w-full flex items-center justify-between gap-4 py-8 text-left">
+        <span class="text-[18px] leading-7 font-medium text-ink/80">What can I export?</span>
+      <span class="chev shrink-0 text-ink/60"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></span>
+    </button>
+      <div class="faq-a"><p class="pb-8 pr-10 text-[16px] leading-7 text-ink/70">Export standalone HTML or a one-file React, Next.js, Vue, or Svelte implementation.</p></div>
+  </div>
+  <div class="faq-item border-b border-[#E5E5E5] ">
+    <button class="faq-q w-full flex items-center justify-between gap-4 py-8 text-left">
+        <span class="text-[18px] leading-7 font-medium text-ink/80">How do credits work?</span>
+      <span class="chev shrink-0 text-ink/60"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></span>
+    </button>
+      <div class="faq-a"><p class="pb-8 pr-10 text-[16px] leading-7 text-ink/70">Credits make generation, chat editing, and export costs predictable across your projects.</p></div>
+  </div></div>
+          <div class="pt-6 flex justify-center">
+            <button class="btn-ghost rounded-full h-9 px-4 text-[12px] font-medium">Show All 18 Questions</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================ CTA ================================ -->
+  <section id="contact" class="py-24">
+    <div class="rail">
+      <div class="reveal rounded-[24px] px-8 py-16 text-center in" style="background:linear-gradient(180deg,#2D2D2D 10%,#000 100%)">
+        <h2 class="font-display font-light text-[47.4px] leading-[52.8px] text-white">Ready to redesign your landing page?</h2>
+        <p class="mt-3 mx-auto max-w-[660px] text-[18px] leading-7 text-[#D1D1D1] font-light">Bring your current URL and creative direction. ResetUI will turn them into an editable page and production-ready code.</p>
+        <div class="mt-8 flex justify-center gap-4 flex-wrap">
+          <a href="#pricing" class="bg-white text-ink rounded-full h-11 px-6 flex items-center text-[14px] font-medium" style="box-shadow:inset 0 0 0 1px #E7E7E7;">Start free</a>
+          <a href="#features" class="rounded-full h-11 px-6 flex items-center text-[14px] font-medium text-white" style="box-shadow:inset 0 0 0 1px #454545;">See the workflow</a>
+        </div>
+        <div class="mt-6 flex flex-wrap justify-center gap-8 text-[14px] text-[#D1D1D1]">
+          <span class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9be7b4" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>No credit card required</span>
+          <span class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9be7b4" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Recoverable project history</span>
+          <span class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9be7b4" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg>Production-ready export</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================== FOOTER =============================== -->
+  <footer class="relative mx-4 mb-4 overflow-hidden rounded-3xl bg-white" style="box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)">
+    <div class="rail py-16">
+      <div class="grid grid-cols-[1.3fr_.7fr_.7fr_.7fr] gap-16">
+        <div>
+          <a href="#top" class="inline-flex items-center gap-3 text-[22px] font-semibold text-ink"><img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" alt="ResetUI logo" class="h-9 w-9 rounded-full object-cover">ResetUI</a>
+          <p class="mt-5 max-w-[330px] text-[16px] leading-7 text-ink/65">Agentic landing-page redesign from your existing URL and creative direction to editable, production-ready code.</p>
+        </div>
+        <div>
+          <p class="text-[13px] font-medium text-ink/45">Product</p>
+          <div class="mt-5 flex flex-col gap-3 text-[15px] text-ink/75"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="#top">Overview</a></div>
+        </div>
+        <div>
+          <p class="text-[13px] font-medium text-ink/45">Resources</p>
+          <div class="mt-5 flex flex-col gap-3 text-[15px] text-ink/75"><a href="#">Guides</a><a href="#">Changelog</a><a href="#">Documentation</a><a href="#">Status</a></div>
+        </div>
+        <div>
+          <p class="text-[13px] font-medium text-ink/45">Company</p>
+          <div class="mt-5 flex flex-col gap-3 text-[15px] text-ink/75"><a href="#">About</a><a href="mailto:hello@resetui.com">Contact</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+        </div>
+      </div>
+      <div class="mt-14 flex items-center justify-between border-t border-ink/10 pt-7 text-[13px] text-ink/50">
+        <p>© 2026 ResetUI. All rights reserved.</p>
+        <div class="flex items-center gap-6"><a href="#">X / Twitter</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="mailto:hello@resetui.com">hello@resetui.com</a></div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /frame -->
+
+
+
+
+</body></html>

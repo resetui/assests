@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>ResetUI | Agentic Landing Page Redesign</title>
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: "#050101",
+          crimson: "#C51B20",
+          ash: "#D8D8D8",
+        },
+        fontFamily: {
+          sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+        },
+        maxWidth: { wrap: "1200px", content: "1080px" },
+      },
+    },
+  };
+</script>
+<style>
+  html { background: #000; }
+  body { margin: 0; }
+  * { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+  /* ---- Frame ---- */
+  .frame {
+    width: 100%;
+    min-width: 1440px;
+    margin: 0 auto;
+    position: relative;
+    background: #050101;
+    overflow: hidden;
+    color: #fff;
+    font-family: "Inter", sans-serif;
+  }
+  /* vertical guide lines at edges of the 1200px column */
+  .guide { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.2); z-index: 2; pointer-events: none; }
+  .guide.l { left: calc(50% - 600px); }
+  .guide.r { right: calc(50% - 600px); }
+
+  .wrap { width: 1200px; margin: 0 auto; position: relative; }
+  .pad { padding-left: 60px; padding-right: 60px; }
+
+  .eyebrow { color: #C51B20; font-size: 18px; line-height: 24px; letter-spacing: -0.36px; }
+  .h2 { font-size: 40px; line-height: 48px; letter-spacing: -0.8px; color: #fff; font-weight: 400; }
+  .body { color: rgba(255,255,255,0.8); letter-spacing: -0.32px; }
+
+  /* fill button */
+  .btn-fill { background: #fff; color: #150808; border-radius: 10px; font-weight: 500; letter-spacing: -0.32px;
+    display: inline-flex; align-items: center; gap: 6px; transition: transform .25s ease, box-shadow .25s ease, background .25s ease; }
+  .btn-fill:hover { transform: translateY(-2px); box-shadow: 0 14px 40px -10px rgba(255,255,255,0.45); }
+  .btn-fill:hover .ico { transform: translateX(3px); }
+  .btn-fill .ico { transition: transform .25s ease; }
+  .btn-hollow { border-radius: 10px; font-weight: 500; letter-spacing: -0.32px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
+    color: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: box-shadow .25s ease, background .25s ease, transform .25s ease; }
+  .btn-hollow:hover { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55); background: rgba(255,255,255,0.04); transform: translateY(-2px); }
+
+  /* horizontal section rule */
+  .rule-b { border-bottom: 0.8px solid rgba(255,255,255,0.2); }
+  .rule-t { border-top: 0.8px solid rgba(255,255,255,0.2); }
+
+  .card-border { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1); }
+
+  /* ---- hero blur-in text ---- */
+  .reveal-word { display: inline-block; filter: blur(14px); opacity: 0; transform: translateY(10px);
+    transition: filter .9s cubic-bezier(.2,.7,.2,1), opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+  .reveal-word.show { filter: blur(0); opacity: 1; transform: none; }
+
+  /* ---- scroll reveal ---- */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* hero glow pulse */
+  @keyframes glowpulse { 0%,100% { opacity: .92; } 50% { opacity: 1; } }
+  .hero-bg { animation: glowpulse 6s ease-in-out infinite; }
+  .hero-bg video { position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:cover; object-position:50% 21%; }
+
+  /* ticker */
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker-track { display: flex; width: max-content; animation: ticker 34s linear infinite; }
+  .ticker-mask { -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+
+  /* nav */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 72px;
+    background: linear-gradient(180deg, rgba(18,8,8,0.54), rgba(5,1,1,0.24));
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.16), 0 18px 44px rgba(0,0,0,0.18);
+    transition: backdrop-filter .35s ease, background .35s ease, box-shadow .35s ease;
+  }
+  .nav.scrolled { backdrop-filter: blur(26px) saturate(160%); -webkit-backdrop-filter: blur(26px) saturate(160%); background: linear-gradient(180deg, rgba(18,8,8,0.66), rgba(5,1,1,0.34)); }
+  .navlink { color: rgba(255,255,255,0.8); font-size: 16px; letter-spacing: -0.32px; transition: color .2s; }
+  .navlink:hover { color: #fff; }
+  .nav .navlink { color: rgba(255,255,255,0.9); text-shadow: 0 1px 14px rgba(0,0,0,0.5); }
+  .nav a span { text-shadow: 0 1px 14px rgba(0,0,0,0.5); }
+  .nav .btn-hollow { background: rgba(255,255,255,0.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22), 0 10px 28px rgba(0,0,0,0.18); }
+
+  /* feature / step / testimonial card hover */
+  .hovcard { transition: box-shadow .3s ease, transform .3s ease; }
+  .hovcard:hover { box-shadow: inset 0 0 0 1px rgba(197,27,32,0.55), 0 24px 60px -30px rgba(244,64,58,0.55); transform: translateY(-3px); }
+  #how .hovcard:hover .block { color: #F4403A !important; opacity: 0.75 !important; transition: color .3s ease, opacity .3s ease; text-shadow: 0 0 30px rgba(244,64,58,0.6); }
+
+  /* tabs */
+  .tab { position: relative; font-size: 16px; letter-spacing: -0.32px; color: rgba(255,255,255,0.45); cursor: pointer; transition: color .2s; padding-bottom: 8px; }
+  .tab:hover { color: rgba(255,255,255,0.8); }
+  .tab.active { color: #C51B20; }
+  .tab-bar { position: absolute; bottom: 0; left: 0; height: 2px; width: 0; background: #C51B20; border-radius: 1px; }
+  .tab.active .tab-bar { animation: tabfill 5s linear forwards; }
+  @keyframes tabfill { from { width: 0; } to { width: 100%; } }
+
+  /* pricing glow blob */
+  .price-blob { position: absolute; width: 485px; height: 257px; border-radius: 260px; left: 50%; top: 56%;
+    transform: translate(-50%,-50%) rotate(34deg);
+    background: linear-gradient(125deg, rgba(83,2,6,0.95) 0%, rgba(149,4,12,0.45) 48%, rgba(244,64,58,1) 100%);
+    filter: blur(46px); opacity: .55; z-index: 0; pointer-events: none; }
+
+  /* faq */
+  .faq-item { background: rgba(255,255,255,0.02); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1); overflow: hidden; transition: background .25s; }
+  .faq-item:hover { background: rgba(255,255,255,0.035); }
+  .faq-diamond { width: 20px; height: 20px; background: #fff; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+  .faq-item.open .faq-diamond { transform: rotate(135deg); }
+  .faq-answer { max-height: 0; opacity: 0; transition: max-height .4s ease, opacity .4s ease, margin .4s ease; }
+  .faq-item.open .faq-answer { max-height: 200px; opacity: 1; }
+
+  /* pricing toggle */
+  .toggle { width: 36px; height: 20px; border-radius: 4px; background: #737373; position: relative; cursor: pointer; transition: background .25s; }
+  .toggle .knob { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 3px; background: #fff; transition: left .25s cubic-bezier(.2,.7,.2,1); }
+  .toggle.on { background: #C51B20; }
+  .toggle.on .knob { left: 19px; }
+
+  /* placeholder image */
+  .ph { background-color: #0c0708;
+    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 9px);
+    display: flex; align-items: center; justify-content: center; }
+  .ph span { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; letter-spacing: .5px; color: rgba(255,255,255,0.32); text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="frame" id="frame">
+  <div class="guide l"></div>
+  <div class="guide r"></div>
+
+  <!-- ===================== NAV ===================== -->
+  <header class="nav rule-b">
+    <div class="wrap pad flex items-center justify-between" style="height:72px;">
+      <a href="#" class="flex items-center gap-2.5">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" alt="ResetUI logo" style="width:28px;height:28px;border-radius:9999px;object-fit:cover;flex:none;">
+        <span style="font-size:18px;font-weight:600;letter-spacing:-0.36px;color:#fff;">ResetUI</span>
+      </a>
+      <nav class="flex items-center gap-8">
+        <a href="#features" class="navlink">Features</a>
+        <a href="#how" class="navlink">How it works</a>
+        <a href="#pricing" class="navlink">Pricing</a>
+        <a href="#faq" class="navlink">FAQ</a>
+      </nav>
+      <a href="#" class="btn-hollow text-base h-10 px-3">Get started</a>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="relative overflow-hidden rule-b" style="min-height:920px;margin-top:-72px;padding-top:0;padding-bottom:96px;background:#020000;">
+    <div class="absolute inset-0 overflow-hidden" style="z-index:0;">
+      <div class="hero-bg absolute" style="top:72px;left:-64px;right:64px;height:560px;background:url('https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Crimson-Dark-Hero.png') 50% 21% / 92% auto no-repeat;">
+        <video autoplay muted loop playsinline preload="metadata" poster="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Crimson-Dark-Hero.png" aria-hidden="true" onerror="this.style.display='none'">
+          <source src="https://7xkytvucp2.ufs.sh/f/m4bRQHrXdK3UHi4LCHgGHjJiqDuLlna7cAfWEOv35UF2NmBV" type="video/mp4">
+        </video>
+      </div>
+      <div class="absolute inset-0" style="background:linear-gradient(180deg, rgba(2,0,0,0) 28%, rgba(2,0,0,0.2) 48%, #020000 70%, #050101 100%);"></div>
+      <div class="absolute inset-0" style="background:radial-gradient(70% 44% at 50% 33%, rgba(244,64,58,0.20), transparent 68%);"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(90deg, #020000 0%, rgba(2,0,0,0) 18%, rgba(2,0,0,0) 82%, #020000 100%);"></div>
+    </div>
+    <div class="relative wrap flex flex-col items-center text-center gap-8" style="z-index:3;padding-top:560px;">
+      <div class="flex flex-col items-center gap-5" style="width:940px;">
+        <h1 id="heroTitle" class="font-medium" style="font-size:58px;line-height:66px;letter-spacing:-1.4px;max-width:920px;"><span class="reveal-word show">Your</span> <span class="reveal-word show">existing</span> <span class="reveal-word show">landing</span> <span class="reveal-word show">page</span> <span class="reveal-word show">redesigned</span> <span class="reveal-word show">with</span> <span class="reveal-word show">intelligence</span></h1>
+        <p id="heroSub" class="body" style="font-size:18px;line-height:26px;max-width:580px;color:rgba(255,255,255,0.68);"><span class="reveal-word show">ResetUI</span> <span class="reveal-word show">captures</span> <span class="reveal-word show">your</span> <span class="reveal-word show">real</span> <span class="reveal-word show">website</span> <span class="reveal-word show">context,</span> <span class="reveal-word show">plans</span> <span class="reveal-word show">a</span> <span class="reveal-word show">new</span> <span class="reveal-word show">visual</span> <span class="reveal-word show">system,</span> <span class="reveal-word show">and</span> <span class="reveal-word show">exports</span> <span class="reveal-word show">production-ready</span> <span class="reveal-word show">front-end</span> <span class="reveal-word show">code.</span></p>
+      </div>
+      <div class="reveal flex items-center gap-5 in" style="transition-delay:.5s;">
+        <a href="#" class="btn-fill text-base" style="height:48px;padding:12px 24px;">Start free</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PARTNERS ===================== -->
+  <section class="relative" style="padding:80px 0;">
+    <div class="wrap flex flex-col items-center gap-6">
+      <p class="reveal body text-center in" style="font-size:16px;letter-spacing:-0.32px;">From an existing URL to a distinctive, production-ready redesign.</p>
+      <div class="ticker-mask w-full overflow-hidden" style="opacity:.7;">
+        <div class="ticker-track items-center gap-16" id="ticker"><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div><div style="flex:none;padding:0 40px;"><div style="width:120px;height:36px;border-radius:6px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,0.32);text-transform:uppercase;">ResetUI</span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== STATS ===================== -->
+  <section class="relative rule-t rule-b" style="padding:80px 0;">
+    <div class="wrap pad flex justify-center" style="gap:20px;">
+      <p class="reveal body in" style="width:320px;font-size:18px;line-height:24px;letter-spacing:-0.36px;flex:none;">One connected workspace for faster, more recoverable landing-page redesigns.</p>
+      <div class="flex" style="width:530px;gap:40px;">
+        <div class="reveal stat flex flex-col in" style="width:150px;padding:0 12px 32px;box-shadow:inset 1px 0 0 rgba(255,255,255,0.2);gap:10px;">
+          <span class="h2 counter" data-to="47" data-suffix="%">47%</span>
+          <span style="font-size:12px;line-height:16px;">Faster design iteration</span>
+        </div>
+        <div class="reveal stat flex flex-col in" style="width:150px;padding:0 12px 32px;box-shadow:inset 1px 0 0 rgba(255,255,255,0.2);gap:10px;transition-delay:.1s;">
+          <span class="h2 counter" data-to="3" data-suffix="x">3x</span>
+          <span style="font-size:12px;line-height:16px;">Connected workflow</span>
+        </div>
+        <div class="reveal stat flex flex-col in" style="width:150px;padding:0 12px 32px;box-shadow:inset 1px 0 0 rgba(255,255,255,0.2);gap:10px;transition-delay:.2s;">
+          <span class="h2 counter" data-to="4.8" data-suffix="/5" data-decimals="1">4.8/5</span>
+          <span style="font-size:12px;line-height:16px;">User rating</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Text ===================== -->
+  <section class="relative rule-b" style="padding:160px 0 200px;">
+    <div class="wrap flex flex-col items-center text-center gap-4" style="padding:0 180px;">
+      <p class="reveal eyebrow in">Source-aware by design</p>
+      <h2 class="reveal h2 in" style="font-size:40px;line-height:48px;max-width:648px;transition-delay:.08s;">Keep the facts, links, pricing, and product intent. <span style="color:rgba(255,255,255,0.45);">ResetUI replaces the visual system without losing what makes the page useful.</span></h2>
+    </div>
+  </section>
+
+  <!-- ===================== BENEFITS ===================== -->
+  <section id="features" class="relative" style="padding:100px 0;">
+    <div class="wrap flex flex-col" style="gap:80px;">
+      <!-- header -->
+      <div class="pad flex flex-col gap-4">
+        <span class="reveal eyebrow in">Benefits</span>
+        <div class="reveal flex items-end justify-between in" style="transition-delay:.06s;">
+          <h2 class="h2" style="width:540px;">Everything required for a complete landing-page redesign.</h2>
+          <p class="body" style="width:432px;font-size:16px;line-height:24px;">From structured capture and creative planning to chat editing and production code export in one project.</p>
+        </div>
+      </div>
+
+      <!-- product block -->
+      <div class="reveal flex flex-col in">
+        <!-- tabs -->
+        <div class="flex justify-between items-start pad" style="padding-top:24px;padding-bottom:24px;">
+          <span class="tab active" data-tab="0" data-preview="Capture preview" role="button" tabindex="0">Capture<span class="tab-bar"></span></span>
+          <span class="tab" data-tab="1" data-preview="Creative direction preview" role="button" tabindex="0">Plan<span class="tab-bar"></span></span>
+          <span class="tab" data-tab="2" data-preview="Live generation preview" role="button" tabindex="0">Generate<span class="tab-bar"></span></span>
+          <span class="tab" data-tab="3" data-preview="Code export preview" role="button" tabindex="0">Export<span class="tab-bar"></span></span>
+        </div>
+        <!-- product image -->
+        <div class="overflow-hidden flex items-center justify-center" style="height:687px;padding:32px;">
+          <div id="productImg" style="position:relative;width:100%;height:100%;transition:opacity 0.4s;background:#050101;border-radius:8px;overflow:hidden;opacity:1;">
+            <video autoplay muted loop playsinline preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+              <source src="https://7xkytvucp2.ufs.sh/f/m4bRQHrXdK3UgDjwfWPQlzRM6J2W4hdswTGtu3q9xeZNi7kO" type="video/mp4">
+            </video>
+            <div class="absolute inset-0" style="background:linear-gradient(180deg, rgba(5,1,1,0.06), rgba(5,1,1,0.18));pointer-events:none;"></div>
+            <div class="absolute" style="inset:72px;background:#020101;border-radius:12px;padding:28px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08), 0 28px 80px rgba(0,0,0,0.45);">
+              <div id="benefitPreviewImage" class="ph" style="width:100%;height:100%;border-radius:8px;"><span>Capture preview</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- 4 benefit columns -->
+        <div class="flex rule-t" style="border-top:0;">
+          <div class="benefit flex flex-col gap-6 items-center" style="width:300px;padding:32px;box-shadow:inset -1px 0 0 rgba(255,255,255,0.2), inset 0 -0.8px 0 rgba(255,255,255,0.2);">
+            <div class="ph" style="width:40px;height:40px;border-radius:8px;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.15) 0 2px,transparent 2px 9px);flex:none;"></div>
+            <div class="flex flex-col gap-2 items-center text-center">
+              <h3 style="font-size:16px;line-height:24px;letter-spacing:-0.32px;color:#C51B20;">Structured capture</h3>
+              <p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Capture copy, links, media, hierarchy, and brand signals from the live page.</p>
+            </div>
+          </div>
+          <div class="benefit flex flex-col gap-6 items-center" style="width:300px;padding:32px;box-shadow:inset -1px 0 0 rgba(255,255,255,0.2), inset 0 -0.8px 0 rgba(255,255,255,0.2);">
+            <div class="ph" style="width:40px;height:40px;border-radius:8px;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.15) 0 2px,transparent 2px 9px);flex:none;"></div>
+            <div class="flex flex-col gap-2 items-center text-center">
+              <h3 style="font-size:16px;line-height:24px;letter-spacing:-0.32px;color:#C51B20;">Creative planning</h3>
+              <p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Turn source evidence and your prompt into a binding creative direction.</p>
+            </div>
+          </div>
+          <div class="benefit flex flex-col gap-6 items-center" style="width:300px;padding:32px;box-shadow:inset -1px 0 0 rgba(255,255,255,0.2), inset 0 -0.8px 0 rgba(255,255,255,0.2);">
+            <div class="ph" style="width:40px;height:40px;border-radius:8px;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.15) 0 2px,transparent 2px 9px);flex:none;"></div>
+            <div class="flex flex-col gap-2 items-center text-center">
+              <h3 style="font-size:16px;line-height:24px;letter-spacing:-0.32px;color:#C51B20;">Live generation</h3>
+              <p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Stream a complete redesigned page into an editable project canvas.</p>
+            </div>
+          </div>
+          <div class="benefit flex flex-col gap-6 items-center" style="width:300px;padding:32px;box-shadow:inset 0 -0.8px 0 rgba(255,255,255,0.2);">
+            <div class="ph" style="width:40px;height:40px;border-radius:8px;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.15) 0 2px,transparent 2px 9px);flex:none;"></div>
+            <div class="flex flex-col gap-2 items-center text-center">
+              <h3 style="font-size:16px;line-height:24px;letter-spacing:-0.32px;color:#C51B20;">Production export</h3>
+              <p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Export the latest committed design as HTML or framework-ready code.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FEATURES ===================== -->
+  <section class="relative rule-b" style="padding:0 0 100px;">
+    <div class="wrap pad flex flex-col items-center" style="gap:80px;">
+      <div class="flex flex-col gap-4 self-stretch">
+        <span class="reveal eyebrow in">Features</span>
+        <h2 class="reveal h2 in" style="width:648px;transition-delay:.06s;">Capture the source, shape the direction, and ship clean code.</h2>
+      </div>
+      <div class="flex" style="gap:20px;">
+        <!-- card 1 -->
+        <article class="reveal hovcard card-border relative overflow-hidden flex flex-col justify-between in" style="width:346.66px;height:450px;background:rgba(255,255,255,0.01);padding-bottom:24px;">
+          <div class="relative" style="height:320px;">
+            <div class="ph absolute inset-0"><span>Source capture preview</span></div>
+            <div class="absolute inset-0" style="background:linear-gradient(0deg,#050101 8%, rgba(5,1,1,0) 61%);"></div>
+          </div>
+          <div class="flex flex-col gap-2" style="padding:0 24px;">
+            <h3 style="font-size:18px;line-height:24px;letter-spacing:-0.36px;">Capture the real page</h3>
+            <p class="body" style="font-size:14px;line-height:24px;">Preserve useful facts and content while replacing the existing visual system.</p>
+          </div>
+        </article>
+        <!-- card 2 -->
+        <article class="reveal hovcard card-border relative overflow-hidden flex flex-col justify-between in" style="width:346.66px;height:450px;background:rgba(255,255,255,0.01);padding-bottom:24px;transition-delay:.08s;">
+          <div class="relative" style="height:320px;">
+            <div class="ph absolute inset-0"><span>Generated canvas preview</span></div>
+            <div class="absolute inset-0" style="background:linear-gradient(0deg,#050101 8%, rgba(5,1,1,0) 61%);"></div>
+          </div>
+          <div class="flex flex-col gap-2" style="padding:0 24px;">
+            <h3 style="font-size:18px;line-height:24px;letter-spacing:-0.36px;">Refine through chat</h3>
+            <p class="body" style="font-size:14px;line-height:24px;">Target individual sections through chat while retaining the full redesign context.</p>
+          </div>
+        </article>
+        <!-- card 3 -->
+        <article class="reveal hovcard card-border relative overflow-hidden flex flex-col justify-between in" style="width:346.66px;height:450px;background:rgba(255,255,255,0.01);padding-bottom:24px;transition-delay:.16s;">
+          <div class="relative" style="height:320px;">
+            <div class="ph absolute inset-0"><span>Production export preview</span></div>
+            <div class="absolute inset-0" style="background:linear-gradient(0deg,#050101 8%, rgba(5,1,1,0) 61%);"></div>
+          </div>
+          <div class="flex flex-col gap-2" style="padding:0 24px;">
+            <h3 style="font-size:18px;line-height:24px;letter-spacing:-0.36px;">Ship clean code</h3>
+            <p class="body" style="font-size:14px;line-height:24px;">Keep the project context attached from the first capture through the final export.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HOW IT WORKS ===================== -->
+  <section id="how" class="relative rule-b" style="padding:100px 0;">
+    <div class="wrap pad flex justify-center" style="gap:16px;">
+      <div class="flex flex-col gap-4" style="width:532px;">
+        <span class="reveal eyebrow in">How it works</span>
+        <h2 class="reveal h2 in" style="transition-delay:.06s;">A clear three-step redesign workflow.</h2>
+        <p class="reveal body in" style="font-size:16px;line-height:24px;max-width:420px;transition-delay:.12s;">ResetUI combines structured evidence with an agentic creative plan.</p>
+      </div>
+      <div class="flex flex-col" style="width:532px;gap:20px;">
+        <div class="reveal hovcard card-border relative in" style="background:rgba(255,255,255,0.01);padding:32px;">
+          <span class="block" style="font-size:50px;line-height:55px;letter-spacing:-1px;opacity:.2;">01</span>
+          <h3 class="mt-10" style="font-size:18px;line-height:24px;letter-spacing:-0.36px;">Paste the URL</h3>
+          <p class="body mt-4" style="font-size:16px;line-height:24px;">Capture approved copy, links, media, calls to action, and brand context from the live page.</p>
+        </div>
+        <div class="reveal hovcard card-border relative in" style="background:rgba(255,255,255,0.01);padding:32px;transition-delay:.08s;">
+          <span class="block" style="font-size:50px;line-height:55px;letter-spacing:-1px;opacity:.2;">02</span>
+          <h3 class="mt-10" style="font-size:18px;line-height:24px;letter-spacing:-0.36px;">Describe the direction</h3>
+          <p class="body mt-4" style="font-size:16px;line-height:24px;">Describe the visual system you want and turn that prompt into a clear creative plan.</p>
+        </div>
+        <div class="reveal hovcard card-border relative in" style="background:rgba(255,255,255,0.01);padding:32px;transition-delay:.16s;">
+          <span class="block" style="font-size:50px;line-height:55px;letter-spacing:-1px;opacity:.2;">03</span>
+          <h3 class="mt-10" style="font-size:18px;line-height:24px;letter-spacing:-0.36px;">Generate and refine</h3>
+          <p class="body mt-4" style="font-size:16px;line-height:24px;">Watch the redesigned page stream into the canvas, then edit or export it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PRICING ===================== -->
+  <section id="pricing" class="relative rule-b" style="padding:80px 0;">
+    <div class="wrap pad flex flex-col items-center" style="gap:80px;">
+      <div class="flex flex-col items-center gap-4 text-center">
+        <span class="reveal eyebrow in">Pricing</span>
+        <h2 class="reveal h2 in" style="transition-delay:.06s;">Simple plans for real redesign work</h2>
+      </div>
+      <div class="reveal flex flex-col items-center in" style="gap:20px;width:100%;">
+        <!-- toggle -->
+        <div class="flex flex-col items-center gap-2">
+          <div class="flex items-center gap-3">
+            <span class="body" id="monthlyLabel" style="font-size:14px;color:#fff;">Monthly</span>
+            <button class="toggle" id="billToggle" type="button" role="switch" aria-checked="false" aria-label="Switch to yearly billing"><span class="knob"></span></button>
+            <span class="body" id="yearlyLabel" style="font-size:14px;">Yearly</span>
+          </div>
+          <span class="body" id="billingNote" style="font-size:14px;">Monthly credits with no hidden platform fees.</span>
+        </div>
+        <!-- cards -->
+        <div class="relative flex items-center" style="gap:20px;">
+          <div class="price-blob"></div>
+          <!-- Plan-1 -->
+          <div class="hovcard card-border relative flex flex-col justify-between" style="width:330px;height:497px;background:rgba(255,255,255,0.01);padding:24px;z-index:1;">
+            <div class="flex flex-col items-center" style="gap:40px;">
+              <div class="self-stretch flex flex-col gap-1.5">
+                <div class="flex flex-col items-center gap-1.5">
+                  <span class="self-start body" style="font-size:16px;">Free Starter</span>
+                  <div class="self-start flex items-center gap-1">
+                    <span class="h2 price" data-m="0" data-y="0">$0</span>
+                    <span class="body" style="font-size:18px;">/mo</span>
+                  </div>
+                </div>
+                <span class="body" style="font-size:16px;">Try one curated redesign with your existing page context attached.</span>
+              </div>
+              <div class="self-stretch flex flex-col gap-2">
+                <span class="body" style="font-size:14px;">FEATURES</span>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Structured website capture</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Agentic creative planning</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Premium template systems</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Project-aware chat edits</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Production code export</span></div>
+              </div>
+            </div>
+            <div class="flex flex-col items-center gap-5">
+              <div style="width:100%;height:1px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.2);"></div>
+              <a href="#" class="btn-hollow text-base w-full" style="height:40px;">Get started</a>
+            </div>
+          </div>
+          <!-- Plan-2 -->
+          <div class="hovcard relative flex flex-col justify-between" style="width:330px;height:497px;padding:24px;z-index:2;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.1);background:radial-gradient(545px 351px at 44.5% 92.4%, rgba(108,24,25,1) 0%, rgba(21,21,21,0.6) 49%, rgba(0,0,0,0.2) 100%);">
+            <div class="flex flex-col items-center" style="gap:40px;">
+              <div class="self-stretch flex flex-col gap-1.5">
+                <div class="flex flex-col items-center gap-1.5">
+                  <span class="self-start body" style="font-size:16px;">Indie Pro</span>
+                  <div class="self-stretch flex items-start justify-between">
+                    <div class="flex items-center gap-1">
+                      <span class="h2 price" data-m="19" data-y="15">$19</span>
+                      <span class="body" style="font-size:18px;">/mo</span>
+                    </div>
+                    <div class="flex items-center justify-center" style="height:24px;padding:4px 8px;border-radius:3px;background:rgba(197,27,32,0.15);box-shadow:inset 0 0 0 1px #C51B20;">
+                      <span class="font-medium" style="font-size:12px;line-height:16px;">Popular</span>
+                    </div>
+                  </div>
+                </div>
+                <span class="body" style="font-size:16px;">For creators who need more redesigns, editing, and export.</span>
+              </div>
+              <div class="self-stretch flex flex-col gap-2">
+                <span class="body" style="font-size:14px;">FEATURES</span>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Structured website capture</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Agentic creative planning</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Premium template systems</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Project-aware chat edits</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Production code export</span></div>
+              </div>
+            </div>
+            <div class="flex flex-col items-center gap-5">
+              <div style="width:100%;height:1px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.2);"></div>
+              <a href="#" class="btn-fill text-base w-full justify-center" style="height:48px;">Get started
+                <svg class="ico" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M5.32.21a.73.73 0 0 1 1.03 0l5.1 5.1a.73.73 0 0 1 0 1.04l-5.1 5.1a.73.73 0 1 1-1.03-1.03l3.86-3.86H.73a.73.73 0 0 1 0-1.46h8.45L5.32 1.25a.73.73 0 0 1 0-1.04Z" fill="#150808"></path></svg>
+              </a>
+            </div>
+          </div>
+          <!-- Plan-3 -->
+          <div class="hovcard card-border relative flex flex-col justify-between" style="width:330px;height:497px;background:rgba(255,255,255,0.01);padding:24px;z-index:1;">
+            <div class="flex flex-col items-center" style="gap:40px;">
+              <div class="self-stretch flex flex-col gap-1.5">
+                <div class="flex flex-col items-center gap-1.5">
+                  <span class="self-start body" style="font-size:16px;">Credit usage</span>
+                  <div class="self-start flex items-center gap-1">
+                    <span class="h2 price" data-m="5" data-y="5">$5</span>
+                    <span class="body" style="font-size:18px;">/mo</span>
+                  </div>
+                </div>
+                <span class="body" style="font-size:16px;">Generation uses 5 credits; chat uses 1 and export uses 2.</span>
+              </div>
+              <div class="self-stretch flex flex-col gap-2">
+                <span class="body" style="font-size:14px;">FEATURES</span>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Structured website capture</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Agentic creative planning</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Premium template systems</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Project-aware chat edits</span></div>
+                <div class="feat" style="display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 24px; letter-spacing: -0.14px; color: rgba(255, 255, 255, 0.8);"><span style="flex:none;width:16px;height:16px;border-radius:3px;background:#F5F5F5;display:inline-flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span>Production code export</span></div>
+              </div>
+            </div>
+            <div class="flex flex-col items-center gap-5">
+              <div style="width:100%;height:1px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.2);"></div>
+              <a href="#" class="btn-hollow text-base w-full" style="height:40px;">Get started</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TESTIMONIALS ===================== -->
+  <section class="relative rule-b" style="padding:100px 0;">
+    <div class="wrap pad flex flex-col items-center" style="gap:80px;">
+      <div class="self-stretch flex flex-col gap-4">
+        <span class="reveal eyebrow in">Testimonials</span>
+        <h2 class="reveal h2 in" id="testiTitle" style="transition-delay:.06s;">What early users are saying</h2>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(3,346.66px);gap:20px;" id="testiGrid"><article class="reveal hovcard relative overflow-hidden flex flex-col justify-center in" style="width: 346.66px; height: 220px; background: rgba(255, 255, 255, 0.02); box-shadow: rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset; padding: 34px 24px; gap: 32px; transition-delay: 0s;"><p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">"ResetUI produced a redesign that felt specific to our page instead of generic AI output."</p><div class="flex items-center gap-3"><div style="width:40px;height:40px;border-radius:40px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);"></div><div class="flex flex-col"><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Maya Chen</span><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#D8D8D8;">Product lead</span></div></div></article><article class="reveal hovcard relative overflow-hidden flex flex-col justify-center in" style="width: 346.66px; height: 220px; background: rgba(255, 255, 255, 0.02); box-shadow: rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset; padding: 34px 24px; gap: 32px; transition-delay: 0.08s;"><p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">"ResetUI produced a redesign that felt specific to our page instead of generic AI output."</p><div class="flex items-center gap-3"><div style="width:40px;height:40px;border-radius:40px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);"></div><div class="flex flex-col"><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Jon Bell</span><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#D8D8D8;">Independent founder</span></div></div></article><article class="reveal hovcard relative overflow-hidden flex flex-col justify-center in" style="width: 346.66px; height: 220px; background: rgba(255, 255, 255, 0.02); box-shadow: rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset; padding: 34px 24px; gap: 32px; transition-delay: 0.16s;"><p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">"ResetUI produced a redesign that felt specific to our page instead of generic AI output."</p><div class="flex items-center gap-3"><div style="width:40px;height:40px;border-radius:40px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);"></div><div class="flex flex-col"><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Arun Kapoor</span><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#D8D8D8;">Design engineer</span></div></div></article><article class="reveal hovcard relative overflow-hidden flex flex-col justify-center in" style="width: 346.66px; height: 220px; background: rgba(255, 255, 255, 0.02); box-shadow: rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset; padding: 34px 24px; gap: 32px; transition-delay: 0s;"><p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">"ResetUI produced a redesign that felt specific to our page instead of generic AI output."</p><div class="flex items-center gap-3"><div style="width:40px;height:40px;border-radius:40px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);"></div><div class="flex flex-col"><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Elena Vasquez</span><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#D8D8D8;">Creative director</span></div></div></article><article class="reveal hovcard relative overflow-hidden flex flex-col justify-center in" style="width: 346.66px; height: 220px; background: rgba(255, 255, 255, 0.02); box-shadow: rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset; padding: 34px 24px; gap: 32px; transition-delay: 0.08s;"><p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">"ResetUI produced a redesign that felt specific to our page instead of generic AI output."</p><div class="flex items-center gap-3"><div style="width:40px;height:40px;border-radius:40px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);"></div><div class="flex flex-col"><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Priya Shah</span><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#D8D8D8;">Frontend developer</span></div></div></article><article class="reveal hovcard relative overflow-hidden flex flex-col justify-center in" style="width: 346.66px; height: 220px; background: rgba(255, 255, 255, 0.02); box-shadow: rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset; padding: 34px 24px; gap: 32px; transition-delay: 0.16s;"><p style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">"ResetUI produced a redesign that felt specific to our page instead of generic AI output."</p><div class="flex items-center gap-3"><div style="width:40px;height:40px;border-radius:40px;flex:none;background-color:#1a1010;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.12) 0 2px,transparent 2px 9px);"></div><div class="flex flex-col"><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#fff;">Chris Nolan</span><span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#D8D8D8;">Growth lead</span></div></div></article></div>
+    </div>
+  </section>
+
+  <!-- ===================== FAQ ===================== -->
+  <section id="faq" class="relative rule-b" style="padding:100px 0;">
+    <div class="wrap pad flex justify-center" style="gap:60px;">
+      <div class="flex flex-col gap-4" style="width:540px;">
+        <span class="reveal eyebrow in">FAQ</span>
+        <h2 class="reveal h2 in" style="width:320px;transition-delay:.06s;">Everything you need to know</h2>
+      </div>
+      <div class="reveal flex flex-col gap-2 in" style="width:540px;" id="faqList"><div class="faq-item open"><button class="faq-head" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px;text-align:left;background:none;border:0;cursor:pointer;"><span style="font-size:16px;line-height:24px;letter-spacing:-0.32px;color:rgba(255,255,255,0.8);">What does ResetUI need?</span><span class="faq-diamond" style="flex:none;"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" style="transform:rotate(-45deg);"><path d="M11.67 1.18 10.49 0 5.83 4.66 1.18 0 0 1.18l4.66 4.65L0 10.49l1.18 1.18 4.65-4.66 4.66 4.66 1.18-1.18-4.66-4.66 4.66-4.65Z" fill="#000"></path></svg></span></button><div class="faq-answer"><p style="padding:0 24px 24px;font-size:15px;line-height:24px;letter-spacing:-0.2px;color:rgba(255,255,255,0.7);max-width:452px;">A public landing-page URL and a prompt describing the new visual direction.</p></div></div><div class="faq-item"><button class="faq-head" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px;text-align:left;background:none;border:0;cursor:pointer;"><span style="font-size:16px;line-height:24px;letter-spacing:-0.32px;color:rgba(255,255,255,0.8);">Does it copy my layout?</span><span class="faq-diamond" style="flex:none;"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" style="transform:rotate(-45deg);"><path d="M11.67 1.18 10.49 0 5.83 4.66 1.18 0 0 1.18l4.66 4.65L0 10.49l1.18 1.18 4.65-4.66 4.66 4.66 1.18-1.18-4.66-4.66 4.66-4.65Z" fill="#000"></path></svg></span></button><div class="faq-answer"><p style="padding:0 24px 24px;font-size:15px;line-height:24px;letter-spacing:-0.2px;color:rgba(255,255,255,0.7);max-width:452px;">No. ResetUI preserves useful content and intent while generating a new visual system.</p></div></div><div class="faq-item"><button class="faq-head" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px;text-align:left;background:none;border:0;cursor:pointer;"><span style="font-size:16px;line-height:24px;letter-spacing:-0.32px;color:rgba(255,255,255,0.8);">Can I edit the result?</span><span class="faq-diamond" style="flex:none;"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" style="transform:rotate(-45deg);"><path d="M11.67 1.18 10.49 0 5.83 4.66 1.18 0 0 1.18l4.66 4.65L0 10.49l1.18 1.18 4.65-4.66 4.66 4.66 1.18-1.18-4.66-4.66 4.66-4.65Z" fill="#000"></path></svg></span></button><div class="faq-answer"><p style="padding:0 24px 24px;font-size:15px;line-height:24px;letter-spacing:-0.2px;color:rgba(255,255,255,0.7);max-width:452px;">Yes. Chat edits, undo, redo, and version restore keep iteration recoverable.</p></div></div><div class="faq-item"><button class="faq-head" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px;text-align:left;background:none;border:0;cursor:pointer;"><span style="font-size:16px;line-height:24px;letter-spacing:-0.32px;color:rgba(255,255,255,0.8);">What can I export?</span><span class="faq-diamond" style="flex:none;"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" style="transform:rotate(-45deg);"><path d="M11.67 1.18 10.49 0 5.83 4.66 1.18 0 0 1.18l4.66 4.65L0 10.49l1.18 1.18 4.65-4.66 4.66 4.66 1.18-1.18-4.66-4.66 4.66-4.65Z" fill="#000"></path></svg></span></button><div class="faq-answer"><p style="padding:0 24px 24px;font-size:15px;line-height:24px;letter-spacing:-0.2px;color:rgba(255,255,255,0.7);max-width:452px;">Standalone HTML or a one-file React, Next.js, Vue, or Svelte implementation.</p></div></div><div class="faq-item"><button class="faq-head" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px;text-align:left;background:none;border:0;cursor:pointer;"><span style="font-size:16px;line-height:24px;letter-spacing:-0.32px;color:rgba(255,255,255,0.8);">Can I start free?</span><span class="faq-diamond" style="flex:none;"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" style="transform:rotate(-45deg);"><path d="M11.67 1.18 10.49 0 5.83 4.66 1.18 0 0 1.18l4.66 4.65L0 10.49l1.18 1.18 4.65-4.66 4.66 4.66 1.18-1.18-4.66-4.66 4.66-4.65Z" fill="#000"></path></svg></span></button><div class="faq-answer"><p style="padding:0 24px 24px;font-size:15px;line-height:24px;letter-spacing:-0.2px;color:rgba(255,255,255,0.7);max-width:452px;">Yes. Free Starter begins with 5 credits and one curated-template project.</p></div></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA ===================== -->
+  <section class="relative rule-b" style="padding:100px 0;">
+    <div class="wrap pad">
+      <div class="reveal card-border relative overflow-hidden flex items-center justify-center in" style="height:400px;border-radius:12px;background:url('https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Crismson-Dark-Cta.png') center / 100% 100% no-repeat;">
+        <div class="relative flex flex-col items-center justify-center gap-8 text-center" style="width:640px;padding:0 40px;z-index:2;">
+          <div class="flex flex-col items-center gap-6">
+            <h2 class="h2">Bring your current landing page into focus.</h2>
+            <p class="body" style="font-size:16px;line-height:24px;">ResetUI combines structured evidence with an agentic creative plan.</p>
+          </div>
+          <a href="#" class="btn-fill text-base" style="height:48px;padding:12px 18px 12px 20px;">Get started
+            <svg class="ico" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M5.32.21a.73.73 0 0 1 1.03 0l5.1 5.1a.73.73 0 0 1 0 1.04l-5.1 5.1a.73.73 0 1 1-1.03-1.03l3.86-3.86H.73a.73.73 0 0 1 0-1.46h8.45L5.32 1.25a.73.73 0 0 1 0-1.04Z" fill="#150808"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="relative">
+    <div class="wrap" style="padding:48px 60px;">
+      <div class="flex justify-between items-start">
+        <div class="flex flex-col gap-2.5" style="width:320px;">
+          <div class="flex items-center gap-2.5">
+            <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" alt="ResetUI logo" style="width:28px;height:28px;border-radius:9999px;object-fit:cover;flex:none;">
+            <span style="font-size:18px;font-weight:600;letter-spacing:-0.36px;color:#fff;">ResetUI</span>
+          </div>
+          <p class="body" style="font-size:16px;line-height:24px;">ResetUI captures an existing landing page, applies your design direction, and exports a refreshed design as usable front-end code.</p>
+        </div>
+        <div class="flex" style="gap:60px;">
+          <div class="flex flex-col gap-3" style="width:130px;">
+            <span class="font-medium" style="font-size:16px;letter-spacing:-0.32px;">Navigation</span>
+            <a href="#features" class="navlink">Product</a>
+            <a href="#features" class="navlink">Features</a>
+            <a href="#pricing" class="navlink">Pricing</a>
+            <a href="#how" class="navlink">How it works</a>
+            <a href="#faq" class="navlink">FAQ</a>
+          </div>
+          <div class="flex flex-col gap-3" style="width:130px;">
+            <span class="font-medium" style="font-size:16px;letter-spacing:-0.32px;">Socials</span>
+            <a href="#" class="navlink">LinkedIn</a>
+            <a href="#" class="navlink">X (Twitter)</a>
+            <a href="#" class="navlink">Instagram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rule-t" style="height:72px;">
+      <div class="wrap pad h-full flex items-center justify-center">
+        <span style="font-size:14px;line-height:24px;letter-spacing:-0.14px;color:#D8D8D8;">&copy; 2026 ResetUI. All rights reserved.</span>
+      </div>
+    </div>
+</footer>
+</div>
+<script>
+  (() => {
+    const billingToggle = document.getElementById("billToggle");
+    const monthlyLabel = document.getElementById("monthlyLabel");
+    const yearlyLabel = document.getElementById("yearlyLabel");
+    const billingNote = document.getElementById("billingNote");
+    const prices = Array.from(document.querySelectorAll("#pricing .price"));
+    let yearlyBilling = false;
+
+    const renderBilling = () => {
+      billingToggle.classList.toggle("on", yearlyBilling);
+      billingToggle.setAttribute("aria-checked", yearlyBilling ? "true" : "false");
+      billingToggle.setAttribute("aria-label", yearlyBilling ? "Switch to monthly billing" : "Switch to yearly billing");
+      monthlyLabel.style.color = yearlyBilling ? "rgba(255,255,255,0.8)" : "#fff";
+      yearlyLabel.style.color = yearlyBilling ? "#fff" : "rgba(255,255,255,0.8)";
+      billingNote.textContent = yearlyBilling ? "Yearly billing saves on Indie Pro." : "Monthly credits with no hidden platform fees.";
+      prices.forEach((price) => {
+        const amount = yearlyBilling ? price.dataset.y : price.dataset.m;
+        price.textContent = "$" + amount;
+      });
+    };
+
+    if (billingToggle) {
+      billingToggle.addEventListener("click", () => {
+        yearlyBilling = !yearlyBilling;
+        renderBilling();
+      });
+      renderBilling();
+    }
+
+    const tabs = Array.from(document.querySelectorAll("#features .tab"));
+    const duration = 5000;
+    let activeIndex = Math.max(0, tabs.findIndex((tab) => tab.classList.contains("active")));
+    let cycleTimer;
+
+    const restartProgress = (tab) => {
+      const bar = tab.querySelector(".tab-bar");
+      if (!bar) return;
+      bar.style.animation = "none";
+      void bar.offsetWidth;
+      bar.style.animation = "";
+    };
+
+    const previewLabel = document.querySelector("#benefitPreviewImage span");
+
+    const setActiveTab = (index) => {
+      activeIndex = (index + tabs.length) % tabs.length;
+
+      const label = tabs[activeIndex] && tabs[activeIndex].dataset.preview;
+      if (previewLabel && label) previewLabel.textContent = label;
+
+      tabs.forEach((tab, tabIndex) => {
+        const isActive = tabIndex === activeIndex;
+        tab.classList.toggle("active", isActive);
+        tab.setAttribute("aria-selected", isActive ? "true" : "false");
+        restartProgress(tab);
+      });
+
+      window.clearTimeout(cycleTimer);
+      cycleTimer = window.setTimeout(() => setActiveTab(activeIndex + 1), duration);
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => setActiveTab(index));
+      tab.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        setActiveTab(index);
+      });
+    });
+
+    if (tabs.length) setActiveTab(activeIndex);
+  })();
+</script>
+</body></html>
