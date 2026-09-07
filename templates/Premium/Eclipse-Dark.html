@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>ResetUI | Agentic Landing Page Redesign</title>
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg">
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg">
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg">
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          geist: ['Geist', 'Inter', 'sans-serif'],
+        },
+        colors: {
+          ink: '#000000',
+          accent: '#5ee7ff',
+          cyan: { 500: '#22d3ee', 600: '#0891b2', 800: '#0e7490' },
+        },
+        maxWidth: { content: '1200px' },
+      },
+    },
+  };
+</script>
+<style>
+  html { scroll-behavior: smooth; background: #000; }
+  body { background: #000; }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: #181818; border-radius: 8px; }
+  .btn-grad { background: linear-gradient(180deg, #22d3ee 0%, #0891b2 47%, #0e7490 100%); }
+  /* marquee */
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+  .marquee-mask { -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+  /* scroll reveal */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s cubic-bezier(.22,.61,.36,1), transform .8s cubic-bezier(.22,.61,.36,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  /* hero word blur-in */
+  @keyframes wordIn { from { opacity: 0; filter: blur(14px); transform: translateY(14px); } to { opacity: 1; filter: blur(0); transform: none; } }
+  .word { display: inline-block; opacity: 0; animation: wordIn .9s cubic-bezier(.22,.61,.36,1) forwards; }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  .floaty { animation: floaty 6s ease-in-out infinite; }
+  @keyframes pulseGlow { 0%,100% { opacity: .45; } 50% { opacity: .7; } }
+  .pulse-glow { animation: pulseGlow 5s ease-in-out infinite; }
+  .faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+  .faq-body > div { overflow: hidden; }
+  .faq-card.open .faq-body { grid-template-rows: 1fr; }
+  .faq-card.open .faq-icon { transform: rotate(45deg); }
+  .star { width:14px; height:14px; background:#ffdf61; clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); }
+  .star.sm { width:12px; height:12px; }
+  .check { color:#22d3ee; }
+  .integration-stage { isolation:isolate; overflow:hidden; }
+  .integration-rail { z-index:0; top:52%; transform:translateY(-50%); }
+  .integration-phone { position:relative; z-index:10; }
+  .int-logo { display:grid; place-items:center; width:74px; height:74px; flex:0 0 74px; border-radius:14px; background:rgba(255,255,255,.075); border:1px solid rgba(255,255,255,.1); box-shadow:0 14px 32px -14px rgba(0,0,0,.8); backdrop-filter:blur(8px); }
+  .int-logo img { display:none; }
+  .int-logo::before { content:""; width:34px; height:28px; border:1.5px solid rgba(255,255,255,.38); border-radius:5px; background:radial-gradient(circle at 28% 30%,rgba(255,255,255,.5) 0 2px,transparent 3px),linear-gradient(145deg,transparent 48%,rgba(255,255,255,.18) 49% 64%,transparent 65%),linear-gradient(35deg,transparent 45%,rgba(255,255,255,.28) 46% 64%,transparent 65%); }
+  .value-card {
+    background:
+      radial-gradient(95% 115% at 50% 118%, rgba(34,211,238,.18) 0%, rgba(8,145,178,.07) 42%, transparent 72%),
+      linear-gradient(180deg,#0b0b0b 0%,#050505 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+    transition:border-color .25s ease,transform .25s ease;
+  }
+  .value-card:hover { border-color:rgba(34,211,238,.22); transform:translateY(-2px); }
+
+</style>
+</head>
+<body class="bg-black font-sans text-white antialiased selection:bg-cyan-500/40">
+<div class="relative w-[1440px] mx-auto overflow-hidden bg-black">
+
+<!-- ============ STICKY NAV ============ -->
+<header id="nav" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-500">
+  <nav class="flex items-center justify-between gap-14 h-14 pl-3 pr-2 rounded-full bg-black/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_40px_-8px_rgba(34,211,238,.35)]">
+    <a href="#top" class="shrink-0"><img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" alt="ResetUI logo" class="w-9 h-9 rounded-full object-cover"></a>
+    <ul class="flex items-center gap-[26px] text-[16px] font-medium">
+      <li><a href="#top" class="text-white/40 hover:text-white transition-colors">Home</a></li>
+      <li><a href="#features" class="text-white/40 hover:text-white transition-colors">Templates</a></li>
+      <li><a href="#pricing" class="text-white/40 hover:text-white transition-colors">Changelog</a></li>
+      <li><a href="#cta" class="text-white/40 hover:text-white transition-colors">Start free</a></li>
+    </ul>
+    <a href="#cta" class="btn-grad shrink-0 grid place-items-center h-[34px] px-4 rounded-full text-[15px] font-medium shadow-lg shadow-cyan-500/25 hover:brightness-110 transition">Get It</a>
+  </nav>
+</header>
+
+<a id="top"></a>
+<!-- ============ HERO ============ -->
+<section class="bg-black">
+  <div class="relative h-[670px] overflow-hidden bg-black">
+    <div class="relative h-full px-[105px] flex items-center">
+      <div class="flex flex-row-reverse items-center justify-center w-full gap-20">
+        <!-- Text -->
+        <div class="relative top-[60px] w-[640px] flex flex-col gap-10">
+          <div class="flex flex-col gap-6">
+            <!-- social proof -->
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-[5px]">
+                <span class="star"></span>
+              </div>
+              <span class="w-px h-[15px] bg-white/30"></span>
+              <span class="text-[16px] text-white">Agentic design from URL to code</span>
+            </div>
+            <!-- headline -->
+            <h1 class="font-semibold text-[58px] leading-[62px] tracking-[-2.2px]">
+              <span class="word" style="animation-delay:.05s">Your</span> <span class="word" style="animation-delay:.15s">Website,</span><br>
+              <span class="word" style="animation-delay:.25s">Redesigned</span> <span class="word" style="animation-delay:.35s">Smarter</span>
+            </h1>
+            <p class="max-w-[510px] text-[18px] leading-[27px] tracking-[-.18px] text-white/80">Capture your existing landing page, describe the direction, and generate an editable, production-ready redesign in one place.</p>
+          </div>
+          <!-- buttons -->
+          <div class="flex items-center gap-4">
+            <a href="#cta" class="inline-flex h-[52px] items-center transition hover:opacity-80" aria-label="Download on the App Store">
+              <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" class="h-[52px] w-auto" alt="Download on the App Store">
+            </a>
+            <a href="#cta" class="-mx-3 inline-flex h-[52px] items-center overflow-visible transition hover:opacity-80" aria-label="Get it on Google Play">
+              <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" class="h-[76px] w-auto max-w-none" alt="Get it on Google Play">
+            </a>
+          </div>
+        </div>
+        <!-- phone -->
+        <div class="relative top-[100px] w-[350px] shrink-0">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Phone.png" alt="ResetUI mobile app" class="w-[350px] drop-shadow-[0_30px_60px_rgba(0,0,0,.5)]">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOGOS ============ -->
+<section class="px-[60px] pt-24 pb-10 flex flex-col gap-20">
+  <div class="flex flex-col items-center gap-[42px]">
+    <p class="text-[14px] font-medium text-white/50">Powered by a connected agentic workflow:</p>
+    <div class="marquee-mask w-[600px]">
+      <div class="marquee-track items-center gap-16">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-7 w-auto opacity-90" alt="Fulcun">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-6 w-auto opacity-90" alt="Nuri">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-7 w-auto opacity-90" alt="Olofi">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-5 w-auto opacity-90" alt="Nova">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-6 w-auto opacity-90" alt="Company">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-5 w-auto opacity-90" alt="Mello">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-7 w-auto opacity-90" alt="Fulcun">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-6 w-auto opacity-90" alt="Nuri">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-7 w-auto opacity-90" alt="Olofi">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-5 w-auto opacity-90" alt="Nova">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-6 w-auto opacity-90" alt="Company">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Logo.png" class="h-5 w-auto opacity-90" alt="Mello">
+      </div>
+    </div>
+  </div>
+  <div class="reveal flex items-start justify-between gap-20">
+    <h2 class="w-[440px] font-semibold text-[36px] leading-[43px] tracking-[-1.44px]">Who said redesigning an existing page has to be fragmented?</h2>
+    <p class="w-[510px] text-[18px] leading-[25.2px] tracking-[-.18px] text-white/70">With ResetUI, capture, creative planning, generation, chat editing, version history, and code export stay connected. No blank canvas. No generic layout. Just a smarter way to turn the page you have into the design you want.</p>
+  </div>
+</section>
+
+<!-- ============ INFO ============ -->
+<section class="px-[120px] py-20">
+  <div class="flex flex-col items-center gap-20">
+    <div class="reveal flex flex-col items-center gap-6 text-center">
+      <p class="font-geist font-semibold text-[14px] tracking-wide text-accent">CORE OF RESETUI</p>
+      <h2 class="font-semibold text-[36px] leading-[43px] tracking-[-1.44px]">Take Control of Your Redesign</h2>
+      <p class="text-[16px] text-white/70">One source-aware workflow from the first URL to the final code export</p>
+    </div>
+    <div class="grid grid-cols-3 gap-4 w-full">
+      <!-- value cards injected -->
+      <div class="reveal value-card relative rounded-xl p-6 flex flex-col gap-[52px] overflow-hidden border border-white/[.08]">
+        <div class="w-11 h-11 rounded-full grid place-items-center bg-cyan-500/10 border border-cyan-500/20">
+          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        </div>
+        <div class="flex flex-col gap-2">
+          <h3 class="font-semibold text-[24px] leading-[33.6px] tracking-[-.24px]">Structured Capture</h3>
+          <p class="text-[16px] text-white/70">Extract useful copy, links, media, hierarchy, and brand context from the rendered page.</p>
+        </div>
+      </div>
+      <div class="reveal value-card relative rounded-xl p-6 flex flex-col gap-[52px] overflow-hidden border border-white/[.08]">
+        <div class="w-11 h-11 rounded-full grid place-items-center bg-cyan-500/10 border border-cyan-500/20">
+          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-8"/><path d="M21 8v5h-5"/></svg>
+        </div>
+        <div class="flex flex-col gap-2">
+          <h3 class="font-semibold text-[24px] leading-[33.6px] tracking-[-.24px]">Creative Planning</h3>
+          <p class="text-[16px] text-white/70">Turn captured evidence and your prompt into one authoritative visual specification.</p>
+        </div>
+      </div>
+      <div class="reveal value-card relative rounded-xl p-6 flex flex-col gap-[52px] overflow-hidden border border-white/[.08]">
+        <div class="w-11 h-11 rounded-full grid place-items-center bg-cyan-500/10 border border-cyan-500/20">
+          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="2.5"/></svg>
+        </div>
+        <div class="flex flex-col gap-2">
+          <h3 class="font-semibold text-[24px] leading-[33.6px] tracking-[-.24px]">Design Clarity</h3>
+          <p class="text-[16px] text-white/70">Keep every section, media choice, and implementation decision aligned to the plan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ FEATURES ============ -->
+<section id="features" class="px-[120px] py-20">
+  <div class="flex flex-col items-center gap-20">
+    <div class="reveal flex flex-col items-center gap-6 text-center">
+      <p class="font-geist font-semibold text-[14px] tracking-wide text-accent">OUR FEATURES</p>
+      <h2 class="font-semibold text-[36px] leading-[43px] tracking-[-1.44px]">Master Your Redesign Workflow</h2>
+      <p class="text-[16px] text-white/70">Essential capabilities that make source-aware generation reliable</p>
+    </div>
+    <div class="w-full flex flex-col gap-4">
+      <!-- Row 1 -->
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Feature 1 -->
+        <div class="reveal feat group relative overflow-hidden rounded-lg bg-[#080808] border border-white/[.06] h-[360px]">
+          <div class="p-[25px] flex flex-col gap-2">
+            <h3 class="text-[16px] font-medium">Source Website Capture</h3>
+            <p class="text-[16px] leading-6 text-white/60">Render the public page and preserve the content, links, media, and brand cues worth carrying forward.</p>
+          </div>
+          <div class="absolute left-0 right-0 bottom-0 h-[230px]">
+            <div class="absolute left-1/2 -translate-x-1/2 bottom-6 w-[271px] h-[147px] rounded-full bg-cyan-500/50 blur-[60px]"></div>
+            <div class="absolute left-[83px] bottom-[52px] w-[289px] h-[168px] rounded-lg overflow-hidden border border-white/20 p-4 flex flex-col justify-between shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:-rotate-3" style="background:radial-gradient(circle at 85% 15%,rgba(255,255,255,.22),transparent 32%),linear-gradient(120deg,#32205f,#6540a0 55%,#8f70bd)">
+              <div class="absolute inset-0 opacity-30" style="background-image:radial-gradient(circle,rgba(255,255,255,.9) 1px,transparent 1.5px);background-size:7px 7px;mask-image:linear-gradient(90deg,transparent 35%,#000)"></div>
+              <div class="relative flex flex-col gap-2">
+                <span class="font-mono text-[12px] tracking-[2px] text-white/90">0000 0000 0000 0000</span>
+                <span class="text-[9px] text-white/75">John Daniel</span>
+                <span class="w-7 h-5 rounded-sm border border-white/40" style="background:linear-gradient(90deg,#fff 48%,#cfd0d5 48% 53%,#fff 53%);box-shadow:inset 0 -6px rgba(0,0,0,.08)"></span>
+              </div>
+              <span class="relative text-[31px] leading-none font-semibold tracking-[-1px]">VAULTA</span>
+            </div>
+            <div class="absolute right-[73px] bottom-[22px] w-[242px] h-[140px] rounded-lg overflow-hidden border border-white/20 p-4 flex flex-col justify-between shadow-2xl transition-transform duration-500 group-hover:-translate-y-3" style="background:radial-gradient(circle at 85% 15%,rgba(255,255,255,.2),transparent 32%),linear-gradient(120deg,#302151,#4561a0 58%,#4e91bc)">
+              <div class="absolute inset-0 opacity-30" style="background-image:radial-gradient(circle,rgba(255,255,255,.9) 1px,transparent 1.5px);background-size:7px 7px;mask-image:linear-gradient(90deg,transparent 35%,#000)"></div>
+              <div class="relative flex flex-col gap-1.5">
+                <span class="font-mono text-[11px] tracking-[1.5px] text-white/90">0000 0000 0000 0000</span>
+                <span class="text-[8px] text-white/75">John Daniel</span>
+                <span class="w-7 h-5 rounded-sm border border-white/40" style="background:linear-gradient(90deg,#fff 48%,#cfd0d5 48% 53%,#fff 53%);box-shadow:inset 0 -6px rgba(0,0,0,.08)"></span>
+              </div>
+              <span class="relative text-[27px] leading-none font-semibold tracking-[-1px]">VAULTA</span>
+            </div>
+          </div>
+        </div>
+        <!-- Feature 2 -->
+        <div class="reveal feat group relative overflow-hidden rounded-lg bg-[#080808] border border-white/[.06] h-[360px]">
+          <div class="p-[25px] flex flex-col gap-2">
+            <h3 class="text-[16px] font-medium">Generation Overview</h3>
+            <p class="text-[16px] leading-6 text-white/60">A clear project view of capture, planning, generation, editing, versions, and export.</p>
+          </div>
+          <div class="absolute left-0 right-0 bottom-0 h-[230px] grid place-items-center">
+            <div class="absolute w-[369px] h-[190px] rounded-full bg-cyan-500/50 blur-[70px] top-2"></div>
+            <div class="relative w-[366px] rounded-t-xl bg-black/60 border border-white/10 p-3.5 flex flex-col gap-3 translate-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[12px] font-medium">Project</span>
+                <span class="text-[11px] text-white/50 flex items-center gap-1">Current run <svg viewBox="0 0 24 24" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+              </div>
+              <div class="h-px bg-white/10"></div>
+              <div class="flex gap-3">
+                <div class="w-[203px] rounded-lg bg-white/[.04] p-3 flex flex-col gap-2">
+                  <span class="text-[10px] text-white/50">Generation status</span>
+                  <span class="text-[20px] font-semibold">READY</span>
+                  <div class="flex items-end gap-1 h-9 mt-1">
+                    <span class="flex-1 bg-cyan-500/70 rounded-sm" style="height:40%"></span>
+                    <span class="flex-1 bg-cyan-500/70 rounded-sm" style="height:70%"></span>
+                    <span class="flex-1 bg-cyan-500 rounded-sm" style="height:100%"></span>
+                    <span class="flex-1 bg-cyan-500/50 rounded-sm" style="height:55%"></span>
+                    <span class="flex-1 bg-cyan-500/70 rounded-sm" style="height:80%"></span>
+                    <span class="flex-1 bg-cyan-500/40 rounded-sm" style="height:35%"></span>
+                    <span class="flex-1 bg-cyan-500/60 rounded-sm" style="height:60%"></span>
+                  </div>
+                </div>
+                <div class="flex-1 flex flex-col gap-3 py-1">
+                  <div class="flex flex-col gap-1"><span class="text-[10px] text-white/50">Captured</span><span class="text-[12px] font-medium">Mapped</span></div>
+                  <div class="flex flex-col gap-1"><span class="text-[10px] text-white/50">Generated</span><span class="text-[12px] font-medium">Committed</span></div>
+                </div>
+              </div>
+              <div class="flex items-center justify-between rounded-lg bg-white/[.05] px-2 py-2">
+                <span class="text-[11px] text-white/70">The latest validated design is committed to version history.</span>
+                <svg viewBox="0 0 24 24" class="w-3 h-3 text-white/50" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Row 2 -->
+      <div class="grid grid-cols-3 gap-4">
+        <!-- Feature 3 -->
+        <div class="reveal feat group relative overflow-hidden rounded-lg bg-[#080808] border border-white/[.06] h-[360px]">
+          <div class="p-[25px] flex flex-col gap-2">
+            <h3 class="text-[16px] font-medium">Flexible Design Direction</h3>
+            <p class="text-[16px] leading-6 text-white/60">Describe the style, mood, hierarchy, layout, or complete visual language you want.</p>
+          </div>
+          <div class="absolute left-0 right-0 bottom-0 h-[230px] grid place-items-center">
+            <div class="absolute w-[271px] h-[147px] rounded-full bg-cyan-500/50 blur-[60px]"></div>
+            <div class="relative w-[284px] rounded-t-xl bg-black/60 border border-white/10 p-[15px] flex flex-col gap-3 translate-y-4">
+              <span class="font-geist font-medium text-[14px]">Design manifest</span>
+              <div class="h-px bg-white/10"></div>
+              <div class="flex flex-col gap-2">
+                <div class="flex items-end justify-between"><span class="text-[11px] text-white/50">Sections</span><span class="text-[16px] font-semibold">12 <span class="text-[11px] text-white/40 font-normal">/ 20 max</span></span></div>
+                <div class="h-[5px] rounded-full bg-white/10 overflow-hidden"><div class="h-full w-[68%] btn-grad rounded-full"></div></div>
+                <span class="text-[11px] text-white/50">Every section is matched to the approved plan.</span>
+              </div>
+              <div class="h-px bg-white/10"></div>
+              <span class="font-geist font-medium text-[14px]">Design stages</span>
+              <div class="flex items-center justify-between text-[12px]"><span class="text-white/70">🛍️ Generated</span><span class="text-white/50">Committed · 28%</span></div>
+              <div class="flex items-center justify-between text-[12px]"><span class="text-white/70">Generation</span><span class="text-white/50">Full-page output</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- Feature 4 -->
+        <div class="reveal feat group relative overflow-hidden rounded-lg bg-[#080808] border border-white/[.06] h-[360px]">
+          <div class="p-[25px] flex flex-col gap-2">
+            <h3 class="text-[16px] font-medium">Real-Time Generation Progress</h3>
+            <p class="text-[16px] leading-6 text-white/60">Watch planned sections resolve into final HTML while the page is generated.</p>
+          </div>
+          <div class="absolute left-0 right-0 bottom-0 h-[230px] grid place-items-center">
+            <div class="absolute w-[271px] h-[147px] rounded-full bg-cyan-500/50 blur-[60px]"></div>
+            <div class="relative w-[287px] rounded-2xl bg-black/40 border border-white/10 p-2 flex flex-col gap-2 translate-y-4">
+              <div class="flex items-center gap-2 rounded-xl bg-[#101010] border border-white/10 p-3"><span class="w-8 h-8 rounded-md bg-white/10 grid place-items-center text-[13px]">💳</span><div class="flex flex-col"><span class="text-[12px] font-medium">Capture complete</span><span class="text-[11px] text-white/50">Source context mapped</span></div></div>
+              <div class="flex items-center gap-2 rounded-xl bg-[#101010] border border-white/5 p-3 opacity-80"><span class="w-8 h-8 rounded-md bg-white/10 grid place-items-center text-[13px]">☕</span><div class="flex flex-col"><span class="text-[12px] font-medium">Creative plan ready</span><span class="text-[11px] text-white/50">Design direction approved</span></div></div>
+              <div class="flex items-center gap-2 rounded-xl bg-[#101010] border border-white/5 p-3 opacity-[.45]"><span class="w-8 h-8 rounded-md bg-white/10 grid place-items-center text-[13px]">🔔</span><div class="flex flex-col"><span class="text-[12px] font-medium">Section generated</span><span class="text-[11px] text-white/50">80% of Captured used</span></div></div>
+              <div class="flex items-center gap-2 rounded-xl bg-[#101010] border border-white/5 p-3 opacity-[.18]"><span class="w-8 h-8 rounded-md bg-white/10 grid place-items-center text-[13px]">🎯</span><div class="flex flex-col"><span class="text-[12px] font-medium">Version committed</span><span class="text-[11px] text-white/50">Ready to edit or export</span></div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Feature 5 -->
+        <div class="reveal feat group relative overflow-hidden rounded-lg bg-[#080808] border border-white/[.06] h-[360px]">
+          <div class="p-[25px] flex flex-col gap-2">
+            <h3 class="text-[16px] font-medium">Project Context Overview</h3>
+            <p class="text-[16px] leading-6 text-white/60">The active design, source context, chat history, and recoverable versions stay together.</p>
+          </div>
+          <div class="absolute left-0 right-0 bottom-0 h-[230px] grid place-items-center">
+            <div class="absolute w-[271px] h-[147px] rounded-full bg-cyan-500/50 blur-[60px]"></div>
+            <div class="relative w-[248px] rounded-2xl bg-black/40 border border-white/10 p-3 flex flex-col gap-3.5 translate-y-4">
+              <div class="rounded-xl p-4 flex flex-col gap-5" style="background:radial-gradient(120% 120% at 20% 0%,rgba(34,211,238,.7),rgba(8,145,178,.7) 50%,rgba(14,116,144,.7))">
+                <div class="flex items-center justify-between text-[11px] text-white/80"><span>Active design</span><span>HTML</span></div>
+                <div class="flex items-end justify-between"><span class="text-[22px] font-semibold">v1.0.<span class="text-white/60">00</span></span><span class="text-[11px] text-white/70">READY</span></div>
+              </div>
+              <div class="h-px bg-white/10"></div>
+              <div class="flex items-center justify-between rounded-md bg-white/5 px-2 py-2"><span class="text-[11px] text-white/70">Open the project canvas</span><svg viewBox="0 0 24 24" class="w-3 h-3 text-white/50" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+              <div class="flex items-center justify-between px-2">
+                <div class="flex flex-col items-center gap-1.5 text-white/70"><span class="w-9 h-9 rounded-full bg-white/10 grid place-items-center">$</span><span class="text-[10px]">Capture</span></div>
+                <div class="flex flex-col items-center gap-1.5 text-white/70"><span class="w-9 h-9 rounded-full btn-grad grid place-items-center text-[18px]">+</span><span class="text-[10px]">Edit</span></div>
+                <div class="flex flex-col items-center gap-1.5 text-white/70"><span class="w-9 h-9 rounded-full bg-white/10 grid place-items-center">⇄</span><span class="text-[10px]">Export</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY US ============ -->
+<section class="px-[120px] py-20">
+  <div class="flex flex-col items-center gap-20">
+    <div class="reveal flex flex-col items-center gap-6 text-center">
+      <p class="font-geist font-semibold text-[14px] tracking-wide text-accent">Why ResetUI</p>
+      <h2 class="font-semibold text-[36px] leading-[43px] tracking-[-1.44px]">Web Design Without The Fragmentation</h2>
+      <p class="text-[16px] text-white/70 max-w-[500px]">From rendered source capture to a committed redesign, ResetUI keeps the complete workflow visible and recoverable</p>
+    </div>
+    <div class="grid grid-cols-2 gap-4 w-full">
+      <!-- left column -->
+      <div class="flex flex-col gap-4">
+        <!-- Card 1 -->
+        <div class="reveal relative overflow-hidden rounded-lg border border-white/[.06] h-[374px]" style="background:radial-gradient(90% 130% at 20% 0%,#0ea5c6,#0b6178 40%,#000)">
+          <div class="p-6 flex flex-col gap-2">
+            <h3 class="text-[16px] font-medium">Keep Source Context Attached</h3>
+            <p class="text-[16px] leading-6 text-white/70">Keep verified copy, calls to action, links, media, and brand signals available throughout the redesign.</p>
+          </div>
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Phone1.png" class="absolute left-1/2 -translate-x-1/2 bottom-0 top-[130px] w-[288px] object-cover object-top drop-shadow-2xl" alt="ResetUI source context preview">
+        </div>
+        <!-- Card 2 -->
+        <div class="reveal relative overflow-hidden rounded-lg border border-white/[.06] h-[374px]" style="background:radial-gradient(90% 130% at 20% 0%,#0ea5c6,#0b6178 40%,#000)">
+          <div class="p-6 flex flex-col gap-2">
+            <h3 class="text-[16px] font-medium">Generate the Full Page</h3>
+            <p class="text-[16px] leading-6 text-white/70">Kimi implements the approved plan in one streaming call while completed sections appear in the canvas.</p>
+          </div>
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Phone1.png" class="absolute left-1/2 -translate-x-1/2 bottom-0 top-[130px] w-[288px] object-cover object-top drop-shadow-2xl" alt="ResetUI full-page generation preview">
+        </div>
+      </div>
+      <!-- right column -->
+      <div class="reveal group relative overflow-hidden rounded-lg border border-white/[.06] h-[764px]">
+        <div class="absolute left-1/2 -translate-x-1/2 top-[280px] w-[520px] h-[300px] rounded-full bg-[#67e8f9]/40 blur-[90px]"></div>
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Phone2.png" class="absolute left-1/2 -translate-x-1/2 top-[23px] w-[383px] transition-transform duration-500 group-hover:-translate-y-2" alt="App">
+        <div class="absolute left-0 right-0 bottom-0 p-6 flex flex-col gap-2" style="background:linear-gradient(180deg,transparent,rgba(0,0,0,.7) 45%)">
+          <h3 class="text-[16px] font-medium">Every Version in One Project</h3>
+          <p class="text-[16px] leading-6 text-white/70">Chat edits, undo, redo, and restores commit recoverable versions instead of overwriting history.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTEGRATION ============ -->
+<section class="px-[120px] py-20">
+  <div class="flex flex-col items-center gap-20">
+    <div class="reveal flex flex-col items-center gap-6 text-center">
+      <p class="font-geist font-semibold text-[14px] tracking-wide text-accent">INTEGRATIONS</p>
+      <h2 class="font-semibold text-[36px] leading-[43px] tracking-[-1.44px]">A Connected Agentic Design Stack</h2>
+      <p class="text-[16px] leading-6 text-white/70">DeepSeek planning, Kimi implementation, image assistance, database history, and framework export stay connected in one product.</p>
+    </div>
+    <div class="integration-stage relative w-full h-[390px] flex items-center justify-center">
+      <div class="integration-phone w-[350px] h-[390px] overflow-hidden" style="-webkit-mask-image:linear-gradient(180deg,#000 68%,transparent 100%);mask-image:linear-gradient(180deg,#000 68%,transparent 100%)">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Phone.png" class="w-[350px]" alt="ResetUI app">
+      </div>
+      <div class="integration-rail marquee-mask absolute left-0 right-0 w-full pointer-events-none" aria-hidden="true">
+        <div class="marquee-track items-center gap-[54px] px-10" style="animation-duration:38s">
+          <span class="int-logo"><img src="https://cdn.simpleicons.org/mastercard/EB001B" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/stripe/635BFF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/paypal/FFFFFF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/wise/9FE870" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/revolut/FFFFFF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/coinbase/0052FF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/applepay/FFFFFF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/visa/FFFFFF" alt=""></span>
+          <span class="int-logo"><img src="https://cdn.simpleicons.org/mastercard/EB001B" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/stripe/635BFF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/paypal/FFFFFF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/wise/9FE870" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/revolut/FFFFFF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/coinbase/0052FF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/applepay/FFFFFF" alt=""></span><span class="int-logo"><img src="https://cdn.simpleicons.org/visa/FFFFFF" alt=""></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="px-[120px] py-20">
+  <div class="flex flex-col items-center gap-20">
+    <div class="reveal flex flex-col items-center gap-6 text-center">
+      <p class="font-geist font-semibold text-[14px] tracking-wide text-accent">RESETUI CAPABILITIES</p>
+      <h2 class="font-semibold text-[36px] leading-[43px] tracking-[-1.44px]">Our Newly Edited Features</h2>
+      <p class="text-[16px] leading-6 text-white/70">Capture the existing page, generate a distinct direction, and make<br>targeted changes with tools built for real redesign work.</p>
+    </div>
+    <div class="w-full flex flex-col gap-5">
+      <!-- Row template repeated -->
+      <div class="reveal nf-row grid grid-cols-[432px_1fr] gap-5 items-stretch">
+        <div class="relative rounded-[20px] overflow-hidden min-h-[319px]">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Back.png" class="absolute inset-0 w-full h-full object-cover" alt="">
+          <div class="absolute inset-0 bg-black/10"></div>
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Phone1.png" class="absolute left-1/2 -translate-x-1/2 top-[34px] w-[190px] drop-shadow-[0_20px_35px_rgba(0,0,0,.55)]" alt="ResetUI investment insights screen">
+        </div>
+        <div class="relative rounded-[20px] border border-white/[.06] p-8 flex flex-col justify-between gap-10" style="background:linear-gradient(120deg,#141414,#070707)">
+          <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-2"><h3 class="font-semibold text-[24px] tracking-[-.24px]">Creative Planning Before Implementation</h3><p class="text-[16px] leading-6 text-white/70">DeepSeek selects the visual system, layouts, media policy, motion, and exact generation manifest.</p></div>
+            <ul class="flex flex-col gap-3 text-[14px] text-white/80">
+              <li class="flex items-center gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 check shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Classify the website and audience</li>
+              <li class="flex items-center gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 check shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Choose a coherent design system</li>
+              <li class="flex items-center gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 check shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Give each section a distinct composition</li>
+            </ul>
+          </div>
+          <a href="#pricing" class="btn-grad self-start grid place-items-center h-[42px] px-6 rounded-full text-[14px] font-medium whitespace-nowrap hover:brightness-110 transition">See Pricing</a>
+        </div>
+      </div>
+      <div class="reveal nf-row grid grid-cols-[1fr_432px] gap-5 items-stretch">
+        <div class="relative col-start-2 row-start-1 rounded-[20px] overflow-hidden min-h-[319px]">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Back.png" class="absolute inset-0 w-full h-full object-cover" alt="">
+          <div class="absolute inset-0 bg-black/10"></div>
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Phone.png" class="absolute left-1/2 -translate-x-1/2 top-[52px] w-[210px] drop-shadow-[0_20px_35px_rgba(0,0,0,.55)]" alt="ResetUI media policy preview">
+        </div>
+        <div class="relative col-start-1 row-start-1 rounded-[20px] border border-white/[.06] p-8 flex flex-col justify-between gap-10" style="background:linear-gradient(120deg,#141414,#070707)">
+          <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-2"><h3 class="font-semibold text-[24px] tracking-[-.24px]">Captured Media Kept in Bounds</h3><p class="text-[16px] leading-6 text-white/70">ResetUI allows approved website images and videos only in server-owned foreground content slots.</p></div>
+            <ul class="flex flex-col gap-3 text-[14px] text-white/80">
+              <li class="flex items-center gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 check shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>HTTPS-only approved source media</li>
+              <li class="flex items-center gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 check shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Never use source media as hero or CTA backgrounds</li>
+              <li class="flex items-center gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 check shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Validate provenance before persistence</li>
+            </ul>
+          </div>
+          <a href="#pricing" class="btn-grad self-start grid place-items-center h-[42px] px-6 rounded-full text-[14px] font-medium whitespace-nowrap hover:brightness-110 transition">See Pricing</a>
+        </div>
+      </div>
+      <div class="reveal nf-row grid grid-cols-[432px_1fr] gap-5 items-stretch">
+        <div class="relative rounded-[20px] overflow-hidden min-h-[343px]">
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Back.png" class="absolute inset-0 w-full h-full object-cover" alt="">
+          <div class="absolute inset-0 bg-black/10"></div>
+          <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Phone1.png" class="absolute left-1/2 -translate-x-1/2 top-[34px] w-[190px] drop-shadow-[0_20px_35px_rgba(0,0,0,.55)]" alt="ResetUI version history preview">
+        </div>
+        <div class="relative rounded-[20px] border border-white/[.06] p-8 flex flex-col justify-between gap-10" style="background:linear-gradient(120deg,#141414,#070707)">
+          <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-2"><h3 class="font-semibold text-[24px] tracking-[-.24px]">Recoverable Iteration That Compounds</h3><p class="text-[16px] leading-6 text-white/70">Every accepted chat edit creates a committed version so you can explore without losing the design that worked.</p></div>
+            <ul class="flex flex-col gap-3 text-[14px] text-white/80">
+              <li class="flex items-center gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 check shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Target existing or new sections</li>
+              <li class="flex items-center gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 check shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Undo, redo, and restore safely</li>
+              <li class="flex items-center gap-2.5"><svg viewBox="0 0 24 24" class="w-4 h-4 check shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Export the latest committed design</li>
+            </ul>
+          </div>
+          <a href="#pricing" class="btn-grad self-start grid place-items-center h-[42px] px-6 rounded-full text-[14px] font-medium whitespace-nowrap hover:brightness-110 transition">See Pricing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ PRICING ============ -->
+<section id="pricing" class="px-[120px] py-20">
+  <div class="flex flex-col items-center gap-20">
+    <div class="reveal flex flex-col items-center gap-6 text-center">
+      <p class="font-geist font-semibold text-[14px] tracking-wide text-accent">pricing</p>
+      <h2 class="font-semibold text-[36px] leading-[43px] tracking-[-1.44px]">Simple, Transparent Pricing</h2>
+      <p class="text-[16px] leading-6 text-white/70">Start with Free Starter and upgrade to Indie Pro<br>when you need more redesigns, editing, and export</p>
+    </div>
+    <div class="flex items-start justify-center gap-10">
+      <!-- Starter -->
+      <div class="reveal w-[330px] flex flex-col gap-6">
+        <div class="relative rounded-3xl p-6 flex flex-col gap-6 border border-white/[.06]" style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03))">
+          <div class="flex flex-col items-center gap-3 text-center">
+            <h3 class="font-semibold text-[24px]">Starter</h3>
+            <div class="flex items-end gap-2"><span class="font-semibold text-[40px] leading-none">$0</span><span class="text-[18px] text-white/60 mb-1">/month</span></div>
+          </div>
+          <div class="h-px bg-white/[.08]"></div>
+          <div class="flex flex-col gap-4">
+            <p class="text-[14px] font-medium text-white/70 text-center">5 credits, 1 project, up to 7 sections</p>
+            <a href="#cta" class="btn-grad grid place-items-center h-[42px] rounded-full text-[14px] font-medium hover:brightness-110 transition">Get Started</a>
+          </div>
+        </div>
+        <ul class="flex flex-col gap-2 price-list"></ul>
+      </div>
+      <!-- Indie Pro -->
+      <div class="reveal w-[330px] flex flex-col gap-6">
+        <div class="relative rounded-3xl p-6 flex flex-col gap-6 border border-white/[.06]" style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03))">
+          <div class="flex flex-col items-center gap-3 text-center">
+            <h3 class="font-semibold text-[24px]">Indie Pro</h3>
+            <div class="flex items-end gap-2"><span class="font-semibold text-[40px] leading-none">$19</span><span class="text-[18px] text-white/60 mb-1">/month</span></div>
+          </div>
+          <div class="h-px bg-white/[.08]"></div>
+          <div class="flex flex-col gap-4">
+            <p class="text-[14px] font-medium text-white/70 text-center">50 monthly credits, premium templates, chat, and export</p>
+            <a href="#cta" class="btn-grad grid place-items-center h-[42px] rounded-full text-[14px] font-medium hover:brightness-110 transition">Get Started</a>
+          </div>
+        </div>
+        <ul class="flex flex-col gap-2 price-list-plus"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REVIEWS ============ -->
+<section class="px-[120px] py-20">
+  <div class="flex flex-col items-center gap-20">
+    <div class="reveal flex flex-col items-center gap-6 text-center">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center"><span class="star"></span></div>
+        <span class="w-px h-[15px] bg-white/30"></span>
+        <span class="text-[16px] text-white">Source-aware. Agentic. Production-ready.</span>
+      </div>
+      <h2 class="font-semibold text-[36px] leading-[43px] tracking-[-1.44px]">Built for Thoughtful Redesigns</h2>
+    </div>
+    <div id="reviews-grid" class="grid grid-cols-3 gap-4 w-full items-start"></div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="px-[120px] py-20">
+  <div class="flex flex-col items-center gap-20">
+    <div class="reveal flex flex-col items-center gap-6 text-center">
+      <p class="font-geist font-semibold text-[14px] tracking-wide text-accent">FAQ</p>
+      <h2 class="font-semibold text-[36px] leading-[43px] tracking-[-1.44px]">Got Questions?</h2>
+      <p class="text-[16px] text-white/70">Well, we've got all the answers</p>
+    </div>
+    <div id="faq-list" class="w-[700px] flex flex-col gap-4"></div>
+  </div>
+</section>
+</div>
+
+<!-- ============ CTA (full-bleed dark) ============ -->
+<div id="cta" class="w-[1440px] mx-auto bg-ink px-[120px] py-[60px]">
+  <div class="reveal relative overflow-hidden rounded-2xl h-[742px]">
+    <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Back.png" class="absolute inset-0 w-full h-full object-cover opacity-60" style="-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.32) 0%,rgba(0,0,0,.68) 44%,#000 100%);mask-image:linear-gradient(to bottom,rgba(0,0,0,.32) 0%,rgba(0,0,0,.68) 44%,#000 100%)" alt="">
+    <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(0,0,0,.38),transparent 52%)"></div>
+    <div class="relative grid h-full grid-cols-[480px_1fr] items-center gap-14 px-16">
+      <div class="relative h-full overflow-hidden">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Eclipse-Dark-Phone.png" class="absolute left-1/2 top-[120px] w-[440px] -translate-x-1/2 object-cover object-top" alt="ResetUI app">
+      </div>
+      <div class="relative z-10 flex flex-col items-start gap-10 text-left">
+        <h2 class="font-semibold text-[40px] leading-[48px] tracking-[-1.6px]">Start redesigning your<br>landing page the smarter way.</h2>
+        <div class="flex items-center gap-3">
+          <a href="#top" class="inline-flex h-[52px] items-center transition hover:opacity-80" aria-label="Download on the App Store"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" class="h-[52px] w-auto" alt="Download on the App Store"></a>
+          <a href="#top" class="-mx-3 inline-flex h-[52px] items-center overflow-visible transition hover:opacity-80" aria-label="Get it on Google Play"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" class="h-[76px] w-auto max-w-none" alt="Get it on Google Play"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="w-[1440px] mx-auto bg-ink px-[60px] py-10">
+  <div class="flex flex-col items-center gap-20">
+    <div class="flex flex-col items-center gap-2.5">
+      <a href="#top" class="flex items-center gap-2"><img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" class="w-6 h-6 rounded-full object-cover" alt="ResetUI logo"><span class="font-semibold text-[24px] tracking-[-.24px]">RESETUI</span></a>
+      <p class="text-[14px] text-white/60">Agentic web design from URL to code</p>
+    </div>
+    <div class="flex items-start justify-center gap-20">
+      <div class="flex flex-col gap-4"><span class="text-[14px] font-medium">Pages</span><ul class="flex flex-col gap-3.5 text-[14px] text-white/60 whitespace-nowrap"><li><a class="hover:text-white transition" href="#top">Home</a></li><li><a class="hover:text-white transition" href="#features">Templates</a></li><li><a class="hover:text-white transition" href="#pricing">Changelog</a></li><li><a class="hover:text-white transition" href="#cta">Start free</a></li></ul></div>
+      <div class="flex flex-col gap-4"><span class="text-[14px] font-medium">Sections</span><ul class="flex flex-col gap-3.5 text-[14px] text-white/60 whitespace-nowrap"><li><a class="hover:text-white transition" href="#features">Why ResetUI</a></li><li><a class="hover:text-white transition" href="#features">Workflow</a></li><li><a class="hover:text-white transition" href="#pricing">Design stack</a></li><li><a class="hover:text-white transition" href="#features">Capabilities</a></li></ul></div>
+      <div class="flex flex-col gap-4"><span class="text-[14px] font-medium">Connect</span><ul class="flex flex-col gap-3.5 text-[14px] text-white/60 whitespace-nowrap"><li><a class="hover:text-white transition" href="#">X (Twitter)</a></li><li><a class="hover:text-white transition" href="#">LinkedIn</a></li><li><a class="hover:text-white transition" href="#">Instagram</a></li><li><a class="hover:text-white transition" href="#">Discord</a></li></ul></div>
+    </div>
+    <div class="w-full border-t border-white/5 pt-10 flex justify-center">
+      <p class="text-[14px] text-white/50">Copyright © 2026 ResetUI. All rights reserved....</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---------- data ----------
+  const starterFeatures = ["5 starting credits","1 project","Up to 7 sections","Curated template required","Standard queue","ResetUI watermark","Structured source capture","Full-page generation"];
+  const plusFeatures = ["50 credits every month","Up to 20 sections","Custom prompts","Premium template systems","Priority generation","Production code export","No ResetUI watermark"];
+  const checkTile = '<span class="w-[18px] h-[18px] shrink-0 rounded grid place-items-center" style="background:#22d3ee"><svg viewBox="0 0 24 24" class="w-3 h-3" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>';
+  function priceRow(t){ return `<li class="flex items-center gap-2 py-1.5 border-b border-white/10">${checkTile}<span class="flex-1 whitespace-nowrap text-[14px] text-white/80">${t}</span></li>`; }
+  document.querySelector('.price-list').innerHTML = starterFeatures.map(priceRow).join('');
+  document.querySelector('.price-list-plus').innerHTML = plusFeatures.map(priceRow).join('');
+
+  const reviews = [
+    // column 1
+    {c:0,t:"The redesign still felt like our company",q:"ResetUI preserved the copy and calls to action that mattered, but the visual system finally felt considered and specific to us.",n:"Taylor M.",r:"Entrepreneur"},
+    {c:0,t:"The planner gave the page one clear direction",q:"The design plan made every section feel related without repeating the same layout. The result was cohesive, not templated.",n:"Aisha Rehman",r:"Marketing Consultant"},
+    {c:0,t:"Chat edits that know the page",q:"I asked for a tighter pricing section and ResetUI changed the right section without disturbing the rest of the page.",n:"Keisha Brook",r:"Content Creator"},
+    // column 2
+    {c:1,t:"The source content stayed grounded",q:"The generated design kept our verified pricing, links, and product facts while completely rethinking the layout.",n:"James Oliver",r:"Software Engineer"},
+    {c:1,t:"Clear, ambitious, and actually usable",q:"The page felt much more ambitious, but the export was still structured enough for our frontend team to use.",n:"Daniel W.",r:"Architect"},
+    {c:1,t:"Version history without the anxiety",q:"I could try a stronger direction, compare it with the previous version, and restore the one that worked without losing progress.",n:"Ryan Knox",r:"UX Researcher"},
+    // column 3
+    {c:2,t:"From URL to canvas felt effortless",q:"The capture and generation flow handled the heavy lifting, then gave me a canvas I could refine instead of a disposable screenshot.",n:"Priyan Nadan",r:"Product Manager"},
+    {c:2,t:"Our page finally makes sense at a glance",q:"ResetUI clarified the hierarchy and made the product story easier to understand without inventing claims that were never on our site.",n:"Sofia",r:"Startup Founder"},
+    {c:2,t:"The production export made the difference",q:"I started with the free plan, upgraded for chat and export, and handed the generated code to our team the same day.",n:"Nikhil Menon",r:"Investment Analyst"},
+  ];
+  function reviewCard(v){
+    return `<div class="reveal rounded-2xl border border-white/[.04] p-5 flex flex-col gap-6" style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(171,171,171,.03))">
+      <div class="flex flex-col gap-6">
+        <h3 class="text-[18px] leading-tight">${v.t}</h3>
+        <p class="text-[16px] leading-6 text-white/60">"${v.q}"</p>
+      </div>
+      <div class="h-px bg-white/5"></div>
+      <div class="flex items-center gap-4">
+        <div class="relative w-[38px] h-[38px] shrink-0 overflow-hidden rounded-full bg-white/10 border border-white/10" role="img" aria-label="${v.n}">
+          <div class="absolute inset-0 grid place-items-center text-white/40" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z"/><circle cx="9" cy="9" r="2"/><path d="m4 16 4-4 3 3 2-2 7 7"/></svg>
+          </div>
+        </div>
+        <div class="flex flex-col"><span class="text-[14px]">${v.n}</span><span class="text-[14px] font-medium text-white/50">${v.r}</span></div>
+      </div>
+    </div>`;
+  }
+  const grid = document.getElementById('reviews-grid');
+  [0,1,2].forEach(col=>{
+    const c = document.createElement('div'); c.className='flex flex-col gap-4';
+    c.innerHTML = reviews.filter(v=>v.c===col).map(reviewCard).join('');
+    grid.appendChild(c);
+  });
+
+  const faqs = [
+    {q:"Can I try ResetUI for free?",a:"Yes. Free Starter includes 5 credits, 1 project, up to 7 sections, and a curated template."},
+    {q:"Does ResetUI copy my existing layout?",a:"No. ResetUI preserves useful content and brand context while generating a new visual system and section composition."},
+    {q:"Can I edit the generated page?",a:"Yes. Project-aware chat can target existing sections or add new ones, and accepted edits create recoverable versions."},
+    {q:"What happens to source media?",a:"Approved images and videos remain foreground content and are never repurposed as hero or CTA backgrounds."},
+    {q:"What can I export?",a:"Standalone HTML/Tailwind CSS/JS or a one-file Vite React, Next.js App Router, Vue, or Svelte implementation."},
+    {q:"How do I cancel or change my plan?",a:"You can switch between Starter and Indie Pro, or cancel entirely, at any time from your account settings — no fees, no lock-in, no awkward phone calls."},
+  ];
+  const plus = '<span class="faq-icon w-6 h-6 grid place-items-center transition-transform duration-300"><svg viewBox="0 0 24 24" class="w-5 h-5 text-white/70" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>';
+  document.getElementById('faq-list').innerHTML = faqs.map(f=>`
+    <div class="faq-card reveal rounded-3xl bg-white/[.05] border border-white/[.03] overflow-hidden">
+      <button class="faq-toggle w-full flex items-center justify-between gap-4 px-6 py-6 text-left">
+        <span class="text-[18px]">${f.q}</span>${plus}
+      </button>
+      <div class="faq-body"><div><p class="px-6 pb-6 text-[16px] leading-6 text-white/60">${f.a}</p></div></div>
+    </div>`).join('');
+  document.querySelectorAll('.faq-toggle').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const card = btn.closest('.faq-card');
+      document.querySelectorAll('.faq-card').forEach(c=>{ if(c!==card) c.classList.remove('open'); });
+      card.classList.toggle('open');
+    });
+  });
+
+  // ---------- scroll reveal ----------
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transitionDelay=(i%3*0.08)+'s'; io.observe(el); });
+
+  // ---------- nav shrink on scroll ----------
+  const nav = document.getElementById('nav');
+  addEventListener('scroll',()=>{ nav.style.top = window.scrollY>40 ? '12px' : '20px'; });
+</script>
+</body>
+</html>

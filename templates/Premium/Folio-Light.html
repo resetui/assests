@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>ResetUI | Agentic Landing Page Redesign</title>
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code.">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        ink: '#000000', muted: '#605f5f', faint: '#aeaeae',
+        cream: '#f4f2ee', sand: '#f0ece6', sand2: '#efece6',
+        butter: '#fef7af', sky: '#84e6f6', salmon: '#f7a49e', gold: '#fecd1a', crimson: '#e83043'
+      },
+      fontFamily: {
+        display: ['"Albert Sans"', 'system-ui', 'sans-serif'],
+        sans: ['Geist', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
+      },
+      boxShadow: {
+        pill: '0 5px 15px rgba(0,0,0,.20)',
+        widget: '-3px 15px 25px rgba(104,99,80,.18)',
+        card: '0 8px 20px rgba(0,0,0,.10)',
+        tab: '0 4px 10px rgba(0,0,0,.08)',
+        nav: '0 1px 20px rgba(224,215,198,.85)',
+        thumb: '-2px 4px 15px rgba(0,0,0,.18)',
+        plan: '5px 8px 15px rgba(0,0,0,.25)'
+      }
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { overflow-x: hidden; }
+  body { min-width: 1440px; }
+  ::selection { background: #fef7af; }
+
+  /* ---- type scale, 1:1 with the source file ---- */
+  .h1 { font-family: 'Albert Sans'; font-weight: 400; font-size: 56px; line-height: 61.6px; letter-spacing: -2.8px; }
+  .h2 { font-family: 'Albert Sans'; font-weight: 400; font-size: 40px; line-height: 44px; letter-spacing: -2px; }
+  .h3 { font-family: 'Albert Sans'; font-weight: 400; font-size: 36px; line-height: 46.8px; letter-spacing: -1.8px; }
+  .h4 { font-family: 'Albert Sans'; font-weight: 400; font-size: 30px; line-height: 39px; letter-spacing: -1.2px; }
+  .h5 { font-family: 'Albert Sans'; font-weight: 400; font-size: 26px; line-height: 33.8px; letter-spacing: -1.04px; }
+  .h6 { font-family: 'Albert Sans'; font-weight: 400; font-size: 20px; line-height: 26px; letter-spacing: -0.8px; }
+  .t18 { font-size: 18px; line-height: 25.2px; letter-spacing: -0.54px; }
+  .t16 { font-size: 16px; line-height: 22.4px; letter-spacing: -0.48px; }
+  .t14 { font-size: 14px; line-height: 19.6px; letter-spacing: -0.42px; }
+  .t12 { font-size: 12px; line-height: 14.4px; letter-spacing: -0.36px; }
+  .quote { font-family: Georgia, 'Times New Roman', serif; font-size: 62px; line-height: 46px; color: rgba(0,0,0,.22); }
+  .lbl { font-weight: 500; font-size: 16px; line-height: 17.6px; letter-spacing: -0.48px; white-space: nowrap; }
+
+  /* ---- image placeholders (drop real art in later) ---- */
+  .ph { position: relative; background-color: #e6e1d8;
+        background-image: repeating-linear-gradient(45deg, rgba(0,0,0,.05) 0 7px, rgba(0,0,0,0) 7px 14px); overflow: hidden; }
+  .ph::after { content: attr(data-label); position: absolute; inset: 0; display: grid; place-items: center;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .08em;
+        text-transform: uppercase; color: rgba(0,0,0,.38); text-align: center; padding: 10px; line-height: 1.5; }
+  .ph-dark { background-color: #24211e; background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 7px, rgba(255,255,255,0) 7px 14px); }
+  .ph-dark::after { color: rgba(255,255,255,.42); }
+
+  /* ---- hero backdrop: warm texture + diagonal stripes ---- */
+  .hero-stripes {
+    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.9) 0 41px, rgba(255,255,255,0) 41px 82px);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.9) 0%, rgba(0,0,0,.45) 68%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,.9) 0%, rgba(0,0,0,.45) 68%, rgba(0,0,0,0) 100%);
+  }
+  .hero-glow {
+    background:
+      radial-gradient(820px 460px at 76% 20%, rgba(254,247,175,.34), transparent 72%),
+      radial-gradient(680px 400px at 10% 6%, rgba(247,164,158,.13), transparent 72%),
+      radial-gradient(980px 560px at 52% 104%, rgba(132,230,246,.08), transparent 72%);
+  }
+  .edge-fade { -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+               mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent); }
+  .edge-fade-y { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+                 mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent); }
+
+  /* ---- motion ---- */
+  @keyframes marquee-x { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+  @keyframes marquee-x-rev { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0); } }
+  @keyframes marquee-y { from { transform: translate3d(0,0,0); } to { transform: translate3d(0,-50%,0); } }
+  @keyframes marquee-y-rev { from { transform: translate3d(0,-50%,0); } to { transform: translate3d(0,0,0); } }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  @keyframes floaty2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+  .mx { animation: marquee-x 46s linear infinite; }
+  .mx-rev { animation: marquee-x-rev 46s linear infinite; }
+  .mx-fast { animation: marquee-x 28s linear infinite; }
+  .my { animation: marquee-y 30s linear infinite; }
+  .my-rev { animation: marquee-y-rev 34s linear infinite; }
+  .pause-group:hover .mx, .pause-group:hover .mx-rev, .pause-group:hover .my, .pause-group:hover .my-rev { animation-play-state: paused; }
+  .float { animation: floaty 7s ease-in-out infinite; }
+  .float-2 { animation: floaty2 9s ease-in-out infinite .8s; }
+
+  /* scroll reveal */
+  .rv { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.22,.7,.24,1), transform .7s cubic-bezier(.22,.7,.24,1); }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* chart bars */
+  .bar { height: 0; transition: height 1.05s cubic-bezier(.22,.75,.2,1); }
+
+  /* process accordion */
+  .proc { transition: width .62s cubic-bezier(.22,.75,.2,1), background-color .4s ease, box-shadow .4s ease; }
+  .proc-open-only { transition: opacity .45s ease .12s, transform .45s ease .12s; }
+
+  /* faq */
+  .faq-a { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .48s cubic-bezier(.22,.75,.2,1), opacity .35s ease, margin-top .48s ease; }
+  .faq-item.open .faq-a { grid-template-rows: 1fr; opacity: 1; margin-top: 12px; }
+  .faq-a > div { overflow: hidden; }
+  .faq-ico { transition: transform .42s cubic-bezier(.22,.75,.2,1); }
+  .faq-item.open .faq-ico { transform: rotate(45deg); }
+
+  /* tabs + plans */
+  .tab { transition: opacity .32s ease, transform .32s ease; }
+  .panel-swap { transition: opacity .38s ease, transform .38s ease; }
+  .panel-swap.out { opacity: 0; transform: translateY(10px); }
+
+  .lift { transition: transform .45s cubic-bezier(.22,.75,.2,1), box-shadow .45s ease; }
+  .lift:hover { transform: translateY(-6px); }
+  a, button { transition: color .25s ease, background-color .25s ease, border-color .25s ease, transform .25s ease, opacity .25s ease; }
+  a:hover { color: #000; }
+  .btn-black:hover { transform: translateY(-2px); }
+  .btn-black:hover .arrow { transform: rotate(45deg); }
+  .arrow { transition: transform .35s cubic-bezier(.22,.75,.2,1); }
+  .btn-outline:hover { background: #000; color: #fff; }
+  .btn-outline:hover .brd { border-color: #000; }
+  .nav-shell { transition: box-shadow .4s ease, background-color .4s ease, transform .45s cubic-bezier(.22,.75,.2,1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+    .rv { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+
+<body class="bg-cream font-sans text-ink antialiased">
+<div class="relative mx-auto w-[1440px] overflow-visible">
+
+  <!-- ============================= NAV ============================= -->
+  <div class="fixed left-1/2 top-6 z-50 -translate-x-1/2">
+    <nav id="nav" class="nav-shell flex items-center gap-14 rounded-[58px] bg-white px-5 py-2 shadow-nav">
+      <a href="#top" class="flex h-[35px] w-[105px] items-center">
+        <span class="flex items-center gap-2"><img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" alt="ResetUI logo" class="h-[26px] w-[26px] rounded-full object-cover"><span class="text-[17px] font-semibold tracking-[-0.5px]">ResetUI</span></span>
+      </a>
+      <ul class="flex items-center gap-1 px-2">
+        <li><a href="#features" class="lbl block rounded-full px-2 py-1 text-[16px] leading-[22.4px] text-ink/90 hover:bg-black/5">Workflow</a></li>
+        <li><a href="#features" class="lbl block rounded-full px-2 py-1 text-[16px] leading-[22.4px] text-ink/90 hover:bg-black/5">Features</a></li>
+        <li><a href="#pricing" class="lbl block rounded-full px-2 py-1 text-[16px] leading-[22.4px] text-ink/90 hover:bg-black/5">Pricing</a></li>
+      </ul>
+      <a href="#contact" class="btn-black flex items-center gap-3 rounded-[32px] bg-ink py-2 pl-4 pr-2 shadow-pill">
+        <span class="lbl text-white">Start free</span>
+        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-white">
+          <svg class="arrow" width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="#000" stroke-width="1.17" stroke-linecap="round" stroke-linejoin="round"><path d="M5.6 14.4 14.4 5.6"/><path d="M7.4 5.6h7v7"/></svg>
+        </span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- ============================= HERO ============================= -->
+  <header id="top" class="relative">
+    <!-- backdrop, 888px tall, exactly as in the source -->
+    <div class="pointer-events-none absolute left-1/2 top-0 h-[888px] w-screen -translate-x-1/2 overflow-hidden bg-cream">
+      <div class="hero-glow absolute inset-0"></div>
+      <div class="hero-stripes absolute inset-0 opacity-50"></div>
+      <div class="absolute inset-x-0 bottom-0 h-[220px] bg-gradient-to-b from-transparent to-cream"></div>
+    </div>
+
+    <section class="relative mx-auto w-[1200px] px-20 pb-20 pt-[150px]">
+      <div class="flex justify-center">
+        <!-- copy -->
+        <div class="w-[1040px] text-center">
+          <div class="rv">
+            <span class="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/70 px-4 py-2 text-[13px] font-medium tracking-[-0.2px] shadow-[0_8px_24px_rgba(0,0,0,.06)] backdrop-blur-sm">
+              <span class="h-2 w-2 rounded-full bg-gold"></span>
+              Agentic landing-page redesign
+            </span>
+            <h1 class="h1 mt-6 !text-[76px] !leading-[80px]">Redesign your landing page<br>with AI agents</h1>
+            <p class="t18 mt-[23px] mx-auto w-[900px] text-muted">ResetUI captures your existing page, plans a new visual direction, generates the full redesign, and exports clean, production-ready front-end code.</p>
+          </div>
+          <div class="rv mt-11 flex items-center justify-center gap-3" data-delay="120">
+            <a href="#pricing" class="btn-black flex items-center gap-3 rounded-[32px] bg-ink py-2 pl-4 pr-2 shadow-pill">
+              <span class="lbl text-white">Start free</span>
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-white">
+                <svg class="arrow" width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="#000" stroke-width="1.17" stroke-linecap="round" stroke-linejoin="round"><path d="M5.6 14.4 14.4 5.6"/><path d="M7.4 5.6h7v7"/></svg>
+              </span>
+            </a>
+            <a href="#contact" class="btn-outline relative flex h-11 items-center rounded-[32px] px-5">
+              <span class="lbl relative z-10">See workflow</span>
+              <span class="brd pointer-events-none absolute inset-0 rounded-[32px] border border-ink"></span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- logo strip -->
+      <div class="edge-fade pause-group relative mt-20 h-8 overflow-hidden">
+        <div class="mx flex w-max items-center gap-[39.7px] opacity-90">
+          <span class="ph h-8 w-[155.6px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[144.8px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[168.1px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[143.8px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[155.6px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[147.4px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[155.6px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[144.8px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[168.1px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[143.8px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[155.6px] rounded" data-label="client logo"></span>
+          <span class="ph h-8 w-[147.4px] rounded" data-label="client logo"></span>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <!-- ============================= FEATURES ============================= -->
+  <section id="features" class="relative">
+    <div class="mx-auto w-[1200px] px-20 py-20">
+      <div class="rv mx-auto w-[1040px] text-center">
+        <h2 class="h2">Built for complete redesigns</h2>
+        <p class="t18 mt-5 whitespace-nowrap text-muted">ResetUI keeps source capture, creative planning, full-page generation, targeted edits, version history, and production export connected in one project.</p>
+      </div>
+
+      <div class="rv mt-10">
+        <!-- tabs -->
+        <div class="flex w-[1040px] items-center gap-2 rounded-[40px] bg-sand p-2" id="tabs">
+          <button class="tab relative flex h-[57px] w-[250px] items-center justify-center gap-2 rounded-[32px]" data-tab="0">
+            <span class="tab-bg pointer-events-none absolute inset-0 rounded-[32px] bg-white/80 shadow-tab"></span>
+            <svg class="relative z-10" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="15" height="15" rx="3"/><path d="M2.5 7.5h15"/></svg>
+          <span class="t18 relative z-10">Source capture</span>
+          </button>
+          <button class="tab relative flex h-[57px] w-[250px] items-center justify-center gap-2 rounded-[32px]" data-tab="1">
+            <span class="tab-bg pointer-events-none absolute inset-0 rounded-[32px] bg-white/80 shadow-tab"></span>
+            <svg class="relative z-10" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#000" stroke-width="1.3" stroke-linecap="round"><path d="M3 17V9M8.3 17V4M13.6 17v-5M18 17V7"/></svg>
+          <span class="t18 relative z-10">Creative planning</span>
+          </button>
+          <button class="tab relative flex h-[57px] w-[250px] items-center justify-center gap-2 rounded-[32px]" data-tab="2">
+            <span class="tab-bg pointer-events-none absolute inset-0 rounded-[32px] bg-white/80 shadow-tab"></span>
+            <svg class="relative z-10" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6.2v3.8l2.6 2.2"/></svg>
+          <span class="t18 relative z-10">Chat editing</span>
+          </button>
+          <button class="tab relative flex h-[57px] w-[250px] items-center justify-center gap-2 rounded-[32px]" data-tab="3">
+            <span class="tab-bg pointer-events-none absolute inset-0 rounded-[32px] bg-white/80 shadow-tab"></span>
+            <svg class="relative z-10" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.6" cy="7" r="3"/><path d="M2.6 16.4c.6-2.6 2.6-4.2 5-4.2s4.4 1.6 5 4.2"/><path d="M13.4 5.2a2.6 2.6 0 0 1 0 5"/></svg>
+          <span class="t18 relative z-10">Code export</span>
+          </button>
+        </div>
+
+        <!-- panel -->
+        <div class="mt-3 flex h-[405px] w-[1040px] items-center gap-10 rounded-3xl bg-white/60 p-2 pr-10">
+          <div class="relative h-[389px] w-[522px] shrink-0 overflow-hidden rounded-[20px]">
+            <div class="ph h-full w-full" data-label="abstract background"></div>
+            <div class="absolute inset-8 overflow-hidden rounded-2xl border border-[#e6e6e6] shadow-card">
+              <div id="panelShot" class="ph h-full w-full" data-label="source capture UI"></div>
+            </div>
+          </div>
+          <div id="panelCopy" class="panel-swap w-[430px]">
+            <span class="inline-flex items-center rounded-[62px] bg-butter px-3 py-2">
+            <span id="panelBadge" class="whitespace-nowrap font-display text-[12px] font-medium leading-[14.4px] tracking-[-0.36px]">Source capture</span>
+            </span>
+          <h3 id="panelTitle" class="h3 mt-6">Your current page becomes<br>trusted source context</h3>
+          <p id="panelBody" class="t16 mt-6 text-muted">ResetUI captures verified copy, links, pricing, calls to action,<br>and approved media before any redesign work begins, keeping<br>the new direction grounded in the real product.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= HOW IT WORKS ============================= -->
+  <section id="how-it-works" class="relative">
+    <div class="mx-auto w-[1200px] px-20 py-20">
+      <div class="rv mx-auto w-[650px] text-center">
+        <h2 class="h2">How ResetUI works</h2>
+        <p class="t18 mt-5 text-muted">Go from an existing landing-page URL and creative direction to a complete,<br>editable redesign with production-ready code in three connected steps.</p>
+      </div>
+
+      <!-- product screenshot with bottom fade -->
+      <div class="rv relative mx-auto mt-10 h-[480px] w-[863px] overflow-hidden rounded-3xl">
+        <div class="ph h-full w-full" data-label="product dashboard screenshot · 863 × 480"></div>
+        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-transparent to-cream"></div>
+      </div>
+
+      <!-- 3-step accordion -->
+      <div class="rv mt-0 flex h-[356px] w-[1040px] items-center gap-2 rounded-3xl bg-sand p-2" id="process">
+        <!-- 01 -->
+        <article class="proc group relative h-[340px] w-[251px] shrink-0 cursor-pointer overflow-hidden rounded-[20px] bg-white/70 p-6" data-proc="0">
+          <div class="flex h-full flex-col justify-between">
+            <p class="t18 text-faint">01</p>
+            <div class="w-[203px]">
+              <h3 class="h5">Capture your page</h3>
+              <p class="t16 mt-4 text-muted">Paste a public landing-page<br>URL. ResetUI captures its<br>content and brand context.</p>
+            </div>
+          </div>
+        </article>
+        <!-- 02 (open by default) -->
+        <article class="proc group relative h-[340px] w-[509px] shrink-0 cursor-pointer overflow-hidden rounded-[20px] border border-white bg-white/90 p-6 shadow-card" data-proc="1">
+          <div class="flex h-full items-center gap-4">
+            <div class="flex h-full w-[223px] shrink-0 flex-col justify-between">
+              <p class="t18 text-faint">02</p>
+              <div>
+                <h3 class="h5">Set the direction</h3>
+                <p class="t16 mt-4 text-muted">Describe the visual direction<br>you want. An agent turns it<br>into a clear design plan.</p>
+              </div>
+            </div>
+            <div class="proc-open-only relative h-[292px] w-[223px] shrink-0 overflow-hidden rounded-2xl">
+              <div class="ph h-full w-full" data-label="feature art"></div>
+              <div class="absolute inset-x-4 top-5 bottom-0 overflow-hidden rounded-2xl border border-white shadow-thumb">
+                <div class="ph h-full w-full" data-label="step card"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <!-- 03 -->
+        <article class="proc group relative h-[340px] w-[248px] shrink-0 cursor-pointer overflow-hidden rounded-[20px] bg-white/70 p-6" data-proc="2">
+          <div class="flex h-full flex-col justify-between">
+            <p class="t18 text-faint">03</p>
+            <div class="w-[200px]">
+              <h3 class="h5">Generate and export</h3>
+              <p class="t16 mt-4 text-muted">Create the complete redesign,<br>refine it in chat, and export<br>production-ready code.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= INTEGRATIONS ============================= -->
+  <section id="integrations" class="relative">
+    <div class="mx-auto flex w-[1200px] items-center justify-between px-20 py-20">
+      <div class="rv w-[426px]">
+        <h2 class="h2">One connected redesign stack</h2>
+        <p class="t18 mt-[19px] text-muted">ResetUI connects browser capture, AI planning, full-page<br>generation, image assistance, history, and code export.</p>
+        <a href="#pricing" class="btn-black mt-[19px] inline-flex items-center gap-3 rounded-[32px] bg-ink py-2 pl-4 pr-2 shadow-pill">
+            <span class="lbl text-white">Start free</span>
+          <span class="flex h-7 w-7 items-center justify-center rounded-full bg-white">
+            <svg class="arrow" width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="#000" stroke-width="1.17" stroke-linecap="round" stroke-linejoin="round"><path d="M5.6 14.4 14.4 5.6"/><path d="M7.4 5.6h7v7"/></svg>
+          </span>
+        </a>
+
+        <ul class="mt-8 space-y-5">
+          <li class="flex items-center gap-3">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-ink font-display text-[12px] font-medium leading-[14.4px] tracking-[-0.36px] text-white">01</span>
+          <span class="t18 text-muted">Capture your existing landing page</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-ink font-display text-[12px] font-medium leading-[14.4px] tracking-[-0.36px] text-white">02</span>
+          <span class="t18 text-muted">Choose a template or custom direction</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-ink font-display text-[12px] font-medium leading-[14.4px] tracking-[-0.36px] text-white">03</span>
+          <span class="t18 text-muted">Generate, refine, and export your redesign</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- two vertical logo rails -->
+      <div class="rv edge-fade-y pause-group flex h-[465px] w-[216px] gap-4 overflow-hidden">
+        <div class="my flex w-[100px] shrink-0 flex-col gap-3">
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+        </div>
+        <div class="my-rev flex w-[100px] shrink-0 flex-col gap-3">
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+          <span class="ph h-[100px] w-[100px] shrink-0 rounded-2xl" data-label="logo"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= PRICING ============================= -->
+  <section id="pricing" class="relative">
+    <div class="mx-auto w-[1200px]">
+      <div class="rv overflow-hidden rounded-[32px] bg-black px-20 py-20">
+        <div class="mx-auto w-[680px] text-center">
+          <h2 class="h2 text-white">Simple, transparent pricing</h2>
+          <p class="t18 mt-5 text-white/60">Start with one redesign, then upgrade when you need more projects,<br>custom direction, chat editing, and production exports.</p>
+        </div>
+
+        <div class="mt-12 grid grid-cols-3 gap-3">
+          <article class="flex min-h-[500px] flex-col rounded-3xl border border-white/10 bg-white/[.06] p-8">
+            <div>
+              <p class="t14 text-white/60">Free Starter</p>
+              <h3 class="h4 mt-3 min-h-[68px] text-white">One redesign project</h3>
+              <p class="t16 mt-4 min-h-[72px] text-white/60">Try one curated landing-page redesign with your existing page context attached.</p>
+              <div class="mt-7 flex items-end gap-2"><span class="h2 text-white">$0</span><span class="t16 pb-1 text-white/60">/ month</span></div>
+              <p class="t14 mt-2 text-white/50">No credit card required</p>
+            </div>
+            <ul class="mb-8 mt-8 min-h-[184px] space-y-3 text-white/80">
+              <li class="t16">✓ 5 starting credits</li>
+              <li class="t16">✓ 1 redesign project</li>
+              <li class="t16">✓ Up to 7 sections</li>
+              <li class="t16">✓ Curated template access</li>
+            </ul>
+            <a href="#contact" class="mt-auto flex h-11 items-center justify-center rounded-[32px] border border-white/30 text-white hover:bg-white/10"><span class="lbl">Start free</span></a>
+          </article>
+
+          <article class="flex min-h-[500px] flex-col rounded-3xl bg-butter p-8 text-ink">
+            <div>
+              <div class="flex items-center justify-between"><p class="t14">Indie Pro</p><span class="rounded-full bg-ink px-3 py-1 text-[11px] text-white">Most popular</span></div>
+              <h3 class="h4 mt-3 min-h-[68px]">More redesigns + editing</h3>
+              <p class="t16 mt-4 min-h-[72px] text-ink/60">For creators who need premium systems, custom direction, focused edits, and code export.</p>
+              <div class="mt-7 flex items-end gap-2"><span class="h2">$19</span><span class="t16 pb-1 text-ink/60">/ month</span></div>
+              <p class="t14 mt-2 text-ink/50">50 credits billed monthly</p>
+            </div>
+            <ul class="mb-8 mt-8 min-h-[184px] space-y-3 text-ink/80">
+              <li class="t16">✓ 50 credits every month</li>
+              <li class="t16">✓ Up to 20 sections</li>
+              <li class="t16">✓ Custom prompts and premium templates</li>
+              <li class="t16">✓ Chat edits and production export</li>
+            </ul>
+            <a href="#contact" class="mt-auto flex h-11 items-center justify-center rounded-[32px] bg-ink text-white hover:opacity-90"><span class="lbl">Upgrade to Pro</span></a>
+          </article>
+
+          <article class="flex min-h-[500px] flex-col rounded-3xl border border-white/10 bg-white/[.06] p-8">
+            <div>
+              <p class="t14 text-white/60">Credit Plus</p>
+              <h3 class="h4 mt-3 min-h-[68px] text-white">For frequent redesigns</h3>
+              <p class="t16 mt-4 min-h-[72px] text-white/60">More generation capacity for creators working across multiple landing pages.</p>
+              <div class="mt-7 flex items-end gap-2"><span class="h2 text-white">$49</span><span class="t16 pb-1 text-white/60">/ month</span></div>
+              <p class="t14 mt-2 text-white/50">Expanded monthly credits</p>
+            </div>
+            <ul class="mb-8 mt-8 min-h-[184px] space-y-3 text-white/80">
+              <li class="t16">✓ Everything in Indie Pro</li>
+              <li class="t16">✓ More generation credits</li>
+              <li class="t16">✓ Recoverable version history</li>
+              <li class="t16">✓ Multi-framework export</li>
+            </ul>
+            <a href="#contact" class="mt-auto flex h-11 items-center justify-center rounded-[32px] border border-white/30 text-white hover:bg-white/10"><span class="lbl">Choose Credit Plus</span></a>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= CASES + TESTIMONIALS ============================= -->
+  <section id="redesign-stories" class="relative">
+    <div class="mx-auto w-[1200px] px-20 py-20">
+      <!-- case studies -->
+      <div class="rv mx-auto w-[600px] text-center">
+      <h2 class="h2">Redesign stories</h2>
+      <p class="t18 mt-5 text-muted">See how ResetUI turns existing landing pages and clear creative direction<br>into distinctive, editable, production-ready redesigns.</p>
+      </div>
+
+      <div class="rv pause-group mt-10 h-[926px] w-[1040px] overflow-hidden rounded-3xl bg-sand p-2">
+        <div class="mx-fast flex w-max gap-2">
+          <!-- row 1 -->
+          <article class="lift w-[508px] shrink-0 rounded-[20px] bg-white/60 p-2">
+            <div class="relative h-[304px] overflow-hidden rounded-2xl bg-black">
+              <div class="ph ph-dark h-full w-full" data-label="case study thumbnail"></div>
+              <span class="absolute left-1/2 top-1/2 h-[35px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded bg-white/10"></span>
+              <span class="t14 absolute bottom-3 right-3 rounded-[49px] bg-black/30 px-2 py-[3px] text-white">2025</span>
+            </div>
+            <div class="px-5 pb-5 pt-[19px]">
+          <h3 class="h5">SaaS launch page</h3>
+          <p class="t16 mt-1 text-muted">Preserved the verified product story while creating a sharper visual<br>system for a new market launch.</p>
+            </div>
+          </article>
+          <article class="lift w-[508px] shrink-0 rounded-[20px] bg-white/60 p-2">
+            <div class="relative h-[304px] overflow-hidden rounded-2xl bg-black">
+              <div class="ph ph-dark h-full w-full" data-label="case study thumbnail"></div>
+              <span class="absolute left-1/2 top-1/2 h-[35px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded bg-white/10"></span>
+              <span class="t14 absolute bottom-3 right-3 rounded-[49px] bg-black/30 px-2 py-[3px] text-white">2024</span>
+            </div>
+            <div class="px-5 pb-5 pt-[19px]">
+          <h3 class="h5">Health platform</h3>
+          <p class="t16 mt-1 text-muted">Reframed a dense healthcare homepage into a clear, reassuring<br>story without losing essential claims.</p>
+            </div>
+          </article>
+          <article class="lift w-[508px] shrink-0 rounded-[20px] bg-white/60 p-2">
+            <div class="relative h-[304px] overflow-hidden rounded-2xl bg-black">
+              <div class="ph ph-dark h-full w-full" data-label="case study thumbnail"></div>
+              <span class="absolute left-1/2 top-1/2 h-[35px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded bg-white/10"></span>
+              <span class="t14 absolute bottom-3 right-3 rounded-[49px] bg-black/30 px-2 py-[3px] text-white">2025</span>
+            </div>
+            <div class="px-5 pb-5 pt-[19px]">
+          <h3 class="h5">Creative studio</h3>
+          <p class="t16 mt-1 text-muted">Turned a portfolio-heavy source page into an editorial landing<br>experience with focused conversion paths.</p>
+            </div>
+          </article>
+          <article class="lift w-[508px] shrink-0 rounded-[20px] bg-white/60 p-2">
+            <div class="relative h-[304px] overflow-hidden rounded-2xl bg-black">
+              <div class="ph ph-dark h-full w-full" data-label="case study thumbnail"></div>
+              <span class="absolute left-1/2 top-1/2 h-[35px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded bg-white/10"></span>
+              <span class="t14 absolute bottom-3 right-3 rounded-[49px] bg-black/30 px-2 py-[3px] text-white">2023</span>
+            </div>
+            <div class="px-5 pb-5 pt-[19px]">
+          <h3 class="h5">Developer product</h3>
+          <p class="t16 mt-1 text-muted">Restructured technical product content into an accessible page<br>for both developers and decision-makers.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="mx-rev mt-2 flex w-max gap-2">
+          <!-- row 2 -->
+          <article class="lift w-[508px] shrink-0 rounded-[20px] bg-white/60 p-2">
+            <div class="relative h-[304px] overflow-hidden rounded-2xl bg-black">
+              <div class="ph ph-dark h-full w-full" data-label="case study thumbnail"></div>
+              <span class="absolute left-1/2 top-1/2 h-[35px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded bg-white/10"></span>
+              <span class="t14 absolute bottom-3 right-3 rounded-[49px] bg-black/30 px-2 py-[3px] text-white">2024</span>
+            </div>
+            <div class="px-5 pb-5 pt-[19px]">
+          <h3 class="h5">Analytics platform</h3>
+          <p class="t16 mt-1 text-muted">Created a confident data-led design while retaining source-aware<br>pricing, feature, and trust content.</p>
+            </div>
+          </article>
+          <article class="lift w-[508px] shrink-0 rounded-[20px] bg-white/60 p-2">
+            <div class="relative h-[304px] overflow-hidden rounded-2xl bg-black">
+              <div class="ph ph-dark h-full w-full" data-label="case study thumbnail"></div>
+              <span class="absolute left-1/2 top-1/2 h-[35px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded bg-white/10"></span>
+              <span class="t14 absolute bottom-3 right-3 rounded-[49px] bg-black/30 px-2 py-[3px] text-white">2025</span>
+            </div>
+            <div class="px-5 pb-5 pt-[19px]">
+          <h3 class="h5">Service marketplace</h3>
+          <p class="t16 mt-1 text-muted">Clarified the customer journey and used targeted chat edits to<br>polish the final conversion sections.</p>
+            </div>
+          </article>
+          <article class="lift w-[508px] shrink-0 rounded-[20px] bg-white/60 p-2">
+            <div class="relative h-[304px] overflow-hidden rounded-2xl bg-black">
+              <div class="ph ph-dark h-full w-full" data-label="case study thumbnail"></div>
+              <span class="absolute left-1/2 top-1/2 h-[35px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded bg-white/10"></span>
+              <span class="t14 absolute bottom-3 right-3 rounded-[49px] bg-black/30 px-2 py-[3px] text-white">2023</span>
+            </div>
+            <div class="px-5 pb-5 pt-[19px]">
+          <h3 class="h5">Design portfolio</h3>
+          <p class="t16 mt-1 text-muted">Generated a more expressive showcase while keeping approved<br>project imagery in its intended content slots.</p>
+            </div>
+          </article>
+          <article class="lift w-[508px] shrink-0 rounded-[20px] bg-white/60 p-2">
+            <div class="relative h-[304px] overflow-hidden rounded-2xl bg-black">
+              <div class="ph ph-dark h-full w-full" data-label="case study thumbnail"></div>
+              <span class="absolute left-1/2 top-1/2 h-[35px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded bg-white/10"></span>
+              <span class="t14 absolute bottom-3 right-3 rounded-[49px] bg-black/30 px-2 py-[3px] text-white">2024</span>
+            </div>
+            <div class="px-5 pb-5 pt-[19px]">
+          <h3 class="h5">AI product page</h3>
+          <p class="t16 mt-1 text-muted">Combined a bold custom direction with grounded source content<br>and exported the finished page as usable code.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================= TESTIMONIALS ============================= -->
+  <section id="testimonials" class="relative">
+    <div class="mx-auto w-[1200px] px-20 py-20">
+      <div class="rv mx-auto w-[700px] text-center">
+        <h2 class="h2">What creators say</h2>
+        <p class="t18 mt-5 text-muted">Real feedback from teams using ResetUI to turn existing landing pages<br>into distinctive designs and production-ready code.</p>
+      </div>
+
+      <div class="rv mt-10 flex w-[1040px] items-start gap-2">
+        <div class="w-[341px] shrink-0">
+          <article class="lift relative flex h-[409px] flex-col justify-between overflow-hidden rounded-3xl bg-white/40 p-8">
+            <div class="flex gap-4">
+              <span class="quote">&ldquo;</span>
+          <p class="t18 w-[213px] text-muted">ResetUI turned our existing<br>page into a fresh redesign<br>without losing the product<br>story. The exported code<br>gave us a strong starting<br>point.</p>
+            </div>
+            <div class="flex items-end justify-between">
+              <div class="w-[166px]">
+            <p class="t16">Maya Chen</p>
+            <p class="t16 mt-1 text-muted">Product designer at<br>Northstar</p>
+              </div>
+              <span class="ph h-[111px] w-[111px] shrink-0 rounded-2xl" data-label="portrait"></span>
+            </div>
+          </article>
+        </div>
+        <div class="w-[341px] shrink-0 pt-10">
+          <article class="lift relative flex h-[409px] flex-col justify-between overflow-hidden rounded-3xl bg-white/40 p-8">
+            <div class="flex gap-4">
+              <span class="quote">&ldquo;</span>
+          <p class="t18 w-[213px] text-muted">The source capture kept<br>our messaging grounded,<br>and chat edits let us refine<br>specific sections without<br>starting the design over.</p>
+            </div>
+            <div class="flex items-end justify-between">
+              <div class="w-[166px]">
+            <p class="t16">Jordan Lee</p>
+            <p class="t16 mt-1 text-muted">Founder at Metric</p>
+              </div>
+              <span class="ph h-[111px] w-[111px] shrink-0 rounded-2xl" data-label="portrait"></span>
+            </div>
+          </article>
+        </div>
+        <div class="w-[341px] shrink-0 pt-20">
+          <article class="lift relative flex h-[409px] flex-col justify-between overflow-hidden rounded-3xl bg-white/40 p-8">
+            <div class="flex gap-4">
+              <span class="quote">&ldquo;</span>
+          <p class="t18 w-[217px] text-muted">We went from a URL and<br>rough creative direction to<br>a complete landing page.<br>The project history made<br>every iteration easy to<br>recover.</p>
+            </div>
+            <div class="flex items-end justify-between">
+              <div class="w-[166px]">
+            <p class="t16">Samuel Ortiz</p>
+            <p class="t16 mt-1 text-muted">Creative lead at<br>Bloom Labs</p>
+              </div>
+              <span class="ph h-[111px] w-[111px] shrink-0 rounded-2xl" data-label="portrait"></span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= FAQ ============================= -->
+  <section class="relative">
+    <div class="mx-auto flex w-[1200px] items-start justify-between px-20 py-20">
+      <div class="rv w-[343px]">
+        <h2 class="h2">Your questions,<br>answered</h2>
+      <p class="t18 mt-[19px] text-muted">The practical details to know before creating<br>your first source-aware redesign.</p>
+      </div>
+
+      <div class="rv w-[603px] space-y-2 rounded-3xl bg-sand2 p-2" id="faq">
+        <div class="faq-item cursor-pointer rounded-[20px] bg-white/40 p-8">
+          <div class="flex items-center justify-between gap-4">
+        <h3 class="h6">What does ResetUI need to start?</h3>
+            <span class="faq-ico shrink-0 text-ink"><svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M10 3.5v13M3.5 10h13"/></svg></span>
+          </div>
+      <div class="faq-a"><div><p class="t16 text-muted">A publicly accessible landing-page URL and a design prompt describing<br>the visual direction you want ResetUI to explore.</p></div></div>
+        </div>
+        <div class="faq-item cursor-pointer rounded-[20px] bg-white/40 p-8">
+          <div class="flex items-center justify-between gap-4">
+        <h3 class="h6">Does ResetUI copy my existing layout?</h3>
+            <span class="faq-ico shrink-0 text-ink"><svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M10 3.5v13M3.5 10h13"/></svg></span>
+          </div>
+      <div class="faq-a"><div><p class="t16 text-muted">No. ResetUI preserves useful source content and brand context while<br>generating a distinct visual system guided by your prompt.</p></div></div>
+        </div>
+        <div class="faq-item cursor-pointer rounded-[20px] bg-white/40 p-8">
+          <div class="flex items-center justify-between gap-4">
+        <h3 class="h6">What happens to captured media?</h3>
+            <span class="faq-ico shrink-0 text-ink"><svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M10 3.5v13M3.5 10h13"/></svg></span>
+          </div>
+      <div class="faq-a"><div><p class="t16 text-muted">Approved website images and videos stay in foreground content slots<br>and are not repurposed as hero or CTA backgrounds.</p></div></div>
+        </div>
+        <div class="faq-item cursor-pointer rounded-[20px] bg-white/40 p-8">
+          <div class="flex items-center justify-between gap-4">
+        <h3 class="h6">Can I edit the generated design?</h3>
+            <span class="faq-ico shrink-0 text-ink"><svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M10 3.5v13M3.5 10h13"/></svg></span>
+          </div>
+      <div class="faq-a"><div><p class="t16 text-muted">Yes. Project-aware chat targets the relevant section, and every accepted<br>change creates a recoverable design version.</p></div></div>
+        </div>
+        <div class="faq-item cursor-pointer rounded-[20px] bg-white/40 p-8">
+          <div class="flex items-center justify-between gap-4">
+        <h3 class="h6">What can I export?</h3>
+            <span class="faq-ico shrink-0 text-ink"><svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M10 3.5v13M3.5 10h13"/></svg></span>
+          </div>
+      <div class="faq-a"><div><p class="t16 text-muted">Export standalone HTML with Tailwind CSS and JavaScript, or a one-file<br>React, Next.js, Vue, or Svelte implementation.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= CONTACT / CTA ============================= -->
+  <section id="contact" class="relative">
+    <div class="mx-auto w-[1200px]">
+      <div class="rv overflow-hidden rounded-[32px] bg-black px-20 py-24">
+        <div class="mx-auto flex max-w-[760px] flex-col items-center text-center">
+          <h2 class="h2 !text-[56px] !leading-[60px] text-white">Redesign your landing page<br>from URL to production code</h2>
+          <p class="t18 mt-5 max-w-[620px] text-white/65">Give ResetUI your existing page and creative direction. Get a distinctive, editable redesign with the full workflow connected in one project.</p>
+          <div class="mt-9 flex items-center justify-center gap-3">
+            <a href="#top" class="btn-black flex items-center gap-3 rounded-[32px] bg-butter py-2 pl-5 pr-2 shadow-pill">
+              <span class="lbl text-ink">Start free</span>
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-ink">
+                <svg class="arrow" width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.17" stroke-linecap="round" stroke-linejoin="round"><path d="M5.6 14.4 14.4 5.6"/><path d="M7.4 5.6h7v7"/></svg>
+              </span>
+            </a>
+            <a href="#how-it-works" class="btn-outline relative flex h-11 items-center rounded-[32px] px-5 text-white">
+              <span class="lbl relative z-10">See how it works</span>
+              <span class="brd pointer-events-none absolute inset-0 rounded-[32px] border border-white/40"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= FOOTER ============================= -->
+  <footer class="relative px-[120px] py-5">
+    <div class="rv w-[1200px] overflow-hidden rounded-[32px] bg-[#FEFDFD] px-12 py-14">
+      <div class="flex items-start justify-between pb-14">
+        <div class="w-[430px]">
+          <a href="#top" class="inline-flex items-center gap-3">
+            <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" alt="ResetUI logo" class="h-10 w-10 rounded-full object-cover">
+            <span class="text-[24px] font-semibold tracking-[-0.8px]">ResetUI</span>
+          </a>
+          <p class="mt-6 max-w-[390px] text-[20px] leading-[29px] tracking-[-0.3px] text-muted">Agentic landing-page redesign from an existing URL and creative direction to editable, production-ready code.</p>
+          <div class="mt-8 flex items-center gap-3">
+            <a href="#top" class="btn-black flex items-center gap-3 rounded-[32px] bg-ink py-2 pl-5 pr-2 text-white">
+              <span class="lbl">Start free</span>
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-white text-ink">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5.6 14.4 14.4 5.6"/><path d="M7.4 5.6h7v7"/></svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-20 pr-4">
+          <div>
+            <p class="t14 text-muted">Product</p>
+            <ul class="mt-5 space-y-3">
+              <li><a href="#features" class="t16 text-ink hover:opacity-50">Features</a></li>
+              <li><a href="#how-it-works" class="t16 text-ink hover:opacity-50">How it works</a></li>
+              <li><a href="#pricing" class="t16 text-ink hover:opacity-50">Pricing</a></li>
+              <li><a href="#integrations" class="t16 text-ink hover:opacity-50">Integrations</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="t14 text-muted">Resources</p>
+            <ul class="mt-5 space-y-3">
+              <li><a href="#redesign-stories" class="t16 text-ink hover:opacity-50">Redesign gallery</a></li>
+              <li><a href="#" class="t16 text-ink hover:opacity-50">Guides</a></li>
+              <li><a href="#" class="t16 text-ink hover:opacity-50">Changelog</a></li>
+              <li><a href="#faq" class="t16 text-ink hover:opacity-50">FAQ</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="t14 text-muted">Company</p>
+            <ul class="mt-5 space-y-3">
+              <li><a href="#" class="t16 text-ink hover:opacity-50">About</a></li>
+              <li><a href="mailto:hello@resetui.com" class="t16 text-ink hover:opacity-50">Contact</a></li>
+              <li><a href="#" class="t16 text-ink hover:opacity-50">Privacy</a></li>
+              <li><a href="#" class="t16 text-ink hover:opacity-50">Terms</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-ink/10">
+        <div class="flex items-end justify-between py-12">
+          <p class="select-none text-[148px] font-medium leading-[110px] tracking-[-8px] text-ink">ResetUI</p>
+          <p class="t14 pb-1 text-right text-muted">© 2026 ResetUI<br>Design forward. Export ready.</p>
+        </div>
+        <div class="flex items-center justify-between border-t border-ink/10 pt-7">
+          <p class="t14 text-muted">Agentic landing-page redesign</p>
+          <div class="flex items-center gap-7">
+            <a href="#" class="t14 text-muted hover:text-ink">X / Twitter</a>
+            <a href="#" class="t14 text-muted hover:text-ink">LinkedIn</a>
+            <a href="mailto:hello@resetui.com" class="t14 text-muted hover:text-ink">hello@resetui.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ---------- section order ---------- */
+  const redesignStories = document.getElementById('redesign-stories');
+  const testimonials = document.getElementById('testimonials');
+  const integrations = document.getElementById('integrations');
+  const pricing = document.getElementById('pricing');
+  if (redesignStories && integrations) integrations.before(redesignStories);
+  if (redesignStories && testimonials) redesignStories.after(testimonials);
+  if (integrations && pricing) pricing.after(integrations);
+
+  /* ---------- scroll reveal ---------- */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const d = parseInt(el.dataset.delay || '0', 10);
+      setTimeout(() => el.classList.add('in'), d);
+      io.unobserve(el);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+  document.querySelectorAll('.rv').forEach((el) => io.observe(el));
+
+  /* ---------- nav: condense on scroll ---------- */
+  const nav = document.getElementById('nav');
+  const onScroll = () => {
+    const y = window.scrollY;
+    nav.classList.toggle('shadow-[0_10px_40px_rgba(0,0,0,.10)]', y > 40);
+    nav.classList.toggle('bg-white/80', y > 40);
+    nav.classList.toggle('backdrop-blur-xl', y > 40);
+    nav.style.transform = y > 40 ? 'scale(.96)' : 'scale(1)';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- process accordion ---------- */
+  const procs = [...document.querySelectorAll('[data-proc]')];
+  const PROC_OPEN = 509, PROC_CLOSED = 250;
+  const setProc = (idx) => {
+    procs.forEach((p, i) => {
+      const open = i === idx;
+      p.style.width = (open ? PROC_OPEN : PROC_CLOSED) + 'px';
+      p.classList.toggle('bg-white/90', open);
+      p.classList.toggle('border', open);
+      p.classList.toggle('border-white', open);
+      p.classList.toggle('shadow-card', open);
+      p.classList.toggle('bg-white/70', !open);
+      const art = p.querySelector('.proc-open-only');
+      if (art) {
+        art.style.opacity = open ? '1' : '0';
+        art.style.transform = open ? 'none' : 'translateX(18px)';
+      }
+    });
+  };
+  procs.forEach((p, i) => {
+    p.addEventListener('mouseenter', () => setProc(i));
+    p.addEventListener('click', () => setProc(i));
+  });
+  // the open panel is the only one carrying artwork markup — move it into every panel
+  const artTemplate = document.querySelector('.proc-open-only');
+  procs.forEach((p) => {
+    if (p.querySelector('.proc-open-only')) return;
+    const inner = p.firstElementChild;
+    const row = document.createElement('div');
+    row.className = 'flex h-full items-center gap-4';
+    const copy = inner.cloneNode(true);
+    copy.className = 'flex h-full w-[223px] shrink-0 flex-col justify-between';
+    copy.querySelectorAll('.w-\\[203px\\], .w-\\[200px\\]').forEach((n) => { n.className = ''; });
+    const art = artTemplate.cloneNode(true);
+    art.style.opacity = '0';
+    art.style.transform = 'translateX(18px)';
+    row.append(copy, art);
+    p.innerHTML = '';
+    p.appendChild(row);
+  });
+  setProc(0);
+
+  /* ---------- feature tabs ---------- */
+  const TABS = [
+    {
+      badge: 'Source capture',
+      title: 'Your current page becomes<br>trusted source context',
+      body: 'Capture verified copy, links, pricing, calls to action, and<br>approved media before redesign work begins, keeping every<br>creative decision grounded in the real product.',
+      shot: 'source capture UI'
+    },
+    {
+      badge: 'Creative planning',
+      title: 'A clear design direction<br>before implementation',
+      body: 'ResetUI turns your prompt and captured source into a coherent<br>visual system, section plan, and implementation brief before<br>generating the full page.',
+      shot: 'creative plan UI'
+    },
+    {
+      badge: 'Chat editing',
+      title: 'Targeted changes without<br>starting over',
+      body: 'Project-aware chat identifies the relevant section and applies<br>focused edits while preserving the rest of your accepted design<br>and its recoverable history.',
+      shot: 'chat editing UI'
+    },
+    {
+      badge: 'Code export',
+      title: 'Production-ready code for<br>your preferred framework',
+      body: 'Export standalone HTML or a one-file React, Next.js, Vue, or<br>Svelte implementation that matches the generated canvas and<br>gives your team a practical starting point.',
+      shot: 'code export UI'
+    }
+  ];
+  const tabs = [...document.querySelectorAll('[data-tab]')];
+  const panelCopy = document.getElementById('panelCopy');
+  const panelShot = document.getElementById('panelShot');
+  const setTab = (idx) => {
+    tabs.forEach((t, i) => {
+      const on = i === idx;
+      t.style.opacity = on ? '1' : '.5';
+      t.querySelector('.tab-bg').style.opacity = on ? '1' : '0';
+    });
+    const t = TABS[idx];
+    panelCopy.classList.add('out');
+    setTimeout(() => {
+      document.getElementById('panelBadge').textContent = t.badge;
+      document.getElementById('panelTitle').innerHTML = t.title;
+      document.getElementById('panelBody').innerHTML = t.body;
+      panelShot.setAttribute('data-label', t.shot);
+      panelCopy.classList.remove('out');
+    }, 260);
+  };
+  tabs.forEach((t, i) => t.addEventListener('click', () => setTab(i)));
+  setTab(0);
+
+  /* ---------- FAQ ---------- */
+  document.querySelectorAll('#faq .faq-item').forEach((item) => {
+    item.addEventListener('click', () => {
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('#faq .faq-item').forEach((i) => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

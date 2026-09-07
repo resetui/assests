@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ResetUI | Agentic Landing Page Redesign</title>
+<meta name="description" content="ResetUI redesigns an existing landing page from its URL and your design direction, then exports production-ready front-end code." />
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          serif: ['"Instrument Serif"', 'ui-serif', 'Georgia', 'serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+
+  * { -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: #000;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: rgba(255,255,255,0.14); color: #fff; }
+
+  .serif-italic { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: 0; }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1000ms ease, transform 1000ms ease;
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  .reveal[data-delay="1"] { transition-delay: 90ms; }
+  .reveal[data-delay="2"] { transition-delay: 180ms; }
+  .reveal[data-delay="3"] { transition-delay: 270ms; }
+  .reveal[data-delay="4"] { transition-delay: 360ms; }
+  .reveal[data-delay="5"] { transition-delay: 450ms; }
+  .reveal[data-delay="6"] { transition-delay: 540ms; }
+
+  /* ---------- Glass ---------- */
+  .glass {
+    background: rgba(16,16,18,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* ---------- Grain / vignette helpers ---------- */
+  .noise::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    opacity: 0.03; pointer-events: none; mix-blend-mode: overlay;
+  }
+
+  /* ---------- Marquee ---------- */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 30s linear infinite;
+  }
+  .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-25%); }
+  }
+
+  /* ---------- Waveform ---------- */
+  .wave-bar {
+    width: 3px; border-radius: 3px;
+    background: rgba(255,255,255,0.45);
+    animation: wave 1.3s ease-in-out infinite;
+  }
+  @keyframes wave {
+    0%,100% { transform: scaleY(0.35); opacity:0.5; }
+    50%     { transform: scaleY(1);    opacity:1; }
+  }
+
+  /* ---------- Typing dots ---------- */
+  .typing-dot { animation: blink 1.4s infinite both; }
+  .typing-dot:nth-child(2){ animation-delay:.2s; }
+  .typing-dot:nth-child(3){ animation-delay:.4s; }
+  @keyframes blink { 0%,80%,100%{opacity:.25;transform:translateY(0)} 40%{opacity:1;transform:translateY(-2px)} }
+
+  /* ---------- Bento cursor highlight ---------- */
+  .bento {
+    position: relative;
+    overflow: hidden;
+    background: #101012;
+    transition: border-color .4s ease, transform .4s ease;
+  }
+  .bento::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(320px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.07), transparent 60%);
+    opacity: 0; transition: opacity .4s ease; pointer-events: none;
+  }
+  .bento:hover::before { opacity: 1; }
+  .bento:hover { border-color: rgba(255,255,255,0.14); }
+
+  /* ---------- Integration marquee card ---------- */
+  .integration-marquee-card {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 28px;
+    background: linear-gradient(145deg, rgba(20,20,23,0.9), rgba(10,10,12,0.96));
+    padding: 18px 0;
+    box-shadow: 0 32px 90px -48px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.025);
+  }
+  .integration-marquee-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(8,8,10,0.92), transparent 13%, transparent 87%, rgba(8,8,10,0.92));
+    z-index: 2;
+  }
+  .integration-marquee-row {
+    overflow: hidden;
+    padding: 7px 0;
+  }
+  .integration-marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+  .integration-marquee-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 12px;
+  }
+  .integration-marquee-row:nth-child(1) .integration-marquee-track { animation: integrations-left 26s linear infinite; }
+  .integration-marquee-row:nth-child(2) .integration-marquee-track { animation: integrations-right 30s linear infinite; }
+  .integration-marquee-row:nth-child(3) .integration-marquee-track { animation: integrations-left 28s linear infinite; }
+  .integration-chip {
+    height: 58px;
+    min-width: 142px;
+    padding: 0 18px;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 15px;
+    background: #151517;
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    color: rgba(255,255,255,0.78);
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.025);
+  }
+  .integration-chip-mark {
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.045);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.55);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  @keyframes integrations-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes integrations-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+  /* ---------- FAQ grid animation ---------- */
+  .faq-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 420ms cubic-bezier(.4,0,.2,1);
+  }
+  .faq-item.open .faq-panel { grid-template-rows: 1fr; }
+  .faq-panel > div { overflow: hidden; }
+  .faq-icon { transition: transform 420ms cubic-bezier(.4,0,.2,1); }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+  /* ---------- Nav underline ---------- */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content:""; position:absolute; left:0; bottom:-6px; height:1px; width:0;
+    background:#fff; transition:width .3s ease;
+  }
+  .nav-link:hover::after, .nav-link.active::after { width:100%; }
+
+  /* ---------- Mobile menu ---------- */
+  .menu-panel {
+    transition: opacity .35s ease, transform .35s ease;
+    transform: translateY(-8px); opacity: 0; pointer-events: none;
+  }
+  .menu-panel.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .burger span { transition: transform .3s ease, opacity .25s ease; transform-origin: center; }
+
+  /* ---------- Buttons ---------- */
+  .btn-primary {
+    background:#fff; color:#000;
+    transition: transform .25s ease, box-shadow .25s ease, opacity .25s ease;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 40px -10px rgba(255,255,255,0.35); }
+  .btn-secondary { transition: background .25s ease, border-color .25s ease; }
+
+  /* focus states */
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid rgba(255,255,255,0.7); outline-offset: 3px; border-radius: 8px;
+  }
+
+  /* dashboard perspective */
+  .hero-dash { transform-style: preserve-3d; transition: transform .3s ease-out; }
+  .hero-dashboard-image { display:block; width:100%; height:auto; border-radius:12px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+
+<body class="bg-black text-white antialiased">
+
+<!-- ============ NAVBAR ============ -->
+<header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500">
+  <nav class="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
+    <!-- Logo -->
+    <a href="#about" class="flex items-center gap-2.5 group" aria-label="ResetUI home">
+      <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" alt="ResetUI logo" class="w-8 h-8 rounded-full object-cover" />
+      <span class="text-[19px] font-semibold tracking-[-0.02em]">ResetUI</span>
+    </a>
+
+    <!-- Center links -->
+    <div class="hidden lg:flex items-center gap-9">
+      <a href="#about" class="nav-link text-sm font-medium text-white">About</a>
+      <a href="#features" class="nav-link text-sm font-medium text-white">Features</a>
+      <a href="#how-it-works" class="nav-link text-sm font-medium text-white">How it works</a>
+      <a href="#integrations" class="nav-link text-sm font-medium text-white">Integrations</a>
+      <a href="#faq" class="nav-link text-sm font-medium text-white">FAQ</a>
+      <a href="#contact" class="nav-link text-sm font-medium text-white">Contact</a>
+    </div>
+
+    <!-- Right -->
+    <div class="flex items-center gap-3">
+      <a href="#contact" class="hidden sm:inline-flex bg-[#1F1F22] hover:bg-[#2A2A2D] text-white px-5 py-2.5 rounded-full border border-white/5 text-sm font-medium btn-secondary">Get Started</a>
+
+      <!-- Hamburger -->
+      <button id="burger" class="burger lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-[5px] rounded-full border border-white/10 bg-[#101012]" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="block w-4 h-[1.5px] bg-white"></span>
+        <span class="block w-4 h-[1.5px] bg-white"></span>
+        <span class="block w-4 h-[1.5px] bg-white"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="menu-panel lg:hidden mx-4 rounded-2xl border border-white/10 glass overflow-hidden">
+    <div class="flex flex-col p-3">
+      <a href="#about" class="mob-link px-4 py-3 rounded-xl text-white hover:bg-white/5 text-[15px] font-medium">About</a>
+      <a href="#features" class="mob-link px-4 py-3 rounded-xl text-white hover:bg-white/5 text-[15px] font-medium">Features</a>
+      <a href="#how-it-works" class="mob-link px-4 py-3 rounded-xl text-white hover:bg-white/5 text-[15px] font-medium">How it works</a>
+      <a href="#integrations" class="mob-link px-4 py-3 rounded-xl text-white hover:bg-white/5 text-[15px] font-medium">Integrations</a>
+      <a href="#faq" class="mob-link px-4 py-3 rounded-xl text-white hover:bg-white/5 text-[15px] font-medium">FAQ</a>
+      <a href="#contact" class="mob-link px-4 py-3 rounded-xl text-white hover:bg-white/5 text-[15px] font-medium">Contact</a>
+      <a href="#contact" class="mob-link mt-2 text-center btn-primary px-5 py-3 rounded-full text-sm font-semibold">Get Started</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 1. HERO ============ -->
+<section id="about" class="min-h-screen flex flex-col items-center justify-center pt-32 pb-24 relative overflow-hidden noise">
+  <!-- bg video -->
+  <video class="absolute inset-0 w-full h-full object-cover opacity-90 js-lazy-video" autoplay muted loop playsinline aria-hidden="true">
+    <source src="https://7xkytvucp2.ufs.sh/f/m4bRQHrXdK3UWNJ1n3S4pdBun9mTojgsN8Ky7AlqV2wS1fXz" type="video/mp4" />
+  </video>
+  <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black"></div>
+  <div class="absolute inset-0 bg-black/30"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 flex flex-col items-center">
+    <!-- Badge -->
+    <a href="#features" class="reveal inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur px-3.5 py-1.5 text-[13px] text-gray-300 mb-8 hover:border-white/20 transition">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+      Introducing agentic design planning
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="opacity-60"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+
+    <!-- Headline -->
+    <h1 class="reveal" data-delay="1">
+      <span class="block text-5xl md:text-7xl lg:text-[82px] font-medium tracking-[-0.04em] leading-[0.98] text-center">
+        The design intelligence layer<br class="hidden sm:block"/>
+        for stronger <span class="serif-italic">landing pages.</span>
+      </span>
+    </h1>
+
+    <!-- Description -->
+    <p class="reveal mt-7 text-[16px] max-w-2xl text-gray-200 text-center leading-relaxed" data-delay="2">
+      Start with a real landing page and a clear direction. ResetUI turns both into an editable, production-ready redesign.
+    </p>
+
+    <!-- Buttons -->
+    <div class="reveal mt-9 flex flex-col sm:flex-row items-center gap-3" data-delay="3">
+      <a href="#contact" class="btn-primary px-6 py-3 rounded-full text-sm font-semibold w-full sm:w-auto text-center">Get Started</a>
+      <a href="#features" class="btn-secondary bg-[#1F1F22] hover:bg-[#2A2A2D] border border-white/5 px-6 py-3 rounded-full text-sm font-medium w-full sm:w-auto text-center">See the workflow</a>
+    </div>
+
+    <!-- Floating dashboard -->
+    <div class="reveal w-full mt-16 md:mt-20 max-w-5xl mx-auto perspective-[1400px]" data-delay="4">
+      <div class="hero-dash rounded-2xl border border-white/10 glass p-3 md:p-4 shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)]">
+        <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/assets/Obsidian-Dark-Dashboard.png" alt="Product dashboard interface" class="hero-dashboard-image" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. TRUSTED BRANDS ============ -->
+<section class="py-20 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6">
+    <p class="reveal text-center text-[13px] tracking-[0.14em] uppercase text-gray-500 mb-12">One connected redesign workflow</p>
+  </div>
+  <div class="marquee-wrap marquee-mask overflow-hidden">
+    <div class="marquee-track">
+      <!-- group (duplicated x4 in JS-free static form) -->
+      <div class="flex items-center marquee-group">
+        <!-- Source capture -->
+        <div class="flex-shrink-0 px-8">
+          <div class="flex items-center gap-2.5 text-gray-500 hover:text-gray-300 transition">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20V8l8-5 8 5v12M4 20h16M9 20v-6h6v6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <span class="text-lg font-semibold tracking-tight">Source capture</span>
+          </div>
+        </div>
+        <!-- Creative plan -->
+        <div class="flex-shrink-0 px-8">
+          <div class="flex items-center gap-2.5 text-gray-500 hover:text-gray-300 transition">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="currentColor" stroke-width="1.6" transform="rotate(35 12 12)"/></svg>
+            <span class="text-lg font-semibold tracking-tight">Creative plan</span>
+          </div>
+        </div>
+        <!-- Full-page build -->
+        <div class="flex-shrink-0 px-8">
+          <div class="flex items-center gap-2.5 text-gray-500 hover:text-gray-300 transition">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 18h9a4 4 0 0 0 .4-7.98A6 6 0 0 0 5.3 12.2 3.5 3.5 0 0 0 7 18Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <span class="text-lg font-semibold tracking-tight">Full-page build</span>
+          </div>
+        </div>
+        <!-- Chat editing -->
+        <div class="flex-shrink-0 px-8">
+          <div class="flex items-center gap-2.5 text-gray-500 hover:text-gray-300 transition">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20L12 4l8 16M8 20l4-8 4 8" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <span class="text-lg font-semibold tracking-tight">Chat editing</span>
+          </div>
+        </div>
+        <!-- Code export -->
+        <div class="flex-shrink-0 px-8">
+          <div class="flex items-center gap-2.5 text-gray-500 hover:text-gray-300 transition">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="6" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 6h8M6 8v8M18 8v8M8 18h8" stroke="currentColor" stroke-width="1.6"/></svg>
+            <span class="text-lg font-semibold tracking-tight">Code export</span>
+          </div>
+        </div>
+      </div>
+      <!-- duplicates for seamless loop (x3 more) -->
+      <div class="flex items-center marquee-group" aria-hidden="true">
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20V8l8-5 8 5v12M4 20h16M9 20v-6h6v6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="text-lg font-semibold tracking-tight">Source capture</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="currentColor" stroke-width="1.6" transform="rotate(35 12 12)"/></svg><span class="text-lg font-semibold tracking-tight">Creative plan</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 18h9a4 4 0 0 0 .4-7.98A6 6 0 0 0 5.3 12.2 3.5 3.5 0 0 0 7 18Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="text-lg font-semibold tracking-tight">Full-page build</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20L12 4l8 16M8 20l4-8 4 8" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="text-lg font-semibold tracking-tight">Chat editing</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="6" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 6h8M6 8v8M18 8v8M8 18h8" stroke="currentColor" stroke-width="1.6"/></svg><span class="text-lg font-semibold tracking-tight">Code export</span></div></div>
+      </div>
+      <div class="flex items-center marquee-group" aria-hidden="true">
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20V8l8-5 8 5v12M4 20h16M9 20v-6h6v6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="text-lg font-semibold tracking-tight">Source capture</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="currentColor" stroke-width="1.6" transform="rotate(35 12 12)"/></svg><span class="text-lg font-semibold tracking-tight">Creative plan</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 18h9a4 4 0 0 0 .4-7.98A6 6 0 0 0 5.3 12.2 3.5 3.5 0 0 0 7 18Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="text-lg font-semibold tracking-tight">Full-page build</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20L12 4l8 16M8 20l4-8 4 8" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="text-lg font-semibold tracking-tight">Chat editing</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="6" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 6h8M6 8v8M18 8v8M8 18h8" stroke="currentColor" stroke-width="1.6"/></svg><span class="text-lg font-semibold tracking-tight">Code export</span></div></div>
+      </div>
+      <div class="flex items-center marquee-group" aria-hidden="true">
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20V8l8-5 8 5v12M4 20h16M9 20v-6h6v6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="text-lg font-semibold tracking-tight">Source capture</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="currentColor" stroke-width="1.6" transform="rotate(35 12 12)"/></svg><span class="text-lg font-semibold tracking-tight">Creative plan</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 18h9a4 4 0 0 0 .4-7.98A6 6 0 0 0 5.3 12.2 3.5 3.5 0 0 0 7 18Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="text-lg font-semibold tracking-tight">Full-page build</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 20L12 4l8 16M8 20l4-8 4 8" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="text-lg font-semibold tracking-tight">Chat editing</span></div></div>
+        <div class="flex-shrink-0 px-8"><div class="flex items-center gap-2.5 text-gray-500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="6" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 6h8M6 8v8M18 8v8M8 18h8" stroke="currentColor" stroke-width="1.6"/></svg><span class="text-lg font-semibold tracking-tight">Code export</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. AI CHAT ============ -->
+<section id="features" class="py-24 md:py-32">
+  <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+    <!-- text -->
+    <div class="reveal">
+      <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[12px] text-gray-300 mb-6">Project-aware chat</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.03em] leading-[1.05]">
+        Where design intent meets<br/><span class="serif-italic text-[1.08em]">precise iteration.</span>
+      </h2>
+      <p class="mt-6 text-[16px] text-gray-400 max-w-lg leading-relaxed">
+        Ask for targeted section edits, new content blocks, or layout changes while ResetUI keeps the current page map and design context attached.
+      </p>
+      <ul class="mt-8 space-y-4">
+        <li class="flex items-center gap-3 text-[15px] text-gray-300">
+          <span class="w-6 h-6 rounded-full border border-white/10 bg-[#151517] flex items-center justify-center shrink-0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Project-aware requests
+        </li>
+        <li class="flex items-center gap-3 text-[15px] text-gray-300">
+          <span class="w-6 h-6 rounded-full border border-white/10 bg-[#151517] flex items-center justify-center shrink-0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Section-targeted edits
+        </li>
+        <li class="flex items-center gap-3 text-[15px] text-gray-300">
+          <span class="w-6 h-6 rounded-full border border-white/10 bg-[#151517] flex items-center justify-center shrink-0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Recoverable version history
+        </li>
+      </ul>
+    </div>
+
+    <!-- mockup -->
+    <div class="reveal" data-delay="2">
+      <div class="relative rounded-2xl overflow-hidden border border-white/10">
+        <video class="absolute inset-0 w-full h-full object-cover opacity-60 js-lazy-video" autoplay muted loop playsinline aria-hidden="true">
+          <source src="https://7xkytvucp2.ufs.sh/f/m4bRQHrXdK3URdcnKMT6T5lFUBV7nr3ugdXaIYR1epA8fS2i" type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-black/55"></div>
+
+        <div class="relative p-5 sm:p-7">
+          <!-- prompt chips -->
+          <div class="flex flex-wrap gap-2 mb-5">
+            <span class="rounded-full border border-white/10 bg-white/5 backdrop-blur px-3 py-1.5 text-[12px] text-gray-300">Refine the hero</span>
+            <span class="rounded-full border border-white/10 bg-white/5 backdrop-blur px-3 py-1.5 text-[12px] text-gray-300">Rework pricing</span>
+            <span class="rounded-full border border-white/10 bg-white/5 backdrop-blur px-3 py-1.5 text-[12px] text-gray-300">Add a section</span>
+          </div>
+
+          <!-- conversation -->
+          <div class="space-y-3">
+            <div class="flex justify-end">
+              <div class="max-w-[78%] rounded-2xl rounded-br-md bg-white text-black px-4 py-2.5 text-[13.5px] leading-snug">Make the pricing section clearer and more premium.</div>
+            </div>
+            <div class="flex justify-start">
+              <div class="max-w-[82%] rounded-2xl rounded-bl-md glass border border-white/10 px-4 py-2.5 text-[13.5px] text-gray-200 leading-snug">
+                I updated the pricing hierarchy, preserved the verified plan details, and committed a new recoverable design version.
+              </div>
+            </div>
+            <!-- typing -->
+            <div class="flex justify-start">
+              <div class="rounded-2xl rounded-bl-md glass border border-white/10 px-4 py-3 flex items-center gap-1.5">
+                <span class="typing-dot w-1.5 h-1.5 rounded-full bg-white/70"></span>
+                <span class="typing-dot w-1.5 h-1.5 rounded-full bg-white/70"></span>
+                <span class="typing-dot w-1.5 h-1.5 rounded-full bg-white/70"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- input -->
+          <div class="mt-5 flex items-center gap-2 rounded-full border border-white/10 glass px-3 py-2.5">
+            <button class="text-gray-400 hover:text-white transition shrink-0" aria-label="Attach file"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3l7.8-7.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <span class="flex-1 text-[13.5px] text-gray-500">Describe the design change...</span>
+            <button class="text-gray-400 hover:text-white transition shrink-0" aria-label="Voice input"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+            <button class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shrink-0 hover:opacity-90 transition" aria-label="Send"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. AI TRANSCRIPTION ============ -->
+<section class="py-24 md:py-32 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+    <!-- mockup (left on desktop, second on mobile) -->
+    <div class="reveal order-2 lg:order-1">
+      <div class="relative rounded-2xl overflow-hidden border border-white/10">
+        <video class="absolute inset-0 w-full h-full object-cover opacity-60" autoplay muted loop playsinline aria-hidden="true">
+          <source src="https://7xkytvucp2.ufs.sh/f/m4bRQHrXdK3URdcnKMT6T5lFUBV7nr3ugdXaIYR1epA8fS2i" type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-black/60"></div>
+
+        <div class="relative p-5 sm:p-7">
+          <!-- player header -->
+          <div class="flex items-center gap-3 mb-5">
+            <button class="w-11 h-11 rounded-full bg-white text-black flex items-center justify-center shrink-0" aria-label="Play recording"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-[13px] text-white font-medium">You</span>
+                <span class="text-[12px] text-gray-400">11:06 AM</span>
+              </div>
+              <!-- waveform -->
+              <div class="flex items-center gap-[3px] h-7 mt-1.5" aria-hidden="true">
+                <div class="wave-bar" style="animation-delay:0s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.1s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.2s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.05s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.3s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.15s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.25s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.35s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.12s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.22s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.08s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.28s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.18s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.32s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.06s;height:100%"></div>
+                <div class="wave-bar" style="animation-delay:.26s;height:100%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- transcript -->
+          <div class="rounded-xl border border-white/10 glass p-4 space-y-3.5">
+            <div>
+              <p class="text-[11px] text-gray-500 mb-0.5">You · 11:06</p>
+              <p class="text-[13px] text-gray-200 leading-relaxed">Keep the hero concise and make the primary CTA more prominent.</p>
+            </div>
+            <div>
+              <p class="text-[11px] text-gray-500 mb-0.5">ResetUI · generated</p>
+              <p class="text-[13px] text-gray-200 leading-relaxed">Done. The hero now leads with the product promise and keeps the original CTA destination.</p>
+            </div>
+          </div>
+
+          <!-- footer -->
+          <div class="mt-4 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-[12px] text-emerald-400">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Section-aware edit
+            </div>
+            <button class="inline-flex items-center gap-2 rounded-full bg-[#1F1F22] hover:bg-[#2A2A2D] border border-white/5 px-4 py-2 text-[12px] text-white transition">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Version saved
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- text (right on desktop, first on mobile) -->
+    <div class="reveal order-1 lg:order-2" data-delay="1">
+      <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[12px] text-gray-300 mb-6">Structured website capture</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.03em] leading-[1.05]">
+        Turn a live website into<br/><span class="serif-italic text-[1.08em]">usable design context.</span>
+      </h2>
+      <p class="mt-6 text-[16px] text-gray-400 max-w-lg leading-relaxed">
+        ResetUI extracts the rendered page structure, copy, calls to action, links, media, colors, typography, and brand signals before generation.
+      </p>
+      <ul class="mt-8 space-y-4">
+        <li class="flex items-center gap-3 text-[15px] text-gray-300">
+          <span class="w-6 h-6 rounded-full border border-white/10 bg-[#151517] flex items-center justify-center shrink-0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Section-level extraction
+        </li>
+        <li class="flex items-center gap-3 text-[15px] text-gray-300">
+          <span class="w-6 h-6 rounded-full border border-white/10 bg-[#151517] flex items-center justify-center shrink-0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Brand-token inference
+        </li>
+        <li class="flex items-center gap-3 text-[15px] text-gray-300">
+          <span class="w-6 h-6 rounded-full border border-white/10 bg-[#151517] flex items-center justify-center shrink-0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Approved media inventory
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. INTELLIGENCE INSIGHTS (BENTO) ============ -->
+<section class="py-24 md:py-32 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="reveal max-w-2xl mb-14">
+      <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[12px] text-gray-300 mb-6">Creative planning engine</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.03em] leading-[1.05]">
+        From captured evidence to<br/>one clear <span class="serif-italic text-[1.08em]">direction.</span>
+      </h2>
+      <p class="mt-6 text-[16px] text-gray-400 leading-relaxed">
+        ResetUI gives DeepSeek the bounded source evidence and your prompt so it can choose the theme, visual system, layouts, media policy, and exact section manifest.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+      <!-- 1. Creative plan -->
+      <article class="bento reveal rounded-2xl border border-white/5 p-6 md:p-7 md:col-span-3 min-h-[390px] flex flex-col">
+        <h3 class="text-[18px] font-medium tracking-tight">Authoritative Creative Plan</h3>
+        <p class="mt-2 text-[13px] leading-relaxed text-gray-400 max-w-xl">Turn source evidence and your prompt into one clear direction before implementation begins.</p>
+        <div class="mt-7 flex-1 rounded-xl border border-white/10 bg-[#0d0d0f] p-4 flex flex-col">
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <span class="text-[12px] font-medium">Creative plan summary</span>
+            <span class="text-[10px] text-emerald-400">APPROVED</span>
+          </div>
+          <div class="mt-4 grid grid-cols-2 gap-3">
+            <div class="rounded-lg bg-[#171719] border border-white/5 p-3"><span class="text-[10px] text-gray-500">Theme</span><p class="mt-1 text-[12px] text-gray-200">Editorial dark</p></div>
+            <div class="rounded-lg bg-[#171719] border border-white/5 p-3"><span class="text-[10px] text-gray-500">Sections</span><p class="mt-1 text-[12px] text-gray-200">12 mapped</p></div>
+          </div>
+          <div class="mt-4 space-y-3">
+            <div class="flex items-center justify-between text-[11px]"><span class="text-gray-400">Source context</span><span class="text-gray-200">Preserved</span></div>
+            <div class="h-1.5 rounded-full bg-white/5 overflow-hidden"><div class="h-full w-[86%] rounded-full bg-emerald-400"></div></div>
+            <p class="text-[11px] text-gray-500">Layout, media policy, motion, and hierarchy are bound to the approved plan.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2. Plan confidence -->
+      <article class="bento reveal rounded-2xl border border-white/5 p-6 md:p-7 md:col-span-3 min-h-[390px] flex flex-col" data-delay="1">
+        <h3 class="text-[18px] font-medium tracking-tight">Plan Confidence</h3>
+        <p class="mt-2 text-[13px] leading-relaxed text-gray-400">Validate the proposed direction against captured content and implementation constraints.</p>
+        <div class="mt-7 flex-1 rounded-xl border border-white/10 bg-[#0d0d0f] p-5 grid sm:grid-cols-[150px_1fr] items-center gap-5">
+          <div class="relative mx-auto">
+            <svg width="132" height="132" viewBox="0 0 132 132" class="-rotate-90">
+              <circle cx="66" cy="66" r="54" stroke="rgba(255,255,255,0.07)" stroke-width="9" fill="none"/>
+              <circle cx="66" cy="66" r="54" stroke="#34d399" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="339" stroke-dashoffset="75"/>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center"><span class="text-[28px] font-semibold">78%</span><span class="text-[10px] text-gray-500">validated</span></div>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between rounded-lg border border-white/5 bg-[#171719] px-3 py-2.5"><span class="text-[11px] text-gray-400">Content fidelity</span><span class="text-[11px] text-emerald-400">High</span></div>
+            <div class="flex items-center justify-between rounded-lg border border-white/5 bg-[#171719] px-3 py-2.5"><span class="text-[11px] text-gray-400">Visual distinction</span><span class="text-[11px] text-emerald-400">Strong</span></div>
+            <div class="flex items-center justify-between rounded-lg border border-white/5 bg-[#171719] px-3 py-2.5"><span class="text-[11px] text-gray-400">Implementation</span><span class="text-[11px] text-gray-200">Ready</span></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3. Risks and opportunities -->
+      <article class="bento reveal rounded-2xl border border-white/5 p-6 md:col-span-2 min-h-[350px] flex flex-col">
+        <h3 class="text-[17px] font-medium tracking-tight">Risks & Opportunities</h3>
+        <p class="mt-2 text-[13px] leading-relaxed text-gray-400">Surface the decisions that protect source truth while creating room for a stronger design.</p>
+        <div class="mt-6 flex-1 rounded-xl border border-white/10 bg-[#0d0d0f] p-3 space-y-3">
+          <div class="rounded-lg border border-amber-400/10 bg-[#171719] p-3.5">
+            <div class="flex items-center gap-2 text-[11px] text-amber-400"><span class="w-5 h-5 rounded-md bg-amber-400/10 grid place-items-center">!</span>Risk</div>
+            <p class="mt-2 text-[11px] leading-relaxed text-gray-400">Preserve verified copy, links, and product claims.</p>
+          </div>
+          <div class="rounded-lg border border-emerald-400/10 bg-[#171719] p-3.5">
+            <div class="flex items-center gap-2 text-[11px] text-emerald-400"><span class="w-5 h-5 rounded-md bg-emerald-400/10 grid place-items-center">+</span>Opportunity</div>
+            <p class="mt-2 text-[11px] leading-relaxed text-gray-400">Replace the source layout with a distinct visual system.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4. Binding decisions -->
+      <article class="bento reveal rounded-2xl border border-white/5 p-6 md:col-span-2 min-h-[350px] flex flex-col" data-delay="1">
+        <h3 class="text-[17px] font-medium tracking-tight">Binding Decisions</h3>
+        <p class="mt-2 text-[13px] leading-relaxed text-gray-400">Keep the visual system and media rules visible throughout generation.</p>
+        <div class="mt-6 flex-1 rounded-xl border border-white/10 bg-[#0d0d0f] p-3.5">
+          <div class="flex items-center gap-2 rounded-lg border border-white/10 bg-[#171719] px-3 py-2.5">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" class="text-gray-500"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="1.6" class="text-gray-500"/></svg>
+            <span class="text-[11px] text-gray-400">creative plan</span>
+          </div>
+          <div class="mt-4 space-y-2.5">
+            <div class="rounded-lg bg-[#171719] px-3 py-2.5"><p class="text-[10px] text-gray-500">Theme</p><p class="mt-1 text-[11px] text-gray-300">Source-aware dark</p></div>
+            <div class="rounded-lg bg-[#171719] px-3 py-2.5"><p class="text-[10px] text-gray-500">Layout</p><p class="mt-1 text-[11px] text-gray-300">Varied section composition</p></div>
+            <div class="rounded-lg bg-[#171719] px-3 py-2.5"><p class="text-[10px] text-gray-500">Media</p><p class="mt-1 text-[11px] text-gray-300">Provenance-controlled slots</p></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5. Generation manifest -->
+      <article class="bento reveal rounded-2xl border border-white/5 p-6 md:col-span-2 min-h-[350px] flex flex-col" data-delay="2">
+        <h3 class="text-[17px] font-medium tracking-tight">Generation Manifest</h3>
+        <p class="mt-2 text-[13px] leading-relaxed text-gray-400">Track the approved implementation stages from full-page generation to commit.</p>
+        <div class="mt-6 flex-1 rounded-xl border border-white/10 bg-[#0d0d0f] p-3 space-y-2.5">
+          <div class="flex items-center gap-3 rounded-lg border border-white/5 bg-[#171719] p-3">
+            <span class="w-7 h-7 rounded-md bg-emerald-400/10 text-emerald-400 grid place-items-center text-[12px]">✓</span><div><p class="text-[11px] text-gray-200">Plan approved</p><p class="text-[10px] text-gray-500">Creative direction locked</p></div>
+          </div>
+          <div class="flex items-center gap-3 rounded-lg border border-white/5 bg-[#171719] p-3">
+            <span class="w-7 h-7 rounded-md bg-white/5 text-gray-400 grid place-items-center text-[11px]">02</span><div><p class="text-[11px] text-gray-200">Generate full page</p><p class="text-[10px] text-gray-500">Sections stream to canvas</p></div>
+          </div>
+          <div class="flex items-center gap-3 rounded-lg border border-white/5 bg-[#171719] p-3 opacity-60">
+            <span class="w-7 h-7 rounded-md bg-white/5 text-gray-400 grid place-items-center text-[11px]">03</span><div><p class="text-[11px] text-gray-200">Validate & commit</p><p class="text-[10px] text-gray-500">Create recoverable version</p></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. HOW IT WORKS ============ -->
+<section id="how-it-works" class="py-24 md:py-32 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="reveal max-w-2xl mb-16 text-center mx-auto">
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.03em] leading-[1.05]">
+        Connected in minutes.<br/>Useful from <span class="serif-italic text-[1.08em]">day one.</span>
+      </h2>
+    </div>
+
+    <div class="relative">
+      <div class="grid md:grid-cols-3 gap-8 md:gap-6 relative">
+        <!-- step 1 -->
+        <div class="reveal text-center">
+          <div class="relative z-10 mx-auto w-24 h-24 rounded-2xl border border-white/10 bg-[#101012] flex items-center justify-center mb-6">
+            <svg width="46" height="46" viewBox="0 0 64 64" fill="none">
+              <rect x="10" y="14" width="16" height="12" rx="2" stroke="white" stroke-width="1.6" stroke-opacity="0.7"/>
+              <rect x="38" y="14" width="16" height="12" rx="2" stroke="white" stroke-width="1.6" stroke-opacity="0.4"/>
+              <rect x="24" y="38" width="16" height="12" rx="2" stroke="white" stroke-width="1.6" stroke-opacity="0.55"/>
+              <path d="M18 26v6h14M46 26v6H32M32 32v6" stroke="white" stroke-width="1.4" stroke-opacity="0.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="text-[12px] tracking-[0.14em] text-gray-500">STEP 01</span>
+          <h3 class="mt-2 text-xl font-medium tracking-tight">Paste the landing-page URL</h3>
+          <p class="mt-3 text-[14px] text-gray-400 max-w-xs mx-auto leading-relaxed">ResetUI renders the public page and builds a structured profile of its content and brand context.</p>
+        </div>
+
+        <!-- step 2 -->
+        <div class="reveal text-center" data-delay="1">
+          <div class="relative z-10 mx-auto w-24 h-24 rounded-2xl border border-white/10 bg-[#101012] flex items-center justify-center mb-6">
+            <svg width="46" height="46" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="8" stroke="white" stroke-width="1.8"/>
+              <path d="M32 24v-8M32 40v8M24 32h-8M40 32h8" stroke="white" stroke-width="1.4" stroke-opacity="0.5" stroke-linecap="round"/>
+              <circle cx="32" cy="12" r="3" fill="white" fill-opacity="0.6"/>
+              <circle cx="32" cy="52" r="3" fill="white" fill-opacity="0.6"/>
+              <circle cx="12" cy="32" r="3" fill="white" fill-opacity="0.6"/>
+              <circle cx="52" cy="32" r="3" fill="white" fill-opacity="0.6"/>
+            </svg>
+          </div>
+          <span class="text-[12px] tracking-[0.14em] text-gray-500">STEP 02</span>
+          <h3 class="mt-2 text-xl font-medium tracking-tight">Describe the new direction</h3>
+          <p class="mt-3 text-[14px] text-gray-400 max-w-xs mx-auto leading-relaxed">Tell ResetUI what should change: style, mood, hierarchy, layout, or the complete visual language.</p>
+        </div>
+
+        <!-- step 3 -->
+        <div class="reveal text-center" data-delay="2">
+          <div class="relative z-10 mx-auto w-24 h-24 rounded-2xl border border-white/10 bg-[#101012] flex items-center justify-center mb-6">
+            <svg width="46" height="46" viewBox="0 0 64 64" fill="none">
+              <rect x="14" y="12" width="36" height="10" rx="2" stroke="white" stroke-width="1.6" stroke-opacity="0.7"/>
+              <rect x="14" y="27" width="24" height="8" rx="2" stroke="white" stroke-width="1.6" stroke-opacity="0.45"/>
+              <path d="M44 30l3 3 6-6" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="14" y="40" width="36" height="10" rx="2" stroke="white" stroke-width="1.6" stroke-opacity="0.55"/>
+            </svg>
+          </div>
+          <span class="text-[12px] tracking-[0.14em] text-gray-500">STEP 03</span>
+          <h3 class="mt-2 text-xl font-medium tracking-tight">Generate, edit, and export</h3>
+          <p class="mt-3 text-[14px] text-gray-400 max-w-xs mx-auto leading-relaxed">Watch the page stream into the canvas, refine it through chat, and export production-ready code.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. INTEGRATIONS ============ -->
+<section id="integrations" class="py-24 md:py-32 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+    <!-- text -->
+    <div class="reveal">
+      <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[12px] text-gray-300 mb-6">Integrations</span>
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.03em] leading-[1.05]">
+        One design workflow<br/>across <span class="serif-italic text-[1.08em]">every stage.</span>
+      </h2>
+      <p class="mt-6 text-[16px] text-gray-400 max-w-lg leading-relaxed">
+        DeepSeek planning, Kimi implementation, OpenAI image assistance, Postgres history, and framework export work together inside ResetUI.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-3">
+        <a href="#contact" class="btn-primary px-6 py-3 rounded-full text-sm font-semibold text-center">Explore the workflow</a>
+        <a href="#contact" class="btn-secondary bg-[#1F1F22] hover:bg-[#2A2A2D] border border-white/5 px-6 py-3 rounded-full text-sm font-medium text-center">View documentation</a>
+      </div>
+    </div>
+
+    <!-- three-row integration marquee card -->
+    <div class="reveal w-full min-w-0" data-delay="2">
+      <div class="integration-marquee-card max-w-[560px] mx-auto" aria-label="Supported integrations">
+        <div class="integration-marquee-row">
+          <div class="integration-marquee-track">
+            <div class="integration-marquee-group">
+              <div class="integration-chip"><span class="integration-chip-mark">Sl</span><span>Slack</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">No</span><span>Notion</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">GD</span><span>Google Drive</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">Li</span><span>Linear</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">Hs</span><span>HubSpot</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="integration-marquee-row">
+          <div class="integration-marquee-track">
+            <div class="integration-marquee-group">
+              <div class="integration-chip"><span class="integration-chip-mark">Gh</span><span>GitHub</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">Fi</span><span>Figma</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">Za</span><span>Zapier</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">Sf</span><span>Salesforce</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">Ji</span><span>Jira</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="integration-marquee-row">
+          <div class="integration-marquee-track">
+            <div class="integration-marquee-group">
+              <div class="integration-chip"><span class="integration-chip-mark">Ms</span><span>Microsoft Teams</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">Db</span><span>Dropbox</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">In</span><span>Intercom</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">Ai</span><span>Airtable</span></div>
+              <div class="integration-chip"><span class="integration-chip-mark">Ze</span><span>Zendesk</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. TESTIMONIALS ============ -->
+<section id="testimonials" class="py-24 md:py-32 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="reveal max-w-2xl mb-14">
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.03em] leading-[1.05]">
+        Built for teams that<br/>need <span class="serif-italic text-[1.08em]">better design.</span>
+      </h2>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-4">
+      <!-- featured -->
+      <div class="reveal lg:col-span-2 rounded-2xl border border-white/10 bg-[#101012] p-8 md:p-10 flex flex-col justify-between">
+        <div>
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" class="text-white/20 mb-6"><path d="M10 11H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6c0 2.2-1.8 4-4 4M20 11h-4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6c0 2.2-1.8 4-4 4" stroke="currentColor" stroke-width="1.5"/></svg>
+          <p class="text-xl md:text-2xl font-medium tracking-tight leading-snug text-white/90">
+            ResetUI gave us a new visual direction without losing the original page facts, links, and calls to action.
+          </p>
+        </div>
+        <div class="mt-8 flex items-center gap-3">
+          <div class="w-11 h-11 rounded-full bg-gradient-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center text-sm font-semibold">MC</div>
+          <div>
+            <p class="text-[14px] font-medium">Maya Chen</p>
+            <p class="text-[12px] text-gray-500">Product lead</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- two stacked -->
+      <div class="flex flex-col gap-4">
+        <div class="reveal rounded-2xl border border-white/10 bg-[#151517] p-6 flex-1" data-delay="1">
+          <p class="text-[15px] text-gray-200 leading-relaxed">Chat edits stayed precise because the canvas already knew which section we meant.</p>
+          <div class="mt-5 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-[12px] font-semibold">DL</div>
+            <div><p class="text-[13px] font-medium">Daniel Ito</p><p class="text-[11px] text-gray-500">Independent founder</p></div>
+          </div>
+        </div>
+        <div class="reveal rounded-2xl border border-white/10 bg-[#151517] p-6 flex-1" data-delay="2">
+          <p class="text-[15px] text-gray-200 leading-relaxed">The exported code matched the canvas and gave our team a practical production starting point.</p>
+          <div class="mt-5 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-[12px] font-semibold">RA</div>
+            <div><p class="text-[13px] font-medium">Rhea Anand</p><p class="text-[11px] text-gray-500">Design engineer</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- metric strip -->
+    <div class="reveal grid grid-cols-2 md:grid-cols-4 gap-px mt-4 rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+      <div class="bg-[#101012] p-7 text-center">
+        <p class="text-3xl md:text-4xl font-semibold tracking-tight"><span class="count" data-target="42" data-suffix="%">0%</span></p>
+        <p class="mt-1 text-[13px] text-gray-500">faster iteration</p>
+      </div>
+      <div class="bg-[#101012] p-7 text-center">
+        <p class="text-3xl md:text-4xl font-semibold tracking-tight"><span class="count" data-target="8.6" data-decimals="1" data-suffix=" hrs">0 hrs</span></p>
+        <p class="mt-1 text-[13px] text-gray-500">from URL to canvas</p>
+      </div>
+      <div class="bg-[#101012] p-7 text-center">
+        <p class="text-3xl md:text-4xl font-semibold tracking-tight"><span class="count" data-target="98.7" data-decimals="1" data-suffix="%">0%</span></p>
+        <p class="mt-1 text-[13px] text-gray-500">source context retained</p>
+      </div>
+      <div class="bg-[#101012] p-7 text-center">
+        <p class="text-3xl md:text-4xl font-semibold tracking-tight"><span class="count" data-target="4.9" data-decimals="1" data-suffix="/5">0/5</span></p>
+        <p class="mt-1 text-[13px] text-gray-500">redesign workflow</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. FAQ ============ -->
+<section id="faq" class="py-24 md:py-32 border-t border-white/5">
+  <div class="max-w-3xl mx-auto px-6">
+    <div class="reveal text-center mb-14">
+      <h2 class="text-4xl md:text-5xl font-medium tracking-[-0.03em] leading-[1.05]">We've got <span class="serif-italic text-[1.08em]">answers</span></h2>
+    </div>
+
+    <div class="reveal border border-white/10 rounded-xl bg-transparent overflow-hidden">
+      <!-- item -->
+      <div class="faq-item border-b border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left px-6 py-5" aria-expanded="false">
+          <span class="text-[16px] font-medium">What does ResetUI need to start?</span>
+          <svg class="faq-icon shrink-0 text-gray-400" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-panel"><div><p class="px-6 pb-5 text-[15px] text-gray-400 leading-relaxed">A publicly accessible landing-page URL and a prompt describing the new visual direction.</p></div></div>
+      </div>
+      <!-- item -->
+      <div class="faq-item border-b border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left px-6 py-5" aria-expanded="false">
+          <span class="text-[16px] font-medium">Does ResetUI copy my existing layout?</span>
+          <svg class="faq-icon shrink-0 text-gray-400" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-panel"><div><p class="px-6 pb-5 text-[15px] text-gray-400 leading-relaxed">No. The source page supplies useful content and brand context while the creative planner produces a new layout and visual system.</p></div></div>
+      </div>
+      <!-- item -->
+      <div class="faq-item border-b border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left px-6 py-5" aria-expanded="false">
+          <span class="text-[16px] font-medium">Can I edit the generated design?</span>
+          <svg class="faq-icon shrink-0 text-gray-400" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-panel"><div><p class="px-6 pb-5 text-[15px] text-gray-400 leading-relaxed">Yes. Project-aware chat can update existing sections or add new ones, and every accepted change creates a recoverable version.</p></div></div>
+      </div>
+      <!-- item -->
+      <div class="faq-item border-b border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left px-6 py-5" aria-expanded="false">
+          <span class="text-[16px] font-medium">What happens to captured website media?</span>
+          <svg class="faq-icon shrink-0 text-gray-400" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-panel"><div><p class="px-6 pb-5 text-[15px] text-gray-400 leading-relaxed">Approved source images and videos remain normal foreground content. They are never repurposed as hero or CTA backgrounds.</p></div></div>
+      </div>
+      <!-- item (last, no border) -->
+      <div class="faq-item">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left px-6 py-5" aria-expanded="false">
+          <span class="text-[16px] font-medium">What does ResetUI export?</span>
+          <svg class="faq-icon shrink-0 text-gray-400" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-panel"><div><p class="px-6 pb-5 text-[15px] text-gray-400 leading-relaxed">Standalone HTML/Tailwind CSS/JS or a one-file Vite React, Next.js App Router, Vue, or Svelte implementation.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. FINAL CTA + FOOTER ============ -->
+<section id="contact" class="relative overflow-hidden border-t border-white/5">
+  <!-- bg video -->
+  <video class="absolute inset-0 w-full h-full object-cover opacity-80 js-lazy-video" autoplay muted loop playsinline aria-hidden="true">
+    <source src="https://7xkytvucp2.ufs.sh/f/m4bRQHrXdK3UWNJ1n3S4pdBun9mTojgsN8Ky7AlqV2wS1fXz" type="video/mp4" />
+  </video>
+  <div class="absolute inset-0 bg-gradient-to-b from-black via-black/60 to-black"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6">
+    <!-- CTA -->
+    <div class="reveal pt-28 pb-24 md:pt-40 md:pb-32 text-center">
+      <h2 class="text-5xl md:text-6xl lg:text-7xl font-medium tracking-[-0.04em] leading-[0.98]">
+        Ready to redesign<br/><span class="serif-italic">what you already have?</span>
+      </h2>
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#" class="btn-primary px-7 py-3.5 rounded-full text-sm font-semibold w-full sm:w-auto text-center">Get Started</a>
+        <a href="#features" class="btn-secondary bg-[#1F1F22] hover:bg-[#2A2A2D] border border-white/5 px-7 py-3.5 rounded-full text-sm font-medium w-full sm:w-auto text-center">See the workflow</a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="pb-10">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-10 pt-16 border-t border-white/10">
+        <!-- Brand -->
+        <div class="col-span-2 lg:col-span-1">
+          <div class="flex items-center gap-2.5 mb-4">
+            <img src="https://cdn.jsdelivr.net/gh/resetui/assets@main/Org-Logo.jpg" alt="ResetUI logo" class="w-[26px] h-[26px] rounded-full object-cover" />
+            <span class="text-[17px] font-semibold tracking-[-0.02em]">ResetUI</span>
+          </div>
+          <p class="text-[14px] text-gray-500 max-w-[220px] leading-relaxed mb-5">Source-aware design, generated and exported.</p>
+          <form id="email-form" class="flex items-center gap-2 max-w-[280px]">
+            <input id="email-input" type="email" required placeholder="Enter your email" class="flex-1 min-w-0 rounded-full bg-[#101012] border border-white/10 px-4 py-2.5 text-[13px] text-white placeholder:text-gray-600 focus:border-white/25 outline-none" />
+            <button type="submit" class="btn-primary rounded-full px-4 py-2.5 text-[13px] font-semibold shrink-0" aria-label="Subscribe">
+              <span id="email-btn-text">Join</span>
+            </button>
+          </form>
+          <p id="email-success" class="hidden mt-2 text-[12px] text-emerald-400">Thanks — you're on the list.</p>
+        </div>
+
+        <!-- Product -->
+        <div>
+          <p class="text-[13px] font-medium text-white mb-4">Product</p>
+          <ul class="space-y-3 text-[14px] text-gray-500">
+            <li><a href="#about" class="hover:text-white transition">About</a></li>
+            <li><a href="#" class="hover:text-white transition">Pricing</a></li>
+            <li><a href="#" class="hover:text-white transition">Changelog</a></li>
+            <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal -->
+        <div>
+          <p class="text-[13px] font-medium text-white mb-4">Legal</p>
+          <ul class="space-y-3 text-[14px] text-gray-500">
+            <li><a href="#" class="hover:text-white transition">Terms of service</a></li>
+            <li><a href="#" class="hover:text-white transition">Privacy policy</a></li>
+            <li><a href="#" class="hover:text-white transition">Security</a></li>
+            <li><a href="#" class="hover:text-white transition">404</a></li>
+          </ul>
+        </div>
+
+        <!-- Connect -->
+        <div>
+          <p class="text-[13px] font-medium text-white mb-4">Connect</p>
+          <ul class="space-y-3 text-[14px] text-gray-500">
+            <li><a href="#" class="hover:text-white transition flex items-center gap-2"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg> Instagram</a></li>
+            <li><a href="#" class="hover:text-white transition flex items-center gap-2"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="4" stroke="currentColor" stroke-width="1.5"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/></svg> YouTube</a></li>
+            <li><a href="#" class="hover:text-white transition flex items-center gap-2"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 0 1 4 0v4M11 17v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> LinkedIn</a></li>
+            <li><a href="#" class="hover:text-white transition flex items-center gap-2"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 4l7.5 9.5M4 20l6.8-7M20 4l-7 8M20 20l-8.5-11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Twitter / X</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-14 pt-6 border-t border-white/10 text-center">
+        <p class="text-[13px] text-gray-600">© 2026 ResetUI. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Seamless integration marquee copies ---------- */
+  document.querySelectorAll('.integration-marquee-track').forEach(function (track) {
+    var group = track.querySelector('.integration-marquee-group');
+    if (!group || track.children.length > 1) return;
+    var copy = group.cloneNode(true);
+    copy.setAttribute('aria-hidden', 'true');
+    track.appendChild(copy);
+  });
+
+  /* ---------- Navbar scroll bg ---------- */
+  var navbar = document.getElementById('navbar');
+  function onScrollNav() {
+    if (window.scrollY > 20) {
+      navbar.classList.add('bg-black/80', 'backdrop-blur-md', 'border-b', 'border-white/5');
+    } else {
+      navbar.classList.remove('bg-black/80', 'backdrop-blur-md', 'border-b', 'border-white/5');
+    }
+  }
+  window.addEventListener('scroll', onScrollNav, { passive: true });
+  onScrollNav();
+
+  /* ---------- Mobile menu ---------- */
+  var burger = document.getElementById('burger');
+  var menu = document.getElementById('mobile-menu');
+  var burgerSpans = burger.querySelectorAll('span');
+  var menuOpen = false;
+
+  function setBurger(open) {
+    if (open) {
+      burgerSpans[0].style.transform = 'translateY(6.5px) rotate(45deg)';
+      burgerSpans[1].style.opacity = '0';
+      burgerSpans[2].style.transform = 'translateY(-6.5px) rotate(-45deg)';
+    } else {
+      burgerSpans[0].style.transform = '';
+      burgerSpans[1].style.opacity = '1';
+      burgerSpans[2].style.transform = '';
+    }
+  }
+  function openMenu() {
+    menuOpen = true;
+    menu.classList.add('open');
+    setBurger(true);
+    burger.setAttribute('aria-expanded', 'true');
+    burger.setAttribute('aria-label', 'Close menu');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    menuOpen = false;
+    menu.classList.remove('open');
+    setBurger(false);
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Open menu');
+    document.body.style.overflow = '';
+  }
+  burger.addEventListener('click', function () { menuOpen ? closeMenu() : openMenu(); });
+  document.querySelectorAll('.mob-link').forEach(function (l) {
+    l.addEventListener('click', closeMenu);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menuOpen) closeMenu();
+  });
+
+  /* ---------- Scroll reveal ---------- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+  } else {
+    var revObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    revealEls.forEach(function (el) { revObs.observe(el); });
+  }
+
+  /* ---------- Active nav link ---------- */
+  var sections = ['about', 'features', 'how-it-works', 'integrations', 'faq', 'contact'];
+  var navLinks = document.querySelectorAll('.nav-link');
+  function setActive() {
+    var pos = window.scrollY + 120;
+    var current = sections[0];
+    sections.forEach(function (id) {
+      var s = document.getElementById(id);
+      if (s && s.offsetTop <= pos) current = id;
+    });
+    navLinks.forEach(function (link) {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', setActive, { passive: true });
+  setActive();
+
+  /* ---------- FAQ accordion ---------- */
+  var faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(function (item) {
+    var trigger = item.querySelector('.faq-trigger');
+    trigger.addEventListener('click', function () {
+      var isOpen = item.classList.contains('open');
+      faqItems.forEach(function (other) {
+        other.classList.remove('open');
+        other.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  /* ---------- Number count-up ---------- */
+  var counts = document.querySelectorAll('.count');
+  function animateCount(el) {
+    var target = parseFloat(el.getAttribute('data-target'));
+    var decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    if (reduceMotion) { el.textContent = target.toFixed(decimals) + suffix; return; }
+    var start = null, dur = 1600;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * eased).toFixed(decimals) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target.toFixed(decimals) + suffix;
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    var cObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { animateCount(e.target); cObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.6 });
+    counts.forEach(function (c) { cObs.observe(c); });
+  } else {
+    counts.forEach(animateCount);
+  }
+
+  /* ---------- Hero dashboard perspective ---------- */
+  var dash = document.querySelector('.hero-dash');
+  if (dash && !reduceMotion && window.matchMedia('(pointer:fine)').matches) {
+    var wrap = dash.parentElement;
+    wrap.addEventListener('mousemove', function (e) {
+      var r = wrap.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      dash.style.transform = 'rotateX(' + (-y * 5) + 'deg) rotateY(' + (x * 6) + 'deg)';
+    });
+    wrap.addEventListener('mouseleave', function () {
+      dash.style.transform = 'rotateX(0) rotateY(0)';
+    });
+  }
+
+  /* ---------- Bento cursor highlight ---------- */
+  document.querySelectorAll('.bento').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  /* ---------- Email form ---------- */
+  var form = document.getElementById('email-form');
+  var success = document.getElementById('email-success');
+  var input = document.getElementById('email-input');
+  var btnText = document.getElementById('email-btn-text');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!input.value) return;
+      btnText.textContent = 'Joined';
+      success.classList.remove('hidden');
+      input.value = '';
+      input.setAttribute('disabled', 'true');
+      setTimeout(function () {
+        btnText.textContent = 'Join';
+        input.removeAttribute('disabled');
+      }, 3000);
+    });
+  }
+
+  /* ---------- Pause videos out of viewport ---------- */
+  var vids = document.querySelectorAll('.js-lazy-video');
+  if ('IntersectionObserver' in window) {
+    var vObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var v = e.target;
+        if (e.isIntersecting) {
+          var pr = v.play();
+          if (pr && pr.catch) pr.catch(function () {});
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: 0.1 });
+    vids.forEach(function (v) { vObs.observe(v); });
+  }
+})();
+</script>
+</body>
+</html>
